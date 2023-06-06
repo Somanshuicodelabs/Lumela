@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   scroll-behavior: smooth;
-  padding: 64px 0 0 0;
+  padding: 0;
 
   &:hover .carouselArrows {
     opacity: 1;
@@ -22,6 +22,9 @@
   opacity: 0;
   z-index: 2;
   transition: all ease-in-out 500ms;
+  @media (max-width: 1023px) {
+    display: none;
+  }
 }
 
 .carouselArrowPrev,
@@ -34,7 +37,6 @@
 
   width: 48px;
   height: 48px;
-  padding: 0px 0 4px 0;
   margin-top: -64px;
   border-radius: 100%;
   border: none;
@@ -48,18 +50,24 @@
   &:hover {
     opacity: 1;
     cursor: pointer;
+    transition: all ease-in-out 100ms;
     background: black;
     color: white;
   }
 }
-
-.carouselArrowPrev {
-  left: 48px;
-}
-
-.carouselArrowNext {
+.peopleSayingSlider .carouselArrowNext {
+  background: transparent;
+  color: #7c7c7c;
+  top: 55%;
   right: 48px;
 }
+.peopleSayingSlider .carouselArrowPrev {
+  background: transparent;
+  color: #7c7c7c;
+  left: 9%;
+  top: 55%;
+}
+
 .notEnoughBlocks {
   @media (--viewportMedium) {
     display: none;
@@ -70,8 +78,6 @@
   display: flex;
   flex-wrap: nowrap;
   width: var(--carouselWidth);
-  padding-bottom: 24px;
-
   overflow-x: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -93,9 +99,9 @@
 .block {
   flex: 0 0 auto;
   /* 64px = horizontal layout paddings */
-  width: calc(min(var(--contentMaxWidthPages), var(--carouselWidth)) - 64px);
+  width: calc(min(var(--contentMaxWidth), var(--carouselWidth)) - 64px);
 
-  margin-right: 16px;
+  margin-right: 32px;
   scroll-snap-align: center;
 
   transform: translateX(32px);
@@ -103,24 +109,20 @@
   &:last-of-type {
     padding-right: 32px;
     /* 32px (padding-right above) */
-    width: calc(min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px);
-  }
-
-  @media (--viewportMedium) {
-    margin-right: 32px;
+    width: calc(min(var(--contentMaxWidth), var(--carouselWidth)) - 32px);
   }
 
   @media (min-width: 1200px) {
     /* Offset the start of the carousel so it follows the global grid layout (e.g. (1400 - 1200) / 2 = 100px) */
     /* Removing this uses the full page width for the slider pane */
     transform: translateX(
-      max(calc((var(--carouselWidth) - var(--contentMaxWidthPages)) / 2 + 32px), 0px)
+      max(calc((var(--carouselWidth) - var(--contentMaxWidth)) / 2 + 32px), 0px)
     );
 
     &:last-of-type {
       padding-right: 32px;
       width: calc(
-        min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px
+        min(var(--contentMaxWidth), var(--carouselWidth)) - 32px
       ); /* 32px (padding-right above) */
     }
   }
@@ -129,11 +131,11 @@
 .oneColumn .block {
   @media (--viewportMedium) {
     /* 64px (horizontal layout paddings) */
-    width: calc(min(var(--contentMaxWidthPages), var(--carouselWidth)) - 64px);
+    width: calc(min(var(--contentMaxWidth), var(--carouselWidth)) - 64px);
 
     &:last-of-type {
       /* 32px (padding-right) */
-      width: calc(min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px);
+      width: calc(min(var(--contentMaxWidth), var(--carouselWidth)) - 32px);
     }
   }
 }
@@ -141,11 +143,11 @@
 .twoColumns .block {
   @media (--viewportMedium) {
     /* 64px (horizontal layout paddings) - 32px (one gutter á 32px) / 2 (number of columns) */
-    width: calc((min(var(--contentMaxWidthPages), var(--carouselWidth)) - 64px - 32px) / 2);
+    width: calc((min(var(--contentMaxWidth), var(--carouselWidth)) - 64px - 32px) / 2);
 
     &:last-of-type {
       /* 32px (padding-right above) / 2 (number of columns) */
-      width: calc((min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px) / 2);
+      width: calc((min(var(--contentMaxWidth), var(--carouselWidth)) - 32px) / 2);
     }
   }
 }
@@ -153,11 +155,11 @@
 .threeColumns .block {
   @media (--viewportMedium) {
     /* 64px (horizontal layout paddings) - 32px (two gutters á 32px) / 3 (number of columns) */
-    width: calc((min(var(--contentMaxWidthPages), var(--carouselWidth)) - 64px - 64px) / 3);
+    width: calc((min(var(--contentMaxWidth), var(--carouselWidth)) - 64px - 64px) / 3);
 
     &:last-of-type {
       /* 32px (padding-right above) / 3 (number of columns) */
-      width: calc((min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px) / 3);
+      width: calc((min(var(--contentMaxWidth), var(--carouselWidth)) - 32px) / 3);
     }
   }
 }
@@ -165,11 +167,47 @@
 .fourColumns .block {
   @media (--viewportMedium) {
     /* 64px (horizontal layout paddings) - 96px (three gutters á 32px) / 4 (number of columns) */
-    width: calc((min(var(--contentMaxWidthPages), var(--carouselWidth)) - 64px - 96px) / 4);
+    width: calc((min(var(--contentMaxWidth), var(--carouselWidth)) - 64px - 96px) / 4);
 
     &:last-of-type {
       /* 32px (padding-right above) / 4 (number of columns) */
-      width: calc((min(var(--contentMaxWidthPages), var(--carouselWidth)) - 32px) / 4);
+      width: calc((min(var(--contentMaxWidth), var(--carouselWidth)) - 32px) / 4);
     }
+  }
+}
+.peopleSayingSlider {
+  padding: 0;
+}
+.peopleSayingSlider .carouselArrowNext {
+  right: -24px;
+  /* @media (max-width: 1360px) {
+    right: -12px;
+  } */
+}
+.exploreCarouselContainer {
+  position: relative;
+  display: flex;
+  & :global(#explore-lumela-slider) {
+    display: flex;
+  }
+  & .carouselArrows {
+    & .carouselArrowPrev {
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      margin-top: 0;
+    }
+    & .carouselArrowNext {
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      margin-top: 0;
+    }
+  }
+}
+.exploreLumelaSlider {
+  & .block {
+    transform: none;
+    position: relative;
   }
 }

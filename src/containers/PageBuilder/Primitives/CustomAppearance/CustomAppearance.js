@@ -8,7 +8,15 @@ import css from './CustomAppearance.module.css';
 
 // BackgroundImage doesn't have enforcable aspectratio
 export const CustomAppearance = React.forwardRef((props, ref) => {
-  const { className, rootClassName, backgroundColor, backgroundImage, alt, sizes } = props;
+  const {
+    className,
+    rootClassName,
+    backgroundColor,
+    backgroundImage,
+    alt,
+    sizes,
+    landingHero,
+  } = props;
 
   const getVariantNames = img => {
     const { variants } = img?.attributes || {};
@@ -17,7 +25,11 @@ export const CustomAppearance = React.forwardRef((props, ref) => {
 
   const backgroundColorMaybe = backgroundColor ? { backgroundColor } : {};
 
-  const classes = classNames(rootClassName || css.backgroundImageWrapper, className);
+  const classes = classNames(
+    rootClassName || css.backgroundImageWrapper,
+    className,
+    landingHero ? css.landingHeroImage : null
+  );
   return (
     <div className={classes} style={backgroundColorMaybe}>
       {backgroundImage ? (

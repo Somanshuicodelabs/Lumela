@@ -6,6 +6,11 @@ import Field, { hasDataInFields } from '../../Field';
 import BlockContainer from '../BlockContainer';
 
 import css from './BlockDefault.module.css';
+import lomelaVideo from '../../../../assets/video/Lumela_video.mp4';
+import ReactMuxPlayer from '../../../../components/ReactMuxPlayer/ReactMuxPlayer';
+import { Button } from '../../../../components';
+import IconLocation from '../../../../components/IconLocation/IconLocation';
+// import IconSearchGlass from '../../../../components/IconSearchGlass/IconSearchGlass';
 
 const FieldMedia = props => {
   const { className, media, sizes, options } = props;
@@ -31,23 +36,66 @@ const BlockDefault = props => {
     media,
     responsiveImageSizes,
     options,
+    sectionId,
+    isDrawerOpen,
+    authStep,
+    redirectRoute,
+    onManageToggleDrawer,
+    publicData,
   } = props;
-  const classes = classNames(rootClassName || css.root, className);
+  const classes = classNames(
+    rootClassName || css.root,
+    className,
+    blockId === 'mobile-image-section' && css.joinLumelaMobile
+  );
   const hasTextComponentFields = hasDataInFields([title, text, callToAction], options);
-
+  const settings = {
+    fluid: false,
+    width: 478,
+    height: 416,
+    videos: [lomelaVideo],
+  };
   return (
     <BlockContainer id={blockId} className={classes}>
-      <FieldMedia
-        media={media}
-        sizes={responsiveImageSizes}
-        className={mediaClassName}
-        options={options}
-      />
+      {sectionId == 'better-advertising' && blockId == 'block2' ? (
+        <div className={css.videoContainer}>
+          <ReactMuxPlayer settings={settings} />
+        </div>
+      ) : (
+        <FieldMedia
+          media={media}
+          sizes={responsiveImageSizes}
+          className={classNames(mediaClassName, props?.additionalClass)}
+          options={options}
+        />
+      )}
       {hasTextComponentFields ? (
-        <div className={classNames(textClassName, css.text)}>
+        <div className={classNames(textClassName, css.text, props?.additionalClass)}>
           <Field data={title} options={options} />
-          <Field data={text} options={options} />
-          <Field data={callToAction} className={ctaButtonClass} options={options} />
+          {sectionId == 'handle-admin-market' && blockId == 'block2' ? (
+            <>
+              <Field data={text} options={options} />
+              <input type="text" placeholder="Email*" />
+            </>
+          ) : (
+            <Field data={text} options={options} />
+          )}
+          {blockId === 'sign-up' ? (
+            <Button
+              className={css.signUpButton}
+              onClick={() => options?.onManageToggleDrawer(false)}
+            >
+              Sign-up Now
+            </Button>
+          ) : blockId == 'find-out-more' ? (
+            <a className={css.findMore} href="#better-advertising">
+              Find out more
+            </a>
+          ) : (
+            <Field data={callToAction} className={ctaButtonClass} options={options} />
+          )}
+          {/* {listings?.map((item) => (
+          <div>{item?.attributes?.publicData?.businessName}</div>))} */}
         </div>
       ) : null}
     </BlockContainer>

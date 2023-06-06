@@ -1,16 +1,28 @@
 // ================ Action types ================ //
 
-export const DISABLE_SCROLLING = 'app/ui/DISABLE_SCROLLING';
+export const DISABLE_SCROLLING = 'app/UI/DISABLE_SCROLLING';
+export const TOGGLE_DRAWER = 'app/UI/TOGGLE_DRAWER';
 
 // ================ Reducer ================ //
 
 const initialState = {
+  authStep: null,
+  redirectRoute: null,
+  isDrawerOpen: false,
   disableScrollRequests: [],
 };
 
 export default function reducer(state = initialState, action = {}) {
   const { type, payload } = action;
   switch (type) {
+    case TOGGLE_DRAWER: {
+      return {
+        ...state,
+        authStep: payload.authStep,
+        redirectRoute: payload.redirectRoute,
+        isDrawerOpen: !payload.isDrawerOpen,
+      };
+    }
     case DISABLE_SCROLLING: {
       const { componentId, disableScrolling } = payload;
       const disableScrollRequests = state.disableScrollRequests;
@@ -44,6 +56,13 @@ export const manageDisableScrolling = (componentId, disableScrolling) => ({
   type: DISABLE_SCROLLING,
   payload: { componentId, disableScrolling },
 });
+
+export const manageToggleDrawer = (isDrawerOpen, authStep = 'LOGIN', redirectRoute = {}) =>({
+  type: TOGGLE_DRAWER,
+  payload: { isDrawerOpen, authStep, redirectRoute },
+});
+
+
 
 // ================ Selectors ================ //
 

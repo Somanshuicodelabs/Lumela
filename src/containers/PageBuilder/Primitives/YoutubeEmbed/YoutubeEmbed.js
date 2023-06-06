@@ -2,7 +2,7 @@ import React from 'react';
 import { string } from 'prop-types';
 import classNames from 'classnames';
 
-import { lazyLoadWithDimensions } from '../../../../util/uiHelpers.js';
+import { lazyLoadWithDimensions } from '../../../../util/contextHelpers';
 
 import { AspectRatioWrapper } from '../../../../components/index.js';
 

@@ -5,6 +5,7 @@
 import appSettings from '../config/settings';
 import { types as sdkTypes, transit } from './sdkLoader';
 import Decimal from 'decimal.js';
+import axios from 'axios';
 
 export const apiBaseUrl = () => {
   const port = process.env.REACT_APP_DEV_API_SERVER_PORT;
@@ -71,6 +72,11 @@ const post = (path, body) => {
   });
 };
 
+
+export const onGetBlogsData = body => {
+  return post('/api/onGetBlogsData', body);
+}
+
 // Fetch transaction line items from the local API endpoint.
 //
 // See `server/api/transaction-line-items.js` to see what data should
@@ -82,7 +88,7 @@ export const transactionLineItems = body => {
 // Initiate a privileged transaction.
 //
 // With privileged transitions, the transactions need to be created
-// from the backend. This endpoint enables sending the order data to
+// from the backend. This endpoint enables sending the booking data to
 // the local backend, and passing that to the Marketplace API.
 //
 // See `server/api/initiate-privileged.js` to see what data should be
@@ -105,7 +111,7 @@ export const transitionPrivileged = body => {
 
 // Create user with identity provider (e.g. Facebook or Google)
 //
-// If loginWithIdp api call fails and user can't authenticate to Marketplace API with idp
+// If loginWithIdp api call fails and user can't authenticate to Flex with idp
 // we will show option to create a new user with idp.
 // For that user needs to confirm data fetched from the idp.
 // After the confirmation, this endpoint is called to create a new user with confirmed data.

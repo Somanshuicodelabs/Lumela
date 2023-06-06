@@ -1,14 +1,18 @@
 import React from 'react';
 
-import { Footer as FooterContent, IconSpinner, LayoutComposer } from '../../components/index.js';
-import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer.js';
+import { Footer as FooterContent } from '../../components/index.js';
+import { TopbarContainer } from '../../containers/index.js';
 
 import { validProps } from './Field';
 
+import LayoutComposer from './LayoutComposer/index.js';
 import SectionBuilder from './SectionBuilder/SectionBuilder.js';
 import StaticPage from './StaticPage.js';
 
 import css from './PageBuilder.module.css';
+// Mandatory css no need to hook with other
+import css2 from '../BusinessLandingPage/BusinessLandingPage.module.css';
+import css3 from './AboutUsPage.module.css';
 
 const getMetadata = (meta, schemaType, fieldOptions) => {
   const { pageTitle, pageDescription, socialSharing } = meta;
@@ -49,14 +53,6 @@ const getMetadata = (meta, schemaType, fieldOptions) => {
   };
 };
 
-const LoadingSpinner = () => {
-  return (
-    <div className={css.loading}>
-      <IconSpinner />
-    </div>
-  );
-};
-
 //////////////////
 // Page Builder //
 //////////////////
@@ -87,19 +83,23 @@ const PageBuilder = props => {
     fallbackPage,
     schemaType,
     options,
+    isDrawerOpen,
+    authStep,
+    redirectRoute,
+    onManageToggleDrawer,
+    isLandingPage,
+    isHeaderSticky,
     ...pageProps
   } = props;
-
   if (!pageAssetsData && fallbackPage && !inProgress && error) {
     return fallbackPage;
   }
-
+  const landingPageHeaderStyle = isLandingPage;
   // Page asset contains UI info and metadata related to it.
   // - "sections" (data that goes inside <body>)
   // - "meta" (which is data that goes inside <head>)
   const { sections = [], meta = {} } = pageAssetsData || {};
   const pageMetaProps = getMetadata(meta, schemaType, options?.fieldComponents);
-
   const layoutAreas = `
     topbar
     main
@@ -112,15 +112,26 @@ const PageBuilder = props => {
           const { Topbar, Main, Footer } = props;
           return (
             <>
-              <Topbar as="header" className={css.topbar}>
-                <TopbarContainer />
+              <Topbar
+                as="header"
+                className={css.topbar}
+                isHeaderStick={isHeaderSticky}
+                isLandingPage={landingPageHeaderStyle}
+              >
+                <TopbarContainer
+                  isHeaderSticky={isHeaderSticky}
+                  isLandingPage={landingPageHeaderStyle}
+                />
               </Topbar>
               <Main as="main" className={css.main}>
-                {inProgress ? (
-                  <LoadingSpinner />
-                ) : (
-                  <SectionBuilder sections={sections} options={options} />
-                )}
+                <SectionBuilder
+                  sections={sections}
+                  options={options}
+                  isDrawerOpen={isDrawerOpen}
+                  authStep={authStep}
+                  redirectRoute={redirectRoute}
+                  onManageToggleDrawer={onManageToggleDrawer}
+                />
               </Main>
               <Footer>
                 <FooterContent />
@@ -133,6 +144,6 @@ const PageBuilder = props => {
   );
 };
 
-export { LayoutComposer, StaticPage, SectionBuilder };
+export { StaticPage, SectionBuilder };
 
 export default PageBuilder;

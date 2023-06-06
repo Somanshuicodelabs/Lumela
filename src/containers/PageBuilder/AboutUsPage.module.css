@@ -1,0 +1,279 @@
+:global(#about-hero) {
+  height: 90vh;
+  position: relative;
+  @media (max-width: 1023px) {
+    height: 55vh;
+}
+  & > div:nth-child(2) {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+  & h1 {
+    font-family: 'MADE Sunflower';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 100px;
+    line-height: 122px;
+    text-align: center;
+    color: #ffffff;
+    text-transform: capitalize;
+    @media (max-width: 1360px) {
+        font-size: 80px;
+        line-height: 100px;
+    }
+    @media (max-width: 1200px) {
+        font-size: 70px;
+        line-height: 90px;
+    }
+    @media (max-width: 1023px) {
+        font-size: 55px;
+        line-height: 70px;
+    }
+    @media (max-width: 767px) {
+        font-size: 32px;
+        line-height: 42px;
+    }
+  }
+}
+:global(#our-why) {
+  & p {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 24px;
+    text-align: center;
+    color: #413f3f;
+    @media (max-width: 1023px) {
+        font-size: 16px;
+        line-height: 20px;
+    }
+  }
+  & > div {
+    max-width: 100%;
+    padding-top: 91px;
+    @media (max-width: 1023px) {
+      padding-top: 48px;
+    }
+  }
+  & > div > div {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 124px;
+    @media (max-width: 1023px) {
+      gap: 48px;
+    }
+    @media (max-width: 767px) {
+      grid-template-columns: repeat(1, 1fr);
+    }
+    & > div {
+      align-items: unset;
+      text-align: center;
+    }
+  }
+  & :global(#our-why-block) {
+    /* justify-content: center; */
+    & > div {
+        max-width: 524px;
+     @media (max-width: 767px) {
+      margin: 0 auto;
+     }
+      & p:nth-child(2) {
+        margin-top: 74px;
+        font-family: 'MADE Sunflower';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 32px;
+        line-height: 39px;
+        text-align: center;
+        color: #f8872b;
+        @media (max-width: 1023px) {
+            margin-top: 60px;
+          }
+        &:before {
+          color: #413f3f;
+          content: 'Our ';
+        }
+      }
+    }
+  }
+  & :global(#as-a-person-block) {
+    /* justify-content: center; */
+    & > div {
+        max-width: 524px;
+       @media (max-width: 767px) {
+        margin: 0 auto;
+       }
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      & p:nth-child(2) {
+        margin-top: 120px;
+        font-family: 'MADE Sunflower';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 32px;
+        line-height: 39px;
+        text-align: center;
+        color: #f8872b;
+        @media (max-width: 1023px) {
+            margin-top: 60px;
+          }
+        &:before {
+          color: #413f3f;
+          content: 'As a ';
+        }
+      }
+    }
+  }
+}
+:global(#from-our-team) {
+  & :global(#right-block) {
+    & img {
+      box-shadow: 8px -8px 0px 0px#F5E5CD;
+    }
+  }
+  & :global(#left-block) {
+    &>div{
+        &:nth-child(2){
+            @media (max-width: 1200px) and (min-width: 768px) {
+                padding: 0 20px;
+            }
+        }
+    }
+    & img {
+      box-shadow: -8px -8px 0px 0px#F5E5CD;
+    }
+  }
+  & img {
+    border-radius: unset;
+  }
+  & h1 {
+    font-family: 'MADE Sunflower';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 39px;
+    text-align: center;
+    color: #413f3f;
+    text-transform: capitalize;
+    margin: 24px 0 58px;
+    @media (max-width: 1200px) {
+        margin: 24px 0 32px;  
+    }
+    &:before {
+      color: #f8872b;
+      content: 'From ';
+    }
+  }
+  & p {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 24px;
+    text-align: center;
+    color: #413f3f;
+    max-width: 524px;
+    margin: 24px auto 0;
+    @media (max-width: 1023px) {
+        font-size: 16px;
+        line-height: 20px;
+    }
+  }
+  & > div {
+    max-width: 100%;
+    padding-bottom: 0;
+  }
+  & > div > div {
+    grid-template-columns: 45% 50%;
+    gap: 66px;
+    @media (max-width: 1023px) {
+        gap: 42px;
+    }
+    @media (max-width: 767px) {
+      grid-template-columns: repeat(1, 1fr);
+    }
+    @media (min-width: 767px) {
+      padding: 0 !important;
+    }
+    @media (min-width: 1500px) {
+      gap: 100px;
+    }
+    @media (min-width: 1700px) {
+      gap: 220px;
+      grid-template-columns: 45% 45%;
+    }
+    & > div {
+      flex-direction: column;
+      gap: 0;
+      &:nth-child(2) {
+        @media (max-width: 767px) {
+          display: none;
+        }
+      }
+    }
+  }
+}
+:global(#nice-to-meet-you) {
+    & header{
+        justify-content: center;
+    }
+  & > div {
+    padding: 145px 0 107px;
+    @media (max-width: 1023px) {
+        padding: 60px 0 107px;
+    }
+  }
+  & > div > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    @media (max-width: 767px) {
+        flex-direction: column;
+        gap: 24px;
+    }
+  }
+  & h1 {
+    font-family: 'MADE Sunflower';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 48px;
+    line-height: 58px;
+    text-align: center;
+    color: #454343;
+    text-transform: inherit;
+    @media (max-width: 767px) {
+        font-size: 32px;
+        line-height: 42px;
+    }
+  }
+  & a {
+    background: #f8872b;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 15px;
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 24px;
+    color: #fcf6ec;
+    margin: 62px 0 0;
+    @media (max-width: 767px) {
+        font-size: 16px;
+        line-height: 20px;
+    }
+  }
+  & :global(#button2){
+    & a{
+        @media (max-width: 767px) {
+            margin: 12px 0 0;
+        }
+    }
+  }
+}

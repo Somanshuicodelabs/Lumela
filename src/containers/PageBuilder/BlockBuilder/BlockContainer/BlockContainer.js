@@ -9,7 +9,7 @@ import css from './BlockContainer.module.css';
 const BlockContainer = props => {
   const { className, rootClassName, as, ...otherProps } = props;
   const Tag = as || 'div';
-  const classes = classNames(rootClassName || css.root, className);
+  const classes = classNames(rootClassName || css.root, className, props?.block?.additionalClass);
 
   // Note: otherProps contains "children" too!
   return <Tag className={classes} {...otherProps} />;

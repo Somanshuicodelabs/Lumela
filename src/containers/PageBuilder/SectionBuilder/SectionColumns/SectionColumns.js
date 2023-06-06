@@ -40,6 +40,10 @@ const SectionColumns = props => {
     blocks,
     isInsideContainer,
     options,
+    isDrawerOpen,
+    authStep,
+    redirectRoute,
+    onManageToggleDrawer,
   } = props;
 
   // If external mapping has been included for fields
@@ -76,6 +80,11 @@ const SectionColumns = props => {
             blocks={blocks}
             responsiveImageSizes={getResponsiveImageSizes(numColumns)}
             options={options}
+            isDrawerOpen={isDrawerOpen}
+            authStep={authStep}
+            redirectRoute={redirectRoute}
+            onManageToggleDrawer={onManageToggleDrawer}
+            number={112121212121}
           />
         </div>
       ) : null}

@@ -8,6 +8,8 @@ import BlockBuilder from '../../BlockBuilder';
 import SectionContainer from '../SectionContainer';
 
 import css from './SectionFeatures.module.css';
+import SectionBusiness from '../../../../components/SectionBusiness/SectionBusiness';
+import SectionBlog from '../../../../components/SectionBlog/SectionBlog';
 
 // Section component that shows features.
 // Block content are shown in a row-like way:
@@ -28,6 +30,8 @@ const SectionFeatures = props => {
     isInsideContainer,
     options,
   } = props;
+
+  const listings = options?.listings || {};
 
   // If external mapping has been included for fields
   // E.g. { h1: { component: MyAwesomeHeader } }
@@ -50,16 +54,26 @@ const SectionFeatures = props => {
           <Field data={title} className={defaultClasses.title} options={fieldOptions} />
           <Field data={description} className={defaultClasses.description} options={fieldOptions} />
           <Field data={callToAction} className={defaultClasses.ctaButton} options={fieldOptions} />
+          {sectionId === 'business_section' && (
+            <SectionBusiness rootClassName={props?.additionalClass} listings={listings} />
+          )}
+          {sectionId === 'blog_section' && <SectionBlog rootClassName={props?.additionalClass} />}
         </header>
       ) : null}
       {hasBlocks ? (
         <div
-          className={classNames(defaultClasses.blockContainer, css.featuresMain, {
-            [css.noSidePaddings]: isInsideContainer,
-          })}
+          className={classNames(
+            defaultClasses.blockContainer,
+            css.featuresMain,
+            props?.additionalClass,
+            {
+              [css.noSidePaddings]: isInsideContainer,
+            }
+          )}
         >
           <BlockBuilder
-            rootClassName={css.block}
+            sectionId={sectionId}
+            rootClassName={classNames(css.block, props?.block?.additionalClass)}
             ctaButtonClass={defaultClasses.ctaButton}
             blocks={blocks}
             responsiveImageSizes="(max-width: 767px) 100vw, 568px"

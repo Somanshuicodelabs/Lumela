@@ -29,7 +29,9 @@ const PreviewResolverPage = props => {
   const toTermsOfServicePage = <NamedRedirect name="TermsOfServicePage" />;
   const toPrivacyPolicyPage = <NamedRedirect name="PrivacyPolicyPage" />;
   const toCMSPage = <NamedRedirect name="CMSPage" params={{ pageId: pageAssetName }} />;
-  const toLandingPage = <NamedRedirect name="LandingPage" />;
+  const toLandingPage = <NamedRedirect name="BusinessLandingPage" />;
+  const toBusinessLandingPage = <NamedRedirect name="BusinessLandingPage" />;
+  const toAboutPage = <NamedRedirect name="AboutPage" />;
 
   // Check if a specific page should be shown
   // If pageAssetName can't be detected, redirect to LandingPage
@@ -39,6 +41,10 @@ const PreviewResolverPage = props => {
     ? toPrivacyPolicyPage
     : pageAssetName === 'landing-page'
     ? toLandingPage
+    : pageAssetName === 'business-landing-page'
+    ? toBusinessLandingPage
+    : pageAssetName === 'about'
+    ? toAboutPage
     : hasCMSPagePath
     ? toCMSPage
     : toLandingPage;

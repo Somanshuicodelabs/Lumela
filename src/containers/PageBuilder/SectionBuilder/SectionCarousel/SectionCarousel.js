@@ -108,14 +108,33 @@ const SectionCarousel = props => {
       options={fieldOptions}
     >
       {hasHeaderFields ? (
-        <header className={defaultClasses.sectionDetails}>
-          <Field data={title} className={defaultClasses.title} options={fieldOptions} />
-          <Field data={description} className={defaultClasses.description} options={fieldOptions} />
-          <Field data={callToAction} className={defaultClasses.ctaButton} options={fieldOptions} />
+        <header className={classNames(defaultClasses.sectionDetails, props?.additionalClass)}>
+          <Field
+            data={title}
+            className={classNames(defaultClasses.title, props?.title?.additionalClass)}
+            options={fieldOptions}
+          />
+          <Field
+            data={description}
+            className={classNames(defaultClasses.description, props?.description?.additionalClass)}
+            options={fieldOptions}
+          />
+          <Field
+            data={callToAction}
+            className={classNames(defaultClasses.ctaButton)}
+            options={fieldOptions}
+          />
         </header>
       ) : null}
       {hasBlocks ? (
-        <div className={css.carouselContainer} id={sliderContainerId}>
+        <div
+          className={classNames(
+            css.carouselContainer,
+            sectionId == 'people-saying' && css.peopleSayingSlider,
+            sectionId == 'explore-lumela' && css.exploreCarouselContainer
+          )}
+          id={sliderContainerId}
+        >
           <div
             className={classNames(css.carouselArrows, {
               [css.notEnoughBlocks]: numberOfBlocks <= numColumns,
@@ -128,9 +147,15 @@ const SectionCarousel = props => {
               ›
             </button>
           </div>
-          <div className={getColumnCSS(numColumns)} id={sliderId}>
+          <div
+            className={classNames(
+              getColumnCSS(numColumns),
+              sliderId === 'explore-lumela-slider' ? css.exploreLumelaSlider : null
+            )}
+            id={sliderId}
+          >
             <BlockBuilder
-              rootClassName={css.block}
+              rootClassName={classNames(css.block)}
               ctaButtonClass={defaultClasses.ctaButton}
               blocks={blocks}
               responsiveImageSizes={getResponsiveImageSizes(numColumns)}
