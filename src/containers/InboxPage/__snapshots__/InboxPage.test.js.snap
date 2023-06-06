@@ -1,0 +1,125 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`InboxPage InboxItem matches snapshot of order 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/provider-user-id"
+      title="provider-user-id display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/order/order-1"
+  >
+    <div
+      class="rowNotificationDot"
+    />
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        provider-user-id display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      ItemX title
+    </div>
+    <div
+      class="itemDetails"
+    >
+      <span>
+        InboxPage.quantity
+      </span>
+    </div>
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateNoActionNeeded"
+      >
+        <span>
+          InboxPage.default-purchase.purchased.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
+
+exports[`InboxPage InboxItem matches snapshot of sales 1`] = `
+<div
+  class="item"
+>
+  <div
+    class="itemAvatar"
+  >
+    <a
+      class="root"
+      href="/u/customer-user-id"
+      title="customer-user-id display name"
+    >
+      <span
+        class="initials"
+      >
+        TT
+      </span>
+    </a>
+  </div>
+  <a
+    class="itemLink"
+    href="/sale/sale-1"
+  >
+    <div
+      class="rowNotificationDot"
+    >
+      <div
+        class="notificationDot"
+      />
+    </div>
+    <div
+      class="itemUsername"
+    >
+      <span
+        class=""
+      >
+        customer-user-id display name
+      </span>
+    </div>
+    <div
+      class="itemTitle"
+    >
+      ItemX title
+    </div>
+    <div
+      class="itemDetails"
+    />
+    <div
+      class="itemState"
+    >
+      <div
+        class="stateName stateActionNeeded"
+      >
+        <span>
+          InboxPage.default-purchase.purchased.status
+        </span>
+      </div>
+    </div>
+  </a>
+</div>
+`;
