@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 import { propTypes } from '../../util/types';
 import { sendVerificationEmail, hasCurrentUserErrors } from '../../ducks/user.duck';
 import { logout, authenticationInProgress } from '../../ducks/auth.duck';
-import { manageDisableScrolling } from '../../ducks/ui.duck';
+import { manageDisableScrolling, manageToggleDrawer } from '../../ducks/ui.duck';
 import { Topbar } from '../../components';
 
 export const TopbarContainerComponent = props => {
@@ -16,6 +16,8 @@ export const TopbarContainerComponent = props => {
     currentSearchParams,
     currentUser,
     currentUserHasListings,
+    currentUserListing,
+    currentUserListingFetched,
     currentUserHasOrders,
     history,
     isAuthenticated,
@@ -24,13 +26,20 @@ export const TopbarContainerComponent = props => {
     location,
     notificationCount,
     onLogout,
+    authStep,
+    redirectRoute,
+    isDrawerOpen,
+    onManageToggleDrawer,
     onManageDisableScrolling,
     sendVerificationEmailInProgress,
     sendVerificationEmailError,
     onResendVerificationEmail,
+    isLandingPage,
+    isHeaderSticky,
     ...rest
   } = props;
 
+  const { pathname } = location;
   return (
     <Topbar
       authInProgress={authInProgress}
@@ -38,6 +47,8 @@ export const TopbarContainerComponent = props => {
       currentSearchParams={currentSearchParams}
       currentUser={currentUser}
       currentUserHasListings={currentUserHasListings}
+      currentUserListing={currentUserListing}
+      currentUserListingFetched={currentUserListingFetched}
       currentUserHasOrders={currentUserHasOrders}
       history={history}
       isAuthenticated={isAuthenticated}
@@ -45,11 +56,18 @@ export const TopbarContainerComponent = props => {
       location={location}
       notificationCount={notificationCount}
       onLogout={onLogout}
+      authStep={authStep}
+      redirectRoute={redirectRoute}
+      isDrawerOpen={isDrawerOpen}
+      onManageToggleDrawer={onManageToggleDrawer}
       onManageDisableScrolling={onManageDisableScrolling}
       onResendVerificationEmail={onResendVerificationEmail}
       sendVerificationEmailInProgress={sendVerificationEmailInProgress}
       sendVerificationEmailError={sendVerificationEmailError}
       showGenericError={hasGenericError}
+      isLandingPage={isLandingPage}
+      isHeaderSticky={isHeaderSticky}
+      pathname={pathname}
       {...rest}
     />
   );
@@ -62,6 +80,7 @@ TopbarContainerComponent.defaultProps = {
   currentUserHasOrders: null,
   notificationCount: 0,
   sendVerificationEmailError: null,
+  currentUserListing: null,
   authScopes: null,
 };
 
@@ -71,6 +90,8 @@ TopbarContainerComponent.propTypes = {
   currentSearchParams: object,
   currentUser: propTypes.currentUser,
   currentUserHasListings: bool.isRequired,
+  currentUserListingFetched: bool.isRequired,
+  currentUserListing: propTypes.ownListing,
   currentUserHasOrders: bool,
   isAuthenticated: bool.isRequired,
   authScopes: array,
@@ -90,12 +111,15 @@ TopbarContainerComponent.propTypes = {
 };
 
 const mapStateToProps = state => {
+  const { authStep, redirectRoute, isDrawerOpen } = state.ui;
   // Topbar needs isAuthenticated
   const { isAuthenticated, logoutError, authScopes } = state.auth;
   // Topbar needs user info.
   const {
     currentUser,
     currentUserHasListings,
+    currentUserListing,
+    currentUserListingFetched,
     currentUserHasOrders,
     currentUserNotificationCount: notificationCount,
     sendVerificationEmailInProgress,
@@ -103,9 +127,14 @@ const mapStateToProps = state => {
   } = state.user;
   const hasGenericError = !!(logoutError || hasCurrentUserErrors(state));
   return {
+    authStep,
+    redirectRoute,
+    isDrawerOpen,
     authInProgress: authenticationInProgress(state),
     currentUser,
     currentUserHasListings,
+    currentUserListing,
+    currentUserListingFetched,
     currentUserHasOrders,
     notificationCount,
     isAuthenticated,
@@ -118,6 +147,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   onLogout: historyPush => dispatch(logout(historyPush)),
+  onManageToggleDrawer: (isDrawerOpen, authStep) =>
+    dispatch(manageToggleDrawer(isDrawerOpen, authStep)),
   onManageDisableScrolling: (componentId, disableScrolling) =>
     dispatch(manageDisableScrolling(componentId, disableScrolling)),
   onResendVerificationEmail: () => dispatch(sendVerificationEmail()),
@@ -131,10 +162,7 @@ const mapDispatchToProps = dispatch => ({
 // See: https://github.com/ReactTraining/react-router/issues/4671
 const TopbarContainer = compose(
   withRouter,
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )
+  connect(mapStateToProps, mapDispatchToProps)
 )(TopbarContainerComponent);
 
 export default TopbarContainer;

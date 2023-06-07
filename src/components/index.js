@@ -98,9 +98,12 @@ export { default as FieldTextInput } from './FieldTextInput/FieldTextInput';
 export { default as FieldBoolean } from './FieldBoolean/FieldBoolean';
 export { default as FieldCheckboxGroup } from './FieldCheckboxGroup/FieldCheckboxGroup';
 export { default as FieldPhoneNumberInput } from './FieldPhoneNumberInput/FieldPhoneNumberInput';
-export { default as LocationAutocompleteInput, FieldLocationAutocompleteInput } from './LocationAutocompleteInput/LocationAutocompleteInput';
+export { default as LocationAutocompleteInput } from './LocationAutocompleteInput/LocationAutocompleteInput';
+// export { default as FieldLocationAutocompleteInput } from './FieldLocationAutocompleteInput/FieldLocationAutocompleteInput';
 // Fields and inputs using old naming pattern
 export { default as StripeBankAccountTokenInputField } from './StripeBankAccountTokenInputField/StripeBankAccountTokenInputField';
+export { default as TopbarMobileMenu } from './TopbarMobileMenu/TopbarMobileMenu';
+export { default as TopbarDesktop } from './TopbarDesktop/TopbarDesktop';
 
 // Tab navigation
 export { default as TabNav } from './TabNav/TabNav';
@@ -123,9 +126,15 @@ export { default as SavedCardDetails } from './SavedCardDetails/SavedCardDetails
 export { default as StripeConnectAccountStatusBox } from './StripeConnectAccountStatusBox/StripeConnectAccountStatusBox';
 export { default as StripePaymentAddress } from './StripePaymentAddress/StripePaymentAddress';
 export { default as UserCard } from './UserCard/UserCard';
+export { default as SearchFiltersPrimary } from './SearchFiltersPrimary/SearchFiltersPrimary';
+export { default as SearchFiltersSecondary } from './SearchFiltersSecondary/SearchFiltersSecondary';
+export { default as IconArrowUp } from './IconArrowUp/IconArrowUp';
+export { default as IconArrowDown } from './IconArrowDown/IconArrowDown';
 
 // Forms
 export { default as StripeConnectAccountForm } from './StripeConnectAccountForm/StripeConnectAccountForm';
+
+
 
 //////////////////////////////////////////////
 // Page sections and modal content wrappers //
@@ -135,3 +144,4 @@ export { default as LayoutComposer, LayoutSingleColumn, LayoutSideNavigation } f
 export { default as ModalMissingInformation } from './ModalMissingInformation/ModalMissingInformation';
 export { default as Footer } from './Footer/Footer';
 export { default as Topbar } from './Topbar/Topbar';
+

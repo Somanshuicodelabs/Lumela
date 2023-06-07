@@ -14,6 +14,7 @@ import SectionFeatures from './SectionFeatures';
 // - dark theme overrides
 // TODO: alternatively, we could consider more in-place way of theming components
 import css from './SectionBuilder.module.css';
+import Slider from 'react-slick';
 
 // These are shared classes.
 // Use these to have consistent styles between different section components
@@ -42,7 +43,7 @@ const defaultSectionComponents = {
 //////////////////////
 
 const SectionBuilder = props => {
-  const { sections, options } = props;
+  const { sections, options, isDrawerOpen, authStep, redirectRoute, onManageToggleDrawer } = props;
   const { sectionComponents = {}, isInsideContainer, ...otherOption } = options || {};
 
   // If there's no sections, we can't render the correct section component
@@ -57,9 +58,52 @@ const SectionBuilder = props => {
     return config?.component;
   };
 
+  const settings = {
+    dots: false,
+    infinite: true,
+    variableWidth: true,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 2,
+    arrows: true,
+    // nextArrow: <SampleNextArrow />,
+    // prevArrow: <SamplePrevArrow />,
+    responsive: [
+      {
+        breakpoint: 768,
+        settings: {
+          // arrows: true,
+          slidesToShow: 3,
+          slidesToScroll: 3,
+          variableWidth: true,
+        },
+      },
+      {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+          infinite: true,
+          initialSlide: 2,
+        },
+      },
+      {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 2,
+          arrows: true,
+          slidesToScroll: 1,
+          // nextArrow: <SampleNextArrow />,
+          // prevArrow: <SamplePrevArrow />,
+        },
+      },
+    ],
+  };
+
   return (
     <>
-      {sections.map((section, index) => {
+      {/* <Slider {...settings}>
+    {sections.map((section, index) => {
         const Section = getComponent(section.sectionType);
         // If the default "dark" theme should be applied (when text color is white).
         // By default, this information is stored to customAppearance field
@@ -74,6 +118,37 @@ const SectionBuilder = props => {
               defaultClasses={DEFAULT_CLASSES}
               isInsideContainer={isInsideContainer}
               options={otherOption}
+              {...section}
+            />
+          );
+        } else {
+          // If the section type is unknown, the app can't know what to render
+          console.warn(`Unknown section type (${section.sectionType}) detected.`);
+          return null;
+        }
+      })}
+    </Slider> */}
+      {sections.map((section, index) => {
+        const Section = getComponent(section.sectionType);
+        // If the default "dark" theme should be applied (when text color is white).
+        // By default, this information is stored to customAppearance field
+        const isDarkTheme = section?.appearance?.textColor === 'white';
+        const classes = classNames({
+          [css.darkTheme]: isDarkTheme,
+        });
+
+        if (Section) {
+          return (
+            <Section
+              key={`${section.sectionId}_${index}`}
+              className={classes}
+              defaultClasses={DEFAULT_CLASSES}
+              isInsideContainer={isInsideContainer}
+              options={otherOption}
+              isDrawerOpen={isDrawerOpen}
+              authStep={authStep}
+              redirectRoute={redirectRoute}
+              onManageToggleDrawer={onManageToggleDrawer}
               {...section}
             />
           );

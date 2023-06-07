@@ -18,7 +18,7 @@ import {
 // Import shared components
 import {
   Form,
-  FieldLocationAutocompleteInput,
+  // FieldLocationAutocompleteInput,
   Button,
   FieldCurrencyInput,
   FieldTextInput,

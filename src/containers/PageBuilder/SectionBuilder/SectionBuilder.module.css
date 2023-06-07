@@ -2,7 +2,7 @@
 
 /* Styles for custom sections: classes shared by <SectionColumns>, <SectionArticle>, <SectionFeatures>, <SectionCarousel> etc. */
 .sectionDetails {
-  max-width: var(--contentMaxWidthPages);
+  max-width: var(--contentMaxWidth);
   display: grid;
   justify-content: start;
   margin: 0 auto;
@@ -105,10 +105,12 @@
 }
 
 .blockContainer {
-  padding: 64px 32px 0 32px;
+  padding: 0;
 
   &:first-child {
-    padding: 0 32px;
+    @media (max-width: 1360px) {
+      padding: 0 16px;
+    }
   }
 }
 
@@ -124,7 +126,7 @@
 
 .title {
   composes: align;
-  max-width: 30ch;
+  /* max-width: 30ch; */
 }
 
 .description {
@@ -161,7 +163,7 @@
 .darkTheme h4,
 .darkTheme h5,
 .darkTheme h6 {
-  color: var(--colorWhite);
+  color: var(--matterColorLight);
 
   &::selection {
     background-color: cyan;
@@ -202,16 +204,20 @@
 }
 
 .darkTheme hr {
-  border-color: var(--colorGrey700);
+  border-color: var(--matterColor);
 }
 
 /* dark inline code */
 .darkTheme code {
-  background-color: var(--colorGrey700);
-  color: var(--colorGrey100);
+  background-color: var(--matterColor);
+  color: var(--matterColorNegative);
 }
 
 /* dark code block */
 .darkTheme pre {
-  background-color: var(--colorGrey700);
+  background-color: var(--matterColor);
+}
+
+.exploreSectionDetails {
+  border: solid green;
 }

@@ -1,0 +1,62 @@
+.accordion {
+  border: none;
+  border-radius: 0px;
+}
+
+.accordion__item {
+  margin-bottom: 15px;
+}
+
+.accordion__button {
+  position: relative;
+}
+
+.accordion__button[aria-expanded="true"]:before {
+  transform: rotate(45deg);
+}
+
+.accordion__button:before {
+  display: inline-block;
+  content: '';
+  height: 10px;
+  width: 10px;
+  margin-right: 0;
+  border-bottom: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+  transform: rotate(312deg);
+  position: absolute;
+  right: 20px;
+  top: 20px;
+}
+
+.accordion__button {
+  font-size: 18px;
+  background-color: #e4e4e4;
+}
+
+.accordion__panel {
+  padding: 10px 20px;
+}
+
+.accordion__panel>ul {
+  margin: 0;
+}
+
+.accordion__panel>ul>li {
+  margin: 0;
+}
+
+
+.accordion__panel>ul>li>a {
+  margin: 0;
+  font-size: 16px;
+  color: #484848;
+  padding: 10px 0;
+  display: inline-block;
+  text-decoration: none;
+  width: 100%;
+}
+
+.accordion__panel>ul>li>a:hover {
+  color: #EF7B58;
+}

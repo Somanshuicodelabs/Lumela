@@ -5,7 +5,6 @@ import classNames from 'classnames';
 
 import { intlShape, injectIntl } from '../../../util/reactIntl';
 import { isMainSearchTypeKeywords } from '../../../util/search';
-
 import { Form, LocationAutocompleteInput } from '../../../components';
 
 import IconSearchDesktop from './IconSearchDesktop';

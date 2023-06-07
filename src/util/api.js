@@ -71,6 +71,10 @@ const post = (path, body) => {
   });
 };
 
+export const onGetBlogsData = body => {
+  return post('/api/onGetBlogsData', body);
+}
+
 // Fetch transaction line items from the local API endpoint.
 //
 // See `server/api/transaction-line-items.js` to see what data should

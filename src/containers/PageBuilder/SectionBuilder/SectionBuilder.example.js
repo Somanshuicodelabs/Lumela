@@ -647,7 +647,7 @@ export const SectionColumns = {
         appearance: {
           fieldType: 'customAppearance',
           backgroundColor: hexBlack,
-          textColor: 'white',
+          textColor: 'light',
         },
         title: { fieldType: 'heading2', content: 'One Column, No Blocks' },
         description: {
@@ -657,7 +657,7 @@ export const SectionColumns = {
         callToAction: {
           fieldType: 'externalButtonLink',
           href: 'https://www.sharetribe.com/docs/',
-          content: 'Documentation',
+          content: 'Flex Docs',
         },
       },
       {
@@ -679,7 +679,7 @@ export const SectionColumns = {
         callToAction: {
           fieldType: 'externalButtonLink',
           href: 'https://www.sharetribe.com/docs/',
-          content: 'Documentation',
+          content: 'Flex Docs',
         },
       },
       {
@@ -759,7 +759,7 @@ export const SectionColumns = {
         appearance: {
           fieldType: 'customAppearance',
           backgroundColor: hexBlack,
-          textColor: 'white',
+          textColor: 'light',
         },
         title: { fieldType: 'heading2', content: '2 Columns, Dark' },
         description: {

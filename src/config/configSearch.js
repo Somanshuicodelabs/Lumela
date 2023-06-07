@@ -3,15 +3,14 @@
 // Note: some search experience is also on defaultMapsConfig        //
 // and defaultListingConfig.js is responsible public data filtering //
 //////////////////////////////////////////////////////////////////////
-
 // NOTE: if you want to change the structure of the data,
 // you should also check src/util/configHelpers.js
-// some validation is added there.
+// some validation is added there.`
 
 // Main search used in Topbar.
 // This can be either 'keywords' or 'location'.
 export const mainSearch = {
-  searchType: 'location',
+  searchType: 'Keywords',
 };
 
 /**
@@ -65,14 +64,13 @@ export const sortConfig = {
   conflictingFilters: [],
 
   options: [
-    { key: 'createdAt', label: 'Newest' },
-    { key: '-createdAt', label: 'Oldest' },
-    { key: '-price', label: 'Lowest price' },
-    { key: 'price', label: 'Highest price' },
+    { key: '', label: 'Most Relevant'},
+    { key: '', label: 'Deals available' },
+    { key: '', label: 'Top rated' },
 
     // The relevance is only used for keyword search, but the
     // parameter isn't sent to the Marketplace API. The key is purely
     // for handling the internal state of the sorting dropdown.
-    { key: 'relevance', label: 'Relevance', longLabel: 'Relevance (Keyword search)' },
+    // { key: 'relevance', label: 'Relevance', longLabel: 'Relevance (Keyword search)' },
   ],
 };

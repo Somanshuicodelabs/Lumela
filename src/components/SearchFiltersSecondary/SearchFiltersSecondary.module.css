@@ -1,0 +1,141 @@
+@import '../../styles/propertySets.css';
+
+.root {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.filtersWrapper {
+  padding-bottom: 10px;
+  @media (max-width: 767px) {
+    padding-bottom: 0px;
+  }
+  & > * {
+    padding-bottom: 15px;
+    @media (max-width: 767px) {
+      &:last-child {
+        padding-bottom: 0px;
+        border: none;
+      }
+    }
+  }
+}
+
+.footer {
+  display: flex;
+  @media (max-width: 767px) {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 12px 20px;
+    background: #fff;
+    box-shadow: 0px -0.4px 0px #c1c1c1;
+    z-index: 1;
+    justify-content: space-between;
+  }
+}
+
+.resetAllButton {
+  @apply --marketplaceLinkStyles;
+  @apply --marketplaceH5FontStyles;
+  font-weight: var(--fontWeightMedium);
+  color: var(--matterColorAnti);
+
+  /* Layout */
+  margin: 0 auto 0 0;
+
+  /* Override button styles */
+  outline: none;
+
+  &:focus,
+  &:hover {
+    color: var(--matterColor);
+  }
+
+  @media (max-width: 767px) {
+    background-color: #e3e3e3;
+    border-radius: 5px;
+    color: #868686;
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 16px;
+    margin: 0;
+    padding: 5px 16px;
+    text-transform: uppercase;
+    width: 50%;
+  }
+}
+
+.cancelButton {
+  font-weight: var(--fontWeightMedium);
+  color: var(--matterColorDark);
+  margin: 0;
+  padding: 6px 10px;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  margin-left: 24px;
+  background-color: var(--matterColorLight);
+  border-radius: 5px;
+  font-size: 0.938rem;
+
+  &:focus,
+  &:hover {
+    color: var(--matterColorLight);
+    background-color: var(--matterColorDark);
+    transition: width var(--transitionStyleButton);
+  }
+
+  @media (max-width: 767px) {
+    display: none;
+  }
+}
+
+.applyButton {
+  font-weight: var(--fontWeightMedium);
+  color: var(--matterColorLight);
+  margin: 0 0 0 19px;
+  padding: 6px 10px;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  background-color: var(--marketplacePrimaryColor);
+  border-radius: 5px;
+  font-size: 0.938rem;
+
+  &:focus,
+  &:hover {
+    color: var(--matterColorLight);
+    background-color: var(--marketplaceColor);
+    transition: width var(--transitionStyleButton);
+  }
+
+  @media (max-width: 767px) {
+    width: 50%;
+  }
+}
+
+.canDoFilter {
+  & .filtersWrapper {
+    padding-bottom: 0;
+    & > div {
+      padding-bottom: 0;
+      border-bottom: none;
+      & > div {
+        &:first-child {
+          display: none;
+        }
+        & fieldset {
+          & > ul {
+            & > li {
+              width: 100%;
+            }
+          }
+        }
+      }
+    }
+  }
+}

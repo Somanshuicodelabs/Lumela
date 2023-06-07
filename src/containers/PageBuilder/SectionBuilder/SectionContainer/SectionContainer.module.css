@@ -1,21 +1,28 @@
 @import '../../../../styles/customMediaQueries.css';
-
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;600;700;800;900&display=swap');
+@font-face {
+  font-family: 'MADE Sunflower';
+  src: url('../../../../assets/fonts/MADE\ Sunflower\ PERSONAL\ USE.otf') format('truetype');
+  font-weight: 700; /* Bold */
+  font-style: normal;
+}
 .root {
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
   width: 100%;
   position: relative;
-
-  &:nth-of-type(odd) {
+  background: #ffffff;
+  /* &:nth-of-type(odd) {
     background-color: #fafafa;
-  }
+  } */
 }
 
 .sectionContent {
   padding: 32px 0;
   position: relative;
-
+  max-width: var(--contentFixedWidth);
+  margin: auto;
   @media (--viewportMedium) {
     padding: 64px 0;
   }
@@ -27,4 +34,359 @@
   right: 0;
   bottom: 0;
   left: 0;
+}
+.landingHero {
+  background: conic-gradient(
+    from 180deg at 60% 60%,
+    #91d6d5 0deg,
+    rgba(255, 200, 107, 0.35) 360deg
+  );
+  padding-top: 150px;
+  display: initial;
+  align-items: center;
+  @media (--viewportMedium) {
+    display: initial;
+    background: conic-gradient(
+      from 180deg at 56% 50%,
+      #91d6d5 0deg,
+      rgba(255, 200, 107, 0.35) 360deg
+    );
+  }
+  @media (--viewportLarge) {
+    padding-top: 100px;
+  }
+
+  & .sectionContent {
+    order: 1;
+    width: 100%;
+    z-index: 1;
+    max-width: var(--contentFixedWidth);
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    left: 0;
+    right: 0;
+    top: -40px;
+    padding: 0;
+    position: relative;
+    @media (--viewportMedium) {
+      top: 0px;
+      position: absolute;
+      background-color: transparent;
+      height: 100%;
+    }
+  }
+}
+.exploreLumelaSection {
+  & .sectionContent {
+    width: 100%;
+    max-width: var(--contentFixedWidth);
+    margin: 0 auto;
+    & > header {
+      padding: 0 0 65px 0;
+
+      @media (max-width: 1360px) {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+      & > h1 {
+        text-align: left;
+        justify-content: flex-start;
+        justify-self: flex-start;
+        font-weight: var(--fontWeightBold);
+        font-size: 24px;
+        line-height: 29px;
+        text-transform: uppercase;
+        color: var(--matterColorDark);
+        margin: 0 0 6px 0;
+        max-width: 100%;
+      }
+      & > p {
+        text-align: left;
+        justify-content: flex-start;
+        font-weight: var(--fontWeightRegular);
+        font-size: 20px;
+        line-height: 24px;
+        color: var(--matterColorDark);
+        margin: 0;
+        max-width: 100%;
+      }
+    }
+  }
+}
+.fixedWidthContainer {
+  width: 100%;
+  max-width: var(--contentFixedWidth);
+  margin: 0 auto;
+  display: flex;
+}
+.heardAboutSection {
+  display: flex;
+  align-items: center;
+  position: relative;
+  background: linear-gradient(180deg, #eab863 0%, #e9b660 51.33%, #e3ac4c 100%);
+  @media (min-width: 1340px) {
+    background: transparent;
+  }
+  &::before {
+    content: '';
+    position: absolute;
+    right: 0;
+    width: 90%;
+    height: calc(100% - 25px);
+    top: 0px;
+    left: 0;
+    background: linear-gradient(180deg, #eab863 0%, #e9b660 51.33%, #e3ac4c 100%);
+    display: none;
+    @media (min-width: 1340px) {
+      display: block;
+    }
+  }
+  &::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    width: 90%;
+    height: 100%;
+    top: 25px;
+    right: 0;
+    background: rgba(234, 184, 99, 0.12);
+    display: none;
+    @media (min-width: 1340px) {
+      display: block;
+    }
+  }
+  & .fixedWidthContainer {
+    width: 100%;
+    max-width: var(--contentFixedWidth);
+    margin: 0 auto;
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+
+    & > div {
+      width: 100%;
+      @media (--viewportMedium) {
+        width: 50%;
+      }
+      &:first-child {
+        margin-left: auto;
+        order: 2;
+        position: absolute;
+        width: 100%;
+        max-width: 692px;
+        @media (max-width: 767px) {
+          right: -210px;
+        }
+        @media (--viewportMedium) {
+          position: relative;
+        }
+        & > img {
+          @media (min-width: 1340px) {
+            height: calc(100% - 25px);
+          }
+        }
+      }
+    }
+    & .sectionContent {
+      order: 1;
+      width: 100%;
+      position: absolute;
+      z-index: 1;
+      @media (max-width: 767px) {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        flex-direction: column;
+        top: 0;
+        left: 0;
+        position: relative;
+        padding: 50px 0;
+      }
+      @media (--viewportMedium) {
+        width: 50%;
+        position: relative;
+      }
+    }
+  }
+}
+.joinLumelaSection {
+  padding: 33px 0 0;
+  overflow: hidden;
+  @media (--viewportMedium) {
+    padding: 60px 0;
+  }
+  & .fixedWidthContainer {
+    position: relative;
+    background-color: var(--matterOrangeColor);
+    overflow: hidden;
+    @media (--viewportMedium) {
+      min-height: 415px;
+    }
+    &::after {
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      content: '';
+      background-image: url('../../../../assets/join-image-pattern.png');
+      background-repeat: no-repeat;
+      background-size: 100%;
+      max-width: 394px;
+      display: inline-block;
+      height: 64px;
+      width: 100%;
+      z-index: 0;
+      display: none;
+      @media (--viewportMedium) {
+        display: block;
+      }
+      @media (min-width: 1000px) {
+        max-width: 494px;
+        height: 80px;
+      }
+    }
+    & > div {
+      width: 100%;
+      order: 2;
+      &:first-child {
+        position: absolute;
+        width: 50%;
+        bottom: 0;
+        right: 0;
+        align-self: flex-end;
+        margin-left: auto;
+        align-items: flex-end;
+        display: none;
+        @media (--viewportMedium) {
+          display: flex;
+        }
+
+        & > img {
+          object-fit: contain;
+          height: auto;
+          max-width: 100%;
+        }
+      }
+    }
+    & .sectionContent {
+      order: 1;
+      padding: 50px 24px 0;
+      margin: 0;
+      margin-right: auto;
+      margin-left: 0;
+      @media (--viewportMedium) {
+        padding: 50px 34px 80px;
+        width: 75%;
+      }
+      & > header {
+        display: block;
+        text-align: left;
+        padding: 0;
+        & > h2 {
+          font-weight: var(--fontWeightBold);
+          font-size: 25px;
+          line-height: 100%;
+          color: var(--matterColorLight);
+          margin: 0px 0 20px 0;
+          text-align: left;
+          @media (min-width: 1000px) {
+            font-size: 30px;
+            margin: 0px 0 20px 0;
+          }
+          @media (min-width: 1200px) {
+            font-size: 36px;
+            margin: 0px 0 24px 0;
+          }
+        }
+        & > p {
+          margin: 0 0 25px 0;
+          font-weight: var(--fontWeightSemiBold);
+          font-size: 18px;
+          line-height: 100%;
+          text-align: left;
+          color: var(--matterColorLight);
+
+          @media (min-width: 1000px) {
+            margin: 0 0 30px 0;
+            font-size: 20px;
+          }
+          @media (min-width: 1200px) {
+            margin: 0 0 35px 0;
+            font-size: 25px;
+          }
+        }
+      }
+      & > div {
+        margin: 0;
+        width: 100%;
+        @media (--viewportMedium) {
+          max-width: 60%;
+        }
+        & p {
+          margin: 0;
+          font-weight: var(--fontWeightRegular);
+          font-size: 16px;
+          line-height: 140%;
+          text-align: left;
+          color: var(--matterColorLight);
+          @media (min-width: 1000px) {
+            font-size: 18px;
+          }
+          @media (min-width: 1200px) {
+            font-size: 20px;
+          }
+        }
+        & a {
+          background-color: var(--matterColorLight);
+          color: var(--matterColorDark);
+          font-weight: var(--fontWeightExtraBold);
+          text-transform: uppercase;
+          box-shadow: none;
+          transition: var(--transitionStyle);
+          margin-top: 34px;
+          &:hover {
+            transition: var(--transitionStyle);
+            background-color: var(--marketplaceColor);
+            color: var(--matterColorLight);
+          }
+        }
+      }
+    }
+  }
+}
+.businessSection {
+  width: 100%;
+  padding: 0 16px;
+  @media (max-width: 767px) {
+    padding: 0px;
+  }
+  & .sectionContent {
+    padding-bottom: 0;
+    & > header {
+      display: block;
+      padding: 0;
+      & > h2 {
+        font-weight: var(--fontWeightBold);
+        font-size: 20px;
+        line-height: 100%;
+        text-transform: uppercase;
+        color: var(--matterColorDark);
+        margin: 0 0 20px 0;
+        text-align: left;
+        @media (max-width: 767px) {
+          padding: 0 16px;
+        }
+        @media (--viewportMedium) {
+          font-size: 26px;
+          margin: 0 0 25px 0;
+        }
+        @media (--viewportLarge) {
+          font-size: 36px;
+          margin: 0 0 32px 0;
+        }
+      }
+    }
+  }
 }

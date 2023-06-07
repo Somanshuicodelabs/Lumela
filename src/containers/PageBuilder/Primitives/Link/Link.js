@@ -3,7 +3,7 @@ import { node, string } from 'prop-types';
 import classNames from 'classnames';
 import { useLocation } from 'react-router-dom';
 
-import { useRouteConfiguration } from '../../../../context/routeConfigurationContext.js';
+import routeConfiguration from '../../../../routing/routeConfiguration';
 import { matchPathname } from '../../../../util/routes.js';
 
 import { NamedLink, ExternalLink } from '../../../../components/index.js';
@@ -11,8 +11,6 @@ import css from './Link.module.css';
 
 export const Link = React.forwardRef((props, ref) => {
   const location = useLocation();
-  const routes = useRouteConfiguration();
-
   const { className, rootClassName, href, title, children } = props;
   const classes = classNames(rootClassName || css.link, className);
   const titleMaybe = title ? { title } : {};
@@ -26,7 +24,7 @@ export const Link = React.forwardRef((props, ref) => {
   if (href.charAt(0) === '/') {
     // Internal link
     const testURL = new URL('http://my.marketplace.com' + href);
-    const matchedRoutes = matchPathname(testURL.pathname, routes);
+    const matchedRoutes = matchPathname(testURL.pathname, routeConfiguration());
     if (matchedRoutes.length > 0) {
       const found = matchedRoutes[0];
       const to = { search: testURL.search, hash: testURL.hash };
@@ -43,7 +41,7 @@ export const Link = React.forwardRef((props, ref) => {
         `http://my.marketplace.com${location.pathname}${location.hash}${location.search}`
       );
       testURL.hash = hash;
-      const matchedRoutes = matchPathname(testURL.pathname, routes);
+      const matchedRoutes = matchPathname(testURL.pathname, routeConfiguration());
       if (matchedRoutes.length > 0) {
         const found = matchedRoutes[0];
         const to = { search: testURL.search, hash: testURL.hash };

@@ -1,0 +1,256 @@
+@import '../../../styles/propertySets.css';
+
+.mobileInputRoot {
+  width: 100%;
+}
+
+.desktopInputRoot {
+}
+
+.mobileIcon {
+  margin-left: 24px;
+  padding: 11px 0 17px 0;
+
+  /* Borders */
+  border-bottom-width: var(--borderRadiusMobileSearch);
+
+  display: flex;
+  width: 24px;
+  align-self: stretch;
+  background-color: var(--matterColorLight);
+}
+
+.mobileInput {
+  flex-grow: 1;
+
+  /* Font */
+  @apply --marketplaceH1FontStyles;
+
+  /* Layout */
+  margin: 0 24px 0 0;
+  padding: 4px 13px 10px 13px;
+  line-height: unset;
+
+  /* Borders */
+  border-bottom-width: var(--borderRadiusMobileSearch);
+
+  /* Safari bugfix: without this Safari will print placeholder to a wrong place */
+  &::-webkit-input-placeholder {
+    line-height: normal;
+  }
+
+  &:hover,
+  &:focus {
+    border-bottom-color: var(--marketplaceColor);
+    outline: none;
+  }
+}
+
+.desktopIcon {
+  border: none;
+  padding-top: 3px;
+
+  display: flex;
+  width: 24px;
+  align-self: stretch;
+  background-color: var(--matterColorLight);
+}
+
+.desktopInput {
+  flex-grow: 1;
+  /* Font */
+  @apply --marketplaceH4FontStyles;
+  line-height: unset;
+  border: none;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 10px;
+
+  /* Search text gets ellipsis if it's too wide */
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+
+  &:hover,
+  &:focus {
+    border-bottom-color: var(--marketplaceColor);
+    outline: none;
+  }
+
+  &:hover::placeholder,
+  &:focus::placeholder {
+    color: var(--matterColor);
+  }
+
+  /* Placeholder text might be too wide */
+  &::placeholder {
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+    font-weight: var(--fontWeightMedium);
+    transition: var(--transitionStyleButton);
+  }
+
+  margin-top: 0;
+  margin-bottom: 0;
+  @media (--viewportMedium) {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-weight: var(--fontWeightSemiBold);
+  }
+}
+
+.mobilePredictions {
+  position: absolute;
+  top: calc(var(--TopbarSearchForm_inputHeight) - var(--TopbarSearchForm_bottomBorder));
+  left: 0;
+  min-height: calc(
+    100vh -
+      calc(
+        var(--TopbarSearchForm_topbarMargin) + var(--TopbarSearchForm_inputHeight) -
+          var(--TopbarSearchForm_bottomBorder)
+      )
+  );
+  width: 100%;
+  padding-bottom: var(--locationAutocompleteBottomPadding);
+  background-color: var(--marketplaceColor);
+  border-bottom-left-radius: var(--borderRadius);
+  border-bottom-right-radius: var(--borderRadius);
+  box-shadow: var(--boxShadowPopup);
+  z-index: calc(var(--zIndexPopup) + 1);
+}
+
+.mobilePredictionsAttribution {
+  /* When using the Google Maps Places geocoder, the "Powered by Google"
+   text is hidden in Mobile Safari without giving some extra space to
+   it. */
+  margin-bottom: 100px;
+}
+
+.desktopPredictions {
+  position: absolute;
+  width: 100%;
+  padding-bottom: var(--locationAutocompleteBottomPadding);
+  top: 50px;
+  left: 0;
+  background-color: var(--matterColorLight);
+  border-bottom-left-radius: var(--borderRadius);
+  border-bottom-right-radius: var(--borderRadius);
+  box-shadow: var(--boxShadowPopup);
+  z-index: calc(var(--zIndexPopup) + 1);
+
+  margin-top: calc(
+    var(--topbarHeightDesktop) - var(--TopbarSearchForm_inputHeight) +
+      var(--TopbarSearchForm_bottomBorder)
+  );
+  max-width: 434px;
+}
+.landingSearchForm {
+  @media (max-width: 767px) {
+    display: none;
+  }
+  & .desktopInputRoot {
+    transition: var(--transitionStyle);
+    background-color: var(--matterColorLight);
+    border-radius: 3.39278px;
+    padding: 14px 10px;
+    height: 50px;
+    &:hover {
+      transition: var(--transitionStyle);
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    }
+    & .desktopIcon {
+      align-items: center;
+      justify-content: center;
+      border-radius: 3.39278px;
+      margin-right: 8px;
+    }
+    & .desktopInput {
+      background-color: var(--matterColorLight);
+      border-radius: 3.39278px;
+      color: var(--inputColor);
+      font-weight: 400;
+      font-size: 16px;
+      padding: 0;
+      line-height: 24px;
+      transition: var(--transitionStyle);
+      flex-grow: 1;
+      @media (--viewportSmall) {
+        flex-grow: 0.5;
+      }
+
+      @media (--viewportLarge) {
+        font-size: 18.0948px;
+      }
+      &::placeholder {
+        opacity: 1;
+        color: var(--inputColor);
+        font-size: 15px;
+        line-height: 24px;
+        font-weight: 400;
+      }
+    }
+  }
+  & .desktopPredictions {
+    top: calc(100% + 5px);
+    margin-top: 0;
+    & > ul {
+      & > li {
+        font-size: 16px;
+        line-height: 20px;
+        @media (--viewportMedium) {
+          font-size: 14px;
+          line-height: 20px;
+        }
+      }
+    }
+  }
+}
+.searchFiltersForm {
+  background-color: transparent;
+  position: relative;
+  &::after {
+    content: ' ';
+    border-right: 2px solid black;
+    border-top: 2px solid black;
+    transform: translateY(-50%) rotate(135deg);
+    position: absolute;
+    right: 12px;
+    top: 41%;
+    height: 10px;
+    width: 10px;
+  }
+  & .desktopInputRoot {
+    display: flex;
+    align-items: center;
+    & .desktopIcon {
+      background-color: transparent;
+      align-items: center;
+      justify-content: center;
+      border-radius: 3.39278px;
+      margin-right: 8px;
+      padding: 0;
+      & path {
+        fill: var(--blogSmallTitleColor);
+      }
+    }
+    & input {
+      background-color: transparent;
+      padding: 0;
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 24px;
+      padding-right: 30px;
+      height: auto;
+      min-height: auto;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      &::placeholder {
+        font-weight: 400;
+        font-size: 17px;
+        line-height: 24px;
+      }
+    }
+  }
+  & .desktopPredictions {
+    top: 20px;
+  }
+}

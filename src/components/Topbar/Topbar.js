@@ -1,36 +1,49 @@
-import React, { Component } from 'react';
-import { array, arrayOf, bool, func, number, object, shape, string } from 'prop-types';
+import React, { useState, Component } from 'react';
+import { array, bool, func, number, shape, string } from 'prop-types';
+import { compose } from 'redux';
+import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
 import pickBy from 'lodash/pickBy';
 import classNames from 'classnames';
-
-import appSettings from '../../config/settings';
-import { useConfiguration } from '../../context/configurationContext';
-import { useRouteConfiguration } from '../../context/routeConfigurationContext';
-
-import { FormattedMessage, intlShape, useIntl } from '../../util/reactIntl';
-import { isMainSearchTypeKeywords, isOriginInUse } from '../../util/search';
-import { withViewport } from '../../util/uiHelpers';
+// import config from '../../config';
+import routeConfiguration from '../../routing/routeConfiguration';
+import { withViewport } from '../../util/contextHelpers';
 import { parse, stringify } from '../../util/urlHelpers';
 import { createResourceLocatorString, pathByRouteName } from '../../util/routes';
 import { propTypes } from '../../util/types';
 import {
   Button,
   LimitedAccessBanner,
-  LinkedLogo,
+  Logo,
   Modal,
   ModalMissingInformation,
   NamedLink,
+  TopbarDesktop,
+  TopbarMobileMenu,
+  Menu,
+  MenuLabel,
+  MenuContent,
+  MenuItem,
 } from '../../components';
 
-import MenuIcon from './MenuIcon';
-import SearchIcon from './SearchIcon';
-import TopbarSearchForm from './TopbarSearchForm/TopbarSearchForm';
-import TopbarMobileMenu from './TopbarMobileMenu/TopbarMobileMenu';
-import TopbarDesktop from './TopbarDesktop/TopbarDesktop';
+import TopbarSearchForm from '../../containers/SearchPage/TopbarSearchForm/TopbarSearchForm';
+import AuthenticationPage from '../../containers/AuthenticationPage/AuthenticationPage';
+
+// import MenuIcon from './MenuIcon';
+// import IconBag from '../IconBag/IconBag';
+// import IconBin from '../IconBin/IconBin';
+// import IconCollection from '../IconCollection/IconCollection';
+
+import cartImg from '../../assets/businessImg2.png';
+
+// import SearchIcon from './SearchIcon';
+// import IconUser from '../IconUser/IconUser';
+// import IconChat from '../IconChat/IconChat';
+// import IconMessage from '../IconMessage/IconMessage';
+// import IconNotification from '../IconNotification/IconNotification';
 
 import css from './Topbar.module.css';
 
-const MAX_MOBILE_SCREEN_WIDTH = 768;
+const MAX_MOBILE_SCREEN_WIDTH = 992;
 
 const redirectToURLWithModalState = (props, modalStateParam) => {
   const { history, location } = props;
@@ -70,9 +83,22 @@ GenericError.propTypes = {
   show: bool.isRequired,
 };
 
+const withConfiguration = (WrappedComponent) => {
+  return class extends React.Component {
+    render() {
+      const config = useConfiguration();
+
+      return <WrappedComponent config={config} {...this.props} />;
+    }
+  };
+};
+
 class TopbarComponent extends Component {
   constructor(props) {
     super(props);
+    this.state = { modalIsOpen: false };
+    this.isMobileAccountOpen = this.isMobileAccountOpen.bind(this);
+    this.handleMobileAccountClose = this.handleMobileAccountClose.bind(this);
     this.handleMobileMenuOpen = this.handleMobileMenuOpen.bind(this);
     this.handleMobileMenuClose = this.handleMobileMenuClose.bind(this);
     this.handleMobileSearchOpen = this.handleMobileSearchOpen.bind(this);
@@ -89,6 +115,14 @@ class TopbarComponent extends Component {
     redirectToURLWithoutModalState(this.props, 'mobilemenu');
   }
 
+  isMobileAccountOpen() {
+    this.setState({ modalIsOpen: !this.state.modalIsOpen });
+  }
+
+  handleMobileAccountClose() {
+    redirectToURLWithoutModalState(this.props, 'mobileAccount');
+  }
+
   handleMobileSearchOpen() {
     redirectToURLWithModalState(this.props, 'mobilesearch');
   }
@@ -99,38 +133,27 @@ class TopbarComponent extends Component {
 
   handleSubmit(values) {
     const { currentSearchParams } = this.props;
-    const { history, config, routeConfiguration } = this.props;
-
-    const topbarSearchParams = () => {
-      if (isMainSearchTypeKeywords(config)) {
-        return { keywords: values?.keywords };
-      }
-      // topbar search defaults to 'location' search
-      const { search, selectedPlace } = values?.location;
-      const { origin, bounds } = selectedPlace;
-      const originMaybe = isOriginInUse(config) ? { origin } : {};
-
-      return {
-        ...originMaybe,
-        address: search,
-        bounds,
-      };
-    };
+    const { search, selectedPlace } = values.location;
+    const { history } = this.props;
+    const { origin, bounds } = selectedPlace;
+    const originMaybe = config.sortSearchByDistance ? { origin } : {};
     const searchParams = {
       ...currentSearchParams,
-      ...topbarSearchParams(),
+      ...originMaybe,
+      address: search,
+      bounds,
     };
-    history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, searchParams));
+    history.push(createResourceLocatorString('SearchPage', routeConfiguration(), {}, searchParams));
   }
 
   handleLogout() {
-    const { onLogout, history, routeConfiguration } = this.props;
+    const { onLogout, history } = this.props;
     onLogout().then(() => {
-      const path = pathByRouteName('LandingPage', routeConfiguration);
+      const path = pathByRouteName('LandingPage', routeConfiguration());
 
       // In production we ensure that data is really lost,
       // but in development mode we use stored values for debugging
-      if (appSettings.dev) {
+      if (config.dev) {
         history.push(path);
       } else if (typeof window !== 'undefined') {
         window.location = path;
@@ -152,21 +175,29 @@ class TopbarComponent extends Component {
       authInProgress,
       currentUser,
       currentUserHasListings,
-      currentUserHasOrders,
+      currentUserListing,
+      currentUserListingFetched,
       currentPage,
       notificationCount,
       viewport,
       intl,
       location,
-      onManageDisableScrolling,
-      onResendVerificationEmail,
-      sendVerificationEmailInProgress,
-      sendVerificationEmailError,
+      authStep,
+      redirectRoute,
+      isDrawerOpen,
       showGenericError,
-      config,
+      onManageToggleDrawer,
+      onManageDisableScrolling,
+      isLandingPage,
+      isHeaderSticky,
+      pathname,
+      // currentUserHasOrders,
+      // onResendVerificationEmail,
+      // sendVerificationEmailInProgress,
+      // sendVerificationEmailError,
     } = this.props;
 
-    const { mobilemenu, mobilesearch, keywords, address, origin, bounds } = parse(location.search, {
+    const { mobilemenu, mobilesearch, address, origin, bounds } = parse(location.search, {
       latlng: ['origin'],
       latlngBounds: ['bounds'],
     });
@@ -179,37 +210,259 @@ class TopbarComponent extends Component {
 
     const mobileMenu = (
       <TopbarMobileMenu
+        onManageDisableScrolling={onManageDisableScrolling}
+        onClose={this.handleMobileMenuClose}
         isAuthenticated={isAuthenticated}
         currentUserHasListings={currentUserHasListings}
+        currentUserListing={currentUserListing}
+        currentUserListingFetched={currentUserListingFetched}
         currentUser={currentUser}
         onLogout={this.handleLogout}
         notificationCount={notificationCount}
         currentPage={currentPage}
+        authStep={authStep}
+        redirectRoute={redirectRoute}
+        isDrawerOpen={isDrawerOpen}
+        onManageToggleDrawer={onManageToggleDrawer}
       />
     );
 
-    const topbarSearcInitialValues = () => {
-      if (isMainSearchTypeKeywords(config)) {
-        return { keywords };
-      }
-
-      // Only render current search if full place object is available in the URL params
-      const locationFieldsPresent = isOriginInUse(config)
-        ? address && origin && bounds
-        : address && bounds;
-      return {
-        location: locationFieldsPresent
-          ? {
-              search: address,
-              selectedPlace: { address, origin, bounds },
-            }
-          : null,
-      };
+    // Only render current search if full place object is available in the URL params
+    const locationFieldsPresent = config.sortSearchByDistance
+      ? address && origin && bounds
+      : address && bounds;
+    const initialSearchFormValues = {
+      location: locationFieldsPresent
+        ? {
+            search: address,
+            selectedPlace: { address, origin, bounds },
+          }
+        : null,
     };
-    const initialSearchFormValues = topbarSearcInitialValues();
 
-    const classes = classNames(rootClassName || css.root, className);
-
+    const classes = classNames(
+      rootClassName || css.root,
+      className,
+      isLandingPage ? css.landingPageHeader : null,
+      isHeaderSticky
+    );
+    const cart = (
+      <Menu className={css.menuDropdown}>
+        <MenuLabel className={css.profileMenuLabel} isOpenClassName={css.profileMenuIsOpen}>
+          <IconBag />
+        </MenuLabel>
+        <MenuContent className={css.cartMenuContent}>
+          <MenuItem key="cart">
+            <div className={css.currentUserDetails}>
+              <h2>Cart (2) </h2>
+            </div>
+          </MenuItem>
+          <MenuItem key="Profile">
+            <NamedLink className={css.dropdownLink} name="ProfileSettingsPage">
+              <div className={css.cartItem}>
+                <div className={css.cartItemImg}>
+                  <img src={cartImg} alt="cart image" />
+                </div>
+                <div className={css.cartItemInfo}>
+                  <div className={css.serviceDetails}>
+                    <div className={css.serviceTime}>
+                      <h2>Haircut - Women</h2>
+                      <p>
+                        <span className={css.time}>45 m</span>{' '}
+                        <span className={css.date}>7.30 pm,Mon 30 July </span>
+                      </p>
+                    </div>
+                    <div className={css.servicePrice}>$50</div>
+                  </div>
+                  <div className={css.serviceAddress}>
+                    <div className={css.serviceAddressLeft}>
+                      <h2>Strands Salon</h2>
+                      <p>
+                        <span className={css.time}>102,Example Street,New Delhi</span>
+                      </p>
+                    </div>
+                    <div className={css.serviceAddressRight}>
+                      <IconBin />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </NamedLink>
+          </MenuItem>
+          <MenuItem key="profile2">
+            <NamedLink className={css.dropdownLink} name="ProfileSettingsPage">
+              <div className={css.cartItem}>
+                <div className={css.cartItemImg}>
+                  <img src={cartImg} alt="cart image" />
+                </div>
+                <div className={css.cartItemInfo}>
+                  <div className={css.serviceDetails}>
+                    <div className={css.serviceTime}>
+                      <h2>Haircut - Women</h2>
+                      <p>
+                        <span className={css.time}>45 m</span>{' '}
+                        <span className={css.date}>7.30 pm,Mon 30 July </span>
+                      </p>
+                    </div>
+                    <div className={css.servicePrice}>$50</div>
+                  </div>
+                  <div className={css.serviceAddress}>
+                    <div className={css.serviceAddressLeft}>
+                      <h2>Strands Salon</h2>
+                      <p>
+                        <span className={css.time}>102,Example Street,New Delhi</span>
+                      </p>
+                    </div>
+                    <div className={css.serviceAddressRight}>
+                      <IconBin />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </NamedLink>
+          </MenuItem>
+          <MenuItem key="profile3">
+            <NamedLink className={css.dropdownLink} name="ProfileSettingsPage">
+              <div className={css.cartItem}>
+                <div className={css.cartItemImg}>
+                  <img src={cartImg} alt="cart image" />
+                </div>
+                <div className={css.cartItemInfo}>
+                  <div className={css.serviceDetails}>
+                    <div className={css.serviceTime}>
+                      <h2>Haircut - Women</h2>
+                      <p>
+                        <span className={css.time}>45 m</span>{' '}
+                        <span className={css.date}>7.30 pm,Mon 30 July </span>
+                      </p>
+                    </div>
+                    <div className={css.servicePrice}>$50</div>
+                  </div>
+                  <div className={css.serviceAddress}>
+                    <div className={css.serviceAddressLeft}>
+                      <h2>Strands Salon</h2>
+                      <p>
+                        <span className={css.time}>102,Example Street,New Delhi</span>
+                      </p>
+                    </div>
+                    <div className={css.serviceAddressRight}>
+                      <IconBin />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </NamedLink>
+          </MenuItem>
+          <MenuItem key="profile4">
+            <NamedLink className={css.dropdownLink} name="ProfileSettingsPage">
+              <div className={css.cartItem}>
+                <div className={css.cartItemImg}>
+                  <img src={cartImg} alt="cart image" />
+                </div>
+                <div className={css.cartItemInfo}>
+                  <div className={css.serviceDetails}>
+                    <div className={css.serviceTime}>
+                      <h2>Haircut - Women</h2>
+                      <p>
+                        <span className={css.time}>45 m</span>{' '}
+                        <span className={css.date}>7.30 pm,Mon 30 July </span>
+                      </p>
+                    </div>
+                    <div className={css.servicePrice}>$50</div>
+                  </div>
+                  <div className={css.serviceAddress}>
+                    <div className={css.serviceAddressLeft}>
+                      <h2>Strands Salon</h2>
+                      <p>
+                        <span className={css.time}>102,Example Street,New Delhi</span>
+                      </p>
+                    </div>
+                    <div className={css.serviceAddressRight}>
+                      <IconBin />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </NamedLink>
+          </MenuItem>
+          <MenuItem key="profile5">
+            <NamedLink className={css.dropdownLink} name="ProfileSettingsPage">
+              <div className={css.cartItem}>
+                <div className={css.cartItemImg}>
+                  <img src={cartImg} alt="cart image" />
+                </div>
+                <div className={css.cartItemInfo}>
+                  <div className={css.serviceDetails}>
+                    <div className={css.serviceTime}>
+                      <h2>Haircut - Women</h2>
+                      <p>
+                        <span className={css.time}>45 m</span>{' '}
+                        <span className={css.date}>7.30 pm,Mon 30 July </span>
+                      </p>
+                    </div>
+                    <div className={css.servicePrice}>$50</div>
+                  </div>
+                  <div className={css.serviceAddress}>
+                    <div className={css.serviceAddressLeft}>
+                      <h2>Strands Salon</h2>
+                      <p>
+                        <span className={css.time}>102,Example Street,New Delhi</span>
+                      </p>
+                    </div>
+                    <div className={css.serviceAddressRight}>
+                      <IconBin />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </NamedLink>
+          </MenuItem>
+          <MenuItem key="profile6">
+            <NamedLink className={css.dropdownLink} name="ProfileSettingsPage">
+              <div className={css.cartItem}>
+                <div className={css.cartItemImg}>
+                  <img src={cartImg} alt="cart image" />
+                </div>
+                <div className={css.cartItemInfo}>
+                  <div className={css.serviceDetails}>
+                    <div className={css.serviceTime}>
+                      <h2>Haircut - Women</h2>
+                      <p>
+                        <span className={css.time}>45 m</span>{' '}
+                        <span className={css.date}>7.30 pm,Mon 30 July </span>
+                      </p>
+                    </div>
+                    <div className={css.servicePrice}>$50</div>
+                  </div>
+                  <div className={css.serviceAddress}>
+                    <div className={css.serviceAddressLeft}>
+                      <h2>Strands Salon</h2>
+                      <p>
+                        <span className={css.time}>102,Example Street,New Delhi</span>
+                      </p>
+                    </div>
+                    <div className={css.serviceAddressRight}>
+                      <IconBin />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </NamedLink>
+          </MenuItem>
+          <MenuItem key="profile7">
+            <div className={css.totalPay}>
+              <div className={css.leftSec}>
+                <h2>Total Pay</h2>
+                <h2>$180</h2>
+              </div>
+              <div className={css.rightSec}>
+                <button className={css.blueBtn}>Proceed</button>
+              </div>
+            </div>
+          </MenuItem>
+        </MenuContent>
+      </Menu>
+    );
     return (
       <div className={classes}>
         <LimitedAccessBanner
@@ -220,27 +473,52 @@ class TopbarComponent extends Component {
           currentPage={currentPage}
         />
         <div className={classNames(mobileRootClassName || css.container, mobileClassName)}>
-          <Button
-            rootClassName={css.menu}
-            onClick={this.handleMobileMenuOpen}
-            title={intl.formatMessage({ id: 'Topbar.menuIcon' })}
-          >
-            <MenuIcon className={css.menuIcon} />
-            {notificationDot}
-          </Button>
-          <LinkedLogo format={'mobile'} alt={intl.formatMessage({ id: 'Topbar.logoIcon' })} />
-          <Button
-            rootClassName={css.searchMenu}
-            onClick={this.handleMobileSearchOpen}
-            title={intl.formatMessage({ id: 'Topbar.searchIcon' })}
-          >
-            <SearchIcon className={css.searchMenuIcon} />
-          </Button>
+          {/* <div className={css.mobileLogoDiv}>
+              <NamedLink
+                className={css.home}
+                name="BusinessLandingPage"
+                title={intl.formatMessage({ id: 'Topbar.logoIcon' })}
+              >
+                <span className={css.logoLink} name="BusinessLandingPage">
+                <IconCollection name="TOPBAR_LOGO"/>
+                </span>
+              </NamedLink>
+            </div> */}
+
+          <div className={css.mobileMenuContent}>
+            <Button
+              rootClassName={css.menu}
+              onClick={this.handleMobileMenuOpen}
+              title={intl.formatMessage({ id: 'Topbar.menuIcon' })}
+            >
+              <MenuIcon className={css.menuIcon} />
+              {notificationDot}
+            </Button>
+            <NamedLink name="LoginPage" className={css.logoMobileLink}>
+              <IconCollection name="MOBILE_NAV_LOGO" />
+            </NamedLink>
+            <div className={css.searchBoxWrapper}>
+              <div className={css.searchforAny}>
+                <IconCollection name="MOBILE_NAV_SEARCH" />
+                {/* <input type="text" placeholder="Search" /> */}
+              </div>
+            </div>
+            {isAuthenticated ? (
+              <div className={css.rightMenuLinks} onClick={this.isMobileAccountOpen}>
+                <IconCollection name="MOBILE_NAV_PROFILE" />
+              </div>
+            ) : null}
+          </div>
         </div>
         <div className={css.desktop}>
           <TopbarDesktop
+            onManageDisableScrolling={onManageDisableScrolling}
+            isOpen={this.state.modalIsOpen}
+            onClose={this.isMobileAccountOpen}
             className={desktopClassName}
             currentUserHasListings={currentUserHasListings}
+            currentUserListing={currentUserListing}
+            currentUserListingFetched={currentUserListingFetched}
             currentUser={currentUser}
             currentPage={currentPage}
             initialSearchFormValues={initialSearchFormValues}
@@ -249,7 +527,11 @@ class TopbarComponent extends Component {
             notificationCount={notificationCount}
             onLogout={this.handleLogout}
             onSearchSubmit={this.handleSubmit}
-            appConfig={config}
+            authStep={authStep}
+            redirectRoute={redirectRoute}
+            isDrawerOpen={isDrawerOpen}
+            onManageToggleDrawer={onManageToggleDrawer}
+            pathname={pathname}
           />
         </div>
         <Modal
@@ -258,6 +540,7 @@ class TopbarComponent extends Component {
           onClose={this.handleMobileMenuClose}
           usePortal
           onManageDisableScrolling={onManageDisableScrolling}
+          isMobileMenuModal={true}
         >
           {authInProgress ? null : mobileMenu}
         </Modal>
@@ -274,25 +557,24 @@ class TopbarComponent extends Component {
               onSubmit={this.handleSubmit}
               initialValues={initialSearchFormValues}
               isMobile
-              appConfig={config}
             />
             <p className={css.mobileHelp}>
               <FormattedMessage id="Topbar.mobileSearchHelp" />
             </p>
           </div>
         </Modal>
-        <ModalMissingInformation
-          id="MissingInformationReminder"
-          containerClassName={css.missingInformationModal}
-          currentUser={currentUser}
-          currentUserHasListings={currentUserHasListings}
-          currentUserHasOrders={currentUserHasOrders}
-          location={location}
-          onManageDisableScrolling={onManageDisableScrolling}
-          onResendVerificationEmail={onResendVerificationEmail}
-          sendVerificationEmailInProgress={sendVerificationEmailInProgress}
-          sendVerificationEmailError={sendVerificationEmailError}
-        />
+        {/* <ModalMissingInformation
+            id="MissingInformationReminder"
+            containerClassName={css.missingInformationModal}
+            currentUser={currentUser}
+            currentUserHasListings={currentUserHasListings}
+            currentUserHasOrders={currentUserHasOrders}
+            location={location}
+            onManageDisableScrolling={onManageDisableScrolling}
+            onResendVerificationEmail={onResendVerificationEmail}
+            sendVerificationEmailInProgress={sendVerificationEmailInProgress}
+            sendVerificationEmailError={sendVerificationEmailError}
+          /> */}
 
         <GenericError show={showGenericError} />
       </div>
@@ -349,31 +631,12 @@ TopbarComponent.propTypes = {
     height: number.isRequired,
   }).isRequired,
 
-  // from useIntl
+  // from injectIntl
   intl: intlShape.isRequired,
-
-  // from useConfiguration
-  config: object.isRequired,
-
-  // from useRouteConfiguration
-  routeConfiguration: arrayOf(propTypes.route).isRequired,
 };
 
-const EnhancedTopbar = props => {
-  const config = useConfiguration();
-  const routeConfiguration = useRouteConfiguration();
-  const intl = useIntl();
-  return (
-    <TopbarComponent
-      config={config}
-      routeConfiguration={routeConfiguration}
-      intl={intl}
-      {...props}
-    />
-  );
-};
+const Topbar = compose(withViewport, injectIntl)(TopbarComponent);
 
-const Topbar = withViewport(EnhancedTopbar);
 Topbar.displayName = 'Topbar';
 
 export default Topbar;

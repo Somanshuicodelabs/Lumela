@@ -1,16 +1,14 @@
-@import '../../styles/customMediaQueries.css';
+@import '../../styles/propertySets.css';
 
 .root {
   position: relative;
   display: flex;
+  align-items: center;
 }
 
 .icon {
   display: flex;
   width: 24px;
-  align-self: stretch;
-  border-bottom: 2px solid var(--marketplaceColor);
-  background-color: var(--colorWhite);
 }
 
 .iconSvg {
@@ -33,11 +31,16 @@
 
 .input {
   flex-grow: 1;
-  height: 50px;
+  height: var(--LocationAutocompleteInput_inputHeight);
   padding-left: 10px;
   margin: 0;
   line-height: unset;
-  border-bottom-width: 2px;
+  border-width: 1px;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
 
   /* Safari bugfix: without this Safari will print placeholder to a wrong place */
   &::-webkit-input-placeholder {
@@ -46,7 +49,7 @@
 
   &:hover,
   &:focus {
-    border-bottom-color: var(--marketplaceColor);
+    border-color: var(--marketplaceColor);
     outline: none;
   }
 }
@@ -58,23 +61,14 @@ size and position, etc.
 .predictionsRoot {
   position: absolute;
   width: 100%;
-  top: 50px;
+  padding-bottom: 2px;
+  top: var(--LocationAutocompleteInput_inputHeight);
   left: 0;
-  background-color: var(--marketplaceColor);
+  background-color: var(--matterColorLight);
   border-bottom-left-radius: var(--borderRadius);
   border-bottom-right-radius: var(--borderRadius);
   box-shadow: var(--boxShadowPopup);
   z-index: calc(var(--zIndexPopup) + 1);
-}
-
-.predictionsRootGoogle {
-  /* Google Maps needs 72px bottom padding to accommodate logo, Mapbox doesn't have one */
-  padding-bottom: 72px;
-}
-
-.predictionsRootMapbox {
-  /* Google Maps needs 72px bottom padding to accommodate logo, Mapbox doesn't have one */
-  padding-bottom: 8px;
 }
 
 /*
@@ -92,48 +86,100 @@ bottom of the container.
   background-position: center;
 
   @media (--viewportMedium) {
-    background-position: center left 36px;
+    background-position: center left var(--LocationAutocompleteInput_sidePaddingDesktop);
   }
 }
 
 /* List of predictions, with a responsive padding size */
 .predictions {
-  composes: marketplaceBodyFontStyles from global;
+  @apply --marketplaceBodyFontStyles;
 
   margin: 0;
-  padding: 14px 0;
+  /* padding: 14px 0; */
 
   & li {
-    color: var(--colorWhite);
+    color: var(--matterColor);
     transition: var(--transitionStyleButton);
-    margin: 0; /* Remove the double white space */
+    margin: 0;
+    /* Remove the double white space */
     line-height: 24px;
 
     /* Assign enough vertical padding to make the element at least 44px high */
-    padding: 9px 24px;
-
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(95, 95, 95, 0.098);
+    font-size: 15px;
+    /* border-left: 2px solid var(--marketplaceColor); */
+    &:last-child {
+      border: none;
+    }
     @media (--viewportMedium) {
-      color: var(--colorLightTransparent);
-      padding: 10px 36px;
+      color: var(--matterColorLightTransparent);
+      padding: 10px var(--LocationAutocompleteInput_sidePaddingDesktop);
       margin: 0;
     }
 
     &:hover,
     &.highlighted {
       cursor: pointer;
-      border-left: 6px solid var(--colorWhite);
-      border-top-right-radius: 20px;
-      border-bottom-right-radius: 20px;
-      color: var(--colorWhite);
+      /* border-left: 2px solid var(--marketplaceColor); */
+      color: var(--matterColorDark);
+      /* border-top-right-radius: 20px;
+      border-bottom-right-radius: 20px; */
+      /* color: var(--matterColorLight); */
+      background: rgba(240, 248, 255, 0.839);
+      & .currentLocation {
+        & .currentLocationIcon {
+          & > path {
+            fill: var(--matterColorDark);
+          }
+        }
+      }
     }
   }
 }
 
 .currentLocation {
-  composes: p from global;
+  @apply --marketplaceH4FontStyles;
 }
 
 .currentLocationIcon {
   margin-right: 10px;
-  margin-bottom: 1px;
+}
+.signupLocation {
+  background-color: var(--matterColorLight);
+  border: 1px solid #b9b9b9;
+  border-radius: 2px;
+  padding: 0 0.75rem;
+  height: 34px;
+  & .input {
+    margin-bottom: 0;
+    border: none;
+    border-radius: 0;
+    height: auto;
+    min-height: auto;
+    padding: 0;
+    font-size: 1rem;
+    line-height: 2rem;
+    font-weight: 400;
+    &::placeholder {
+      font-size: 1rem;
+      line-height: 2rem;
+    }
+  }
+  & .icon {
+    & > svg {
+      width: 10px;
+      & path {
+        fill: var(--matterColor);
+      }
+    }
+  }
+  & .predictionsRoot {
+    & .predictions {
+      & > li {
+        font-size: 14px;
+        padding: 8px 16px;
+      }
+    }
+  }
 }

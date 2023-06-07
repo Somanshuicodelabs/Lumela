@@ -1,0 +1,48 @@
+.rc-tabs {
+  border: none;
+}
+
+.rc-tabs-nav-more {
+  display: none;
+}
+
+.rc-tabs-tab {
+  background-color: transparent;
+  margin-right: 0.75rem;
+}
+
+.rc-tabs-nav-wrap {
+  border-bottom: var(--landingPagesTabUnderLine) solid 1px;
+}
+
+.rc-tabs-tab:last-child {
+  margin-right: 0;
+}
+
+.rc-tabs-tab-active .rc-tabs-tab-btn {
+  color: var(--matterColorLight);
+  background-color: var(--marketplaceSecondaryColor);
+}
+
+.rc-tabs-tab-btn {
+  color: var(--matterColor);
+  font-size: 1.125rem;
+  line-height: 100%;
+  font-weight: var(--fontWeightBold);
+  padding: 0.75rem;
+  border-top-left-radius: 0.625rem;
+  border-top-right-radius: 0.625rem;
+  text-transform: uppercase;
+}
+
+
+.rc-tabs-ink-bar {
+  display: none;
+}
+
+
+@media (max-width:991px) {
+  .rc-tabs-tab-btn {
+    font-size: 1rem;
+  }
+}
