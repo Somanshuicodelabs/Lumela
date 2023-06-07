@@ -7,6 +7,7 @@ import BlockBuilder from '../../BlockBuilder';
 
 import SectionContainer from '../SectionContainer';
 import css from './SectionArticle.module.css';
+import MainPanelLanding from '../../../SearchPage/MainPanelLanding';
 
 // Section component that's able to show article content
 // The article content is mainly supposed to be inside a block
@@ -59,6 +60,10 @@ const SectionArticle = props => {
             ctaButtonClass={defaultClasses.ctaButton}
             options={options}
           />
+
+          {/* {sectionId == 'hero-landing' ? (
+            <MainPanelLanding/>
+          ) : null} */}
         </div>
       ) : null}
     </SectionContainer>

@@ -20,13 +20,20 @@ import {
   Modal,
   ModalMissingInformation,
   NamedLink,
+  Menu,
+  MenuLabel,
+  MenuContent,
+  MenuItem,
 } from '../../components';
-
+import IconBag from '../IconBag/IconBag';
+import IconBin from '../IconBin/IconBin'; 
+import IconCollection from '../IconCollection/IconCollection';
 import MenuIcon from './MenuIcon';
 import SearchIcon from './SearchIcon';
 import TopbarSearchForm from './TopbarSearchForm/TopbarSearchForm';
 import TopbarMobileMenu from './TopbarMobileMenu/TopbarMobileMenu';
 import TopbarDesktop from './TopbarDesktop/TopbarDesktop';
+// import cartImg from '../../assets/fonts'
 
 import css from './Topbar.module.css';
 
@@ -73,6 +80,9 @@ GenericError.propTypes = {
 class TopbarComponent extends Component {
   constructor(props) {
     super(props);
+    this.state = { modalIsOpen: false };
+    this.isMobileAccountOpen = this.isMobileAccountOpen.bind(this);
+    this.handleMobileAccountClose = this.handleMobileAccountClose.bind(this);
     this.handleMobileMenuOpen = this.handleMobileMenuOpen.bind(this);
     this.handleMobileMenuClose = this.handleMobileMenuClose.bind(this);
     this.handleMobileSearchOpen = this.handleMobileSearchOpen.bind(this);
@@ -87,6 +97,14 @@ class TopbarComponent extends Component {
 
   handleMobileMenuClose() {
     redirectToURLWithoutModalState(this.props, 'mobilemenu');
+  }
+
+  isMobileAccountOpen() {
+    this.setState({ modalIsOpen: !this.state.modalIsOpen });
+  }
+
+  handleMobileAccountClose() {
+    redirectToURLWithoutModalState(this.props, 'mobileAccount');
   }
 
   handleMobileSearchOpen() {
@@ -152,18 +170,27 @@ class TopbarComponent extends Component {
       authInProgress,
       currentUser,
       currentUserHasListings,
+      currentUserListing,
+      currentUserListingFetched,
       currentUserHasOrders,
       currentPage,
       notificationCount,
       viewport,
       intl,
       location,
+      authStep,
+      redirectRoute,
+      isDrawerOpen,
+      onManageToggleDrawer,
       onManageDisableScrolling,
       onResendVerificationEmail,
       sendVerificationEmailInProgress,
       sendVerificationEmailError,
       showGenericError,
       config,
+      isLandingPage,
+      isHeaderSticky,
+      pathname,
     } = this.props;
 
     const { mobilemenu, mobilesearch, keywords, address, origin, bounds } = parse(location.search, {
@@ -179,12 +206,20 @@ class TopbarComponent extends Component {
 
     const mobileMenu = (
       <TopbarMobileMenu
+        onManageDisableScrolling={onManageDisableScrolling}
+        onClose={this.handleMobileMenuClose}
         isAuthenticated={isAuthenticated}
         currentUserHasListings={currentUserHasListings}
+        currentUserListing={currentUserListing}
+        currentUserListingFetched={currentUserListingFetched}
         currentUser={currentUser}
         onLogout={this.handleLogout}
         notificationCount={notificationCount}
         currentPage={currentPage}
+        authStep={authStep}
+        redirectRoute={redirectRoute}
+        isDrawerOpen={isDrawerOpen}
+        onManageToggleDrawer={onManageToggleDrawer}
       />
     );
 
@@ -208,7 +243,230 @@ class TopbarComponent extends Component {
     };
     const initialSearchFormValues = topbarSearcInitialValues();
 
-    const classes = classNames(rootClassName || css.root, className);
+    const classes = classNames(
+      rootClassName || css.root,
+      className,
+      isLandingPage ? css.landingPageHeader : null,
+      isHeaderSticky
+    );
+
+    const cart = (
+      <Menu className={css.menuDropdown}>
+        <MenuLabel className={css.profileMenuLabel} isOpenClassName={css.profileMenuIsOpen}>
+          <IconBag />
+        </MenuLabel>
+        <MenuContent className={css.cartMenuContent}>
+          <MenuItem key="cart">
+            <div className={css.currentUserDetails}>
+              <h2>Cart (2) </h2>
+            </div>
+          </MenuItem>
+          <MenuItem key="Profile">
+            <NamedLink className={css.dropdownLink} name="ProfileSettingsPage">
+              <div className={css.cartItem}>
+                {/* <div className={css.cartItemImg}>
+                  <img src={cartImg} alt="cart image" />
+                </div> */}
+                <div className={css.cartItemInfo}>
+                  <div className={css.serviceDetails}>
+                    <div className={css.serviceTime}>
+                      <h2>Haircut - Women</h2>
+                      <p>
+                        <span className={css.time}>45 m</span>{' '}
+                        <span className={css.date}>7.30 pm,Mon 30 July </span>
+                      </p>
+                    </div>
+                    <div className={css.servicePrice}>$50</div>
+                  </div>
+                  <div className={css.serviceAddress}>
+                    <div className={css.serviceAddressLeft}>
+                      <h2>Strands Salon</h2>
+                      <p>
+                        <span className={css.time}>102,Example Street,New Delhi</span>
+                      </p>
+                    </div>
+                    <div className={css.serviceAddressRight}>
+                      <IconBin />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </NamedLink>
+          </MenuItem>
+          <MenuItem key="profile2">
+            <NamedLink className={css.dropdownLink} name="ProfileSettingsPage">
+              <div className={css.cartItem}>
+                {/* <div className={css.cartItemImg}>
+                  <img src={cartImg} alt="cart image" />
+                </div> */}
+                <div className={css.cartItemInfo}>
+                  <div className={css.serviceDetails}>
+                    <div className={css.serviceTime}>
+                      <h2>Haircut - Women</h2>
+                      <p>
+                        <span className={css.time}>45 m</span>{' '}
+                        <span className={css.date}>7.30 pm,Mon 30 July </span>
+                      </p>
+                    </div>
+                    <div className={css.servicePrice}>$50</div>
+                  </div>
+                  <div className={css.serviceAddress}>
+                    <div className={css.serviceAddressLeft}>
+                      <h2>Strands Salon</h2>
+                      <p>
+                        <span className={css.time}>102,Example Street,New Delhi</span>
+                      </p>
+                    </div>
+                    <div className={css.serviceAddressRight}>
+                      <IconBin />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </NamedLink>
+          </MenuItem>
+          <MenuItem key="profile3">
+            <NamedLink className={css.dropdownLink} name="ProfileSettingsPage">
+              <div className={css.cartItem}>
+                {/* <div className={css.cartItemImg}>
+                  <img src={cartImg} alt="cart image" />
+                </div> */}
+                <div className={css.cartItemInfo}>
+                  <div className={css.serviceDetails}>
+                    <div className={css.serviceTime}>
+                      <h2>Haircut - Women</h2>
+                      <p>
+                        <span className={css.time}>45 m</span>{' '}
+                        <span className={css.date}>7.30 pm,Mon 30 July </span>
+                      </p>
+                    </div>
+                    <div className={css.servicePrice}>$50</div>
+                  </div>
+                  <div className={css.serviceAddress}>
+                    <div className={css.serviceAddressLeft}>
+                      <h2>Strands Salon</h2>
+                      <p>
+                        <span className={css.time}>102,Example Street,New Delhi</span>
+                      </p>
+                    </div>
+                    <div className={css.serviceAddressRight}>
+                      <IconBin />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </NamedLink>
+          </MenuItem>
+          <MenuItem key="profile4">
+            <NamedLink className={css.dropdownLink} name="ProfileSettingsPage">
+              <div className={css.cartItem}>
+                {/* <div className={css.cartItemImg}>
+                  <img src={cartImg} alt="cart image" />
+                </div> */}
+                <div className={css.cartItemInfo}>
+                  <div className={css.serviceDetails}>
+                    <div className={css.serviceTime}>
+                      <h2>Haircut - Women</h2>
+                      <p>
+                        <span className={css.time}>45 m</span>{' '}
+                        <span className={css.date}>7.30 pm,Mon 30 July </span>
+                      </p>
+                    </div>
+                    <div className={css.servicePrice}>$50</div>
+                  </div>
+                  <div className={css.serviceAddress}>
+                    <div className={css.serviceAddressLeft}>
+                      <h2>Strands Salon</h2>
+                      <p>
+                        <span className={css.time}>102,Example Street,New Delhi</span>
+                      </p>
+                    </div>
+                    <div className={css.serviceAddressRight}>
+                      <IconBin />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </NamedLink>
+          </MenuItem>
+          <MenuItem key="profile5">
+            <NamedLink className={css.dropdownLink} name="ProfileSettingsPage">
+              <div className={css.cartItem}>
+                {/* <div className={css.cartItemImg}>
+                  <img src={cartImg} alt="cart image" />
+                </div> */}
+                <div className={css.cartItemInfo}>
+                  <div className={css.serviceDetails}>
+                    <div className={css.serviceTime}>
+                      <h2>Haircut - Women</h2>
+                      <p>
+                        <span className={css.time}>45 m</span>{' '}
+                        <span className={css.date}>7.30 pm,Mon 30 July </span>
+                      </p>
+                    </div>
+                    <div className={css.servicePrice}>$50</div>
+                  </div>
+                  <div className={css.serviceAddress}>
+                    <div className={css.serviceAddressLeft}>
+                      <h2>Strands Salon</h2>
+                      <p>
+                        <span className={css.time}>102,Example Street,New Delhi</span>
+                      </p>
+                    </div>
+                    <div className={css.serviceAddressRight}>
+                      <IconBin />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </NamedLink>
+          </MenuItem>
+          <MenuItem key="profile6">
+            <NamedLink className={css.dropdownLink} name="ProfileSettingsPage">
+              <div className={css.cartItem}>
+                {/* <div className={css.cartItemImg}>
+                  <img src={cartImg} alt="cart image" />
+                </div> */}
+                <div className={css.cartItemInfo}>
+                  <div className={css.serviceDetails}>
+                    <div className={css.serviceTime}>
+                      <h2>Haircut - Women</h2>
+                      <p>
+                        <span className={css.time}>45 m</span>{' '}
+                        <span className={css.date}>7.30 pm,Mon 30 July </span>
+                      </p>
+                    </div>
+                    <div className={css.servicePrice}>$50</div>
+                  </div>
+                  <div className={css.serviceAddress}>
+                    <div className={css.serviceAddressLeft}>
+                      <h2>Strands Salon</h2>
+                      <p>
+                        <span className={css.time}>102,Example Street,New Delhi</span>
+                      </p>
+                    </div>
+                    <div className={css.serviceAddressRight}>
+                      <IconBin />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </NamedLink>
+          </MenuItem>
+          <MenuItem key="profile7">
+            <div className={css.totalPay}>
+              <div className={css.leftSec}>
+                <h2>Total Pay</h2>
+                <h2>$180</h2>
+              </div>
+              <div className={css.rightSec}>
+                <button className={css.blueBtn}>Proceed</button>
+              </div>
+            </div>
+          </MenuItem>
+        </MenuContent>
+      </Menu>
+    );
 
     return (
       <div className={classes}>
@@ -220,27 +478,52 @@ class TopbarComponent extends Component {
           currentPage={currentPage}
         />
         <div className={classNames(mobileRootClassName || css.container, mobileClassName)}>
-          <Button
-            rootClassName={css.menu}
-            onClick={this.handleMobileMenuOpen}
-            title={intl.formatMessage({ id: 'Topbar.menuIcon' })}
-          >
-            <MenuIcon className={css.menuIcon} />
-            {notificationDot}
-          </Button>
-          <LinkedLogo format={'mobile'} alt={intl.formatMessage({ id: 'Topbar.logoIcon' })} />
-          <Button
-            rootClassName={css.searchMenu}
-            onClick={this.handleMobileSearchOpen}
-            title={intl.formatMessage({ id: 'Topbar.searchIcon' })}
-          >
-            <SearchIcon className={css.searchMenuIcon} />
-          </Button>
+          {/* <div className={css.mobileLogoDiv}>
+              <NamedLink
+                className={css.home}
+                name="BusinessLandingPage"
+                title={intl.formatMessage({ id: 'Topbar.logoIcon' })}
+              >
+                <span className={css.logoLink} name="BusinessLandingPage">
+                <IconCollection name="TOPBAR_LOGO"/>
+                </span>
+              </NamedLink>
+            </div> */}
+
+          <div className={css.mobileMenuContent}>
+            <Button
+              rootClassName={css.menu}
+              onClick={this.handleMobileMenuOpen}
+              title={intl.formatMessage({ id: 'Topbar.menuIcon' })}
+            >
+              <MenuIcon className={css.menuIcon} />
+              {notificationDot}
+            </Button>
+            <NamedLink name="LoginPage" className={css.logoMobileLink}>
+              <IconCollection name="MOBILE_NAV_LOGO" />
+            </NamedLink>
+            <div className={css.searchBoxWrapper}>
+              <div className={css.searchforAny}>
+                <IconCollection name="MOBILE_NAV_SEARCH" />
+                <input type="text" placeholder="Search" />
+              </div>
+            </div>
+            {isAuthenticated ? (
+              <div className={css.rightMenuLinks} onClick={this.isMobileAccountOpen}>
+                <IconCollection name="MOBILE_NAV_PROFILE" />
+              </div>
+            ) : null}
+          </div>
         </div>
         <div className={css.desktop}>
           <TopbarDesktop
+            onManageDisableScrolling={onManageDisableScrolling}
+            isOpen={this.state.modalIsOpen}
+            onClose={this.isMobileAccountOpen}
             className={desktopClassName}
             currentUserHasListings={currentUserHasListings}
+            currentUserListing={currentUserListing}
+            currentUserListingFetched={currentUserListingFetched}
             currentUser={currentUser}
             currentPage={currentPage}
             initialSearchFormValues={initialSearchFormValues}
@@ -249,7 +532,11 @@ class TopbarComponent extends Component {
             notificationCount={notificationCount}
             onLogout={this.handleLogout}
             onSearchSubmit={this.handleSubmit}
-            appConfig={config}
+            authStep={authStep}
+            redirectRoute={redirectRoute}
+            isDrawerOpen={isDrawerOpen}
+            onManageToggleDrawer={onManageToggleDrawer}
+            pathname={pathname}
           />
         </div>
         <Modal
@@ -258,6 +545,7 @@ class TopbarComponent extends Component {
           onClose={this.handleMobileMenuClose}
           usePortal
           onManageDisableScrolling={onManageDisableScrolling}
+          isMobileMenuModal={true}
         >
           {authInProgress ? null : mobileMenu}
         </Modal>
@@ -274,25 +562,24 @@ class TopbarComponent extends Component {
               onSubmit={this.handleSubmit}
               initialValues={initialSearchFormValues}
               isMobile
-              appConfig={config}
             />
             <p className={css.mobileHelp}>
               <FormattedMessage id="Topbar.mobileSearchHelp" />
             </p>
           </div>
         </Modal>
-        <ModalMissingInformation
-          id="MissingInformationReminder"
-          containerClassName={css.missingInformationModal}
-          currentUser={currentUser}
-          currentUserHasListings={currentUserHasListings}
-          currentUserHasOrders={currentUserHasOrders}
-          location={location}
-          onManageDisableScrolling={onManageDisableScrolling}
-          onResendVerificationEmail={onResendVerificationEmail}
-          sendVerificationEmailInProgress={sendVerificationEmailInProgress}
-          sendVerificationEmailError={sendVerificationEmailError}
-        />
+        {/* <ModalMissingInformation
+            id="MissingInformationReminder"
+            containerClassName={css.missingInformationModal}
+            currentUser={currentUser}
+            currentUserHasListings={currentUserHasListings}
+            currentUserHasOrders={currentUserHasOrders}
+            location={location}
+            onManageDisableScrolling={onManageDisableScrolling}
+            onResendVerificationEmail={onResendVerificationEmail}
+            sendVerificationEmailInProgress={sendVerificationEmailInProgress}
+            sendVerificationEmailError={sendVerificationEmailError}
+          /> */}
 
         <GenericError show={showGenericError} />
       </div>

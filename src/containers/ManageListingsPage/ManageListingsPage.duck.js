@@ -1,6 +1,5 @@
 import { updatedEntities, denormalisedEntities } from '../../util/data';
 import { storableError } from '../../util/errors';
-import { createImageVariantConfig } from '../../util/sdkLoader';
 import { parse } from '../../util/urlHelpers';
 
 // Pagination page size might need to be dynamic on responsive page layouts
@@ -224,7 +223,7 @@ export const queryOwnListings = queryParams => (dispatch, getState, sdk) => {
   dispatch(queryListingsRequest(queryParams));
 
   const { perPage, ...rest } = queryParams;
-  const params = { ...rest, perPage };
+  const params = { ...rest, per_page: perPage };
 
   return sdk.ownListings
     .query(params)
@@ -267,25 +266,15 @@ export const openListing = listingId => (dispatch, getState, sdk) => {
     });
 };
 
-export const loadData = (params, search, config) => {
+export const loadData = (params, search) => {
   const queryParams = parse(search);
   const page = queryParams.page || 1;
-
-  const {
-    aspectWidth = 1,
-    aspectHeight = 1,
-    variantPrefix = 'listing-card',
-  } = config.layout.listingImage;
-  const aspectRatio = aspectHeight / aspectWidth;
-
   return queryOwnListings({
     ...queryParams,
     page,
     perPage: RESULT_PAGE_SIZE,
-    include: ['images', 'currentStock'],
-    'fields.image': [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`],
-    ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
-    ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
+    include: ['images'],
+    'fields.image': ['variants.landscape-crop', 'variants.landscape-crop2x'],
     'limit.images': 1,
   });
 };
