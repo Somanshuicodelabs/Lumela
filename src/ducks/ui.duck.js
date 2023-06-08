@@ -57,12 +57,10 @@ export const manageDisableScrolling = (componentId, disableScrolling) => ({
   payload: { componentId, disableScrolling },
 });
 
-export const manageToggleDrawer = (isDrawerOpen, authStep = 'LOGIN', redirectRoute = {}) =>({
+export const manageToggleDrawer = (isDrawerOpen, authStep = 'LOGIN', redirectRoute = {}) => ({
   type: TOGGLE_DRAWER,
   payload: { isDrawerOpen, authStep, redirectRoute },
 });
-
-
 
 // ================ Selectors ================ //
 

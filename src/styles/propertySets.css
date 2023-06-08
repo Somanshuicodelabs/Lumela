@@ -1,0 +1,749 @@
+:root {
+  /**
+ * This file contains only Custom Sets of Properties (@apply-rule).
+ * This was originally part of cssnext package and was an interesting
+ * concept, because property sets would not suffer from specificity
+ * problems that arise from creating a single CSS file on build step.
+ *
+ * However, W3C has abandoned this concept before it became an
+ * official standard. It would be a good idea to reduce the usage.
+ * http://tabatkins.github.io/specs/css-apply-rule/
+ *
+ * Property sets defined in this file are imported and injected to
+ * correct places during PostCSS build step.
+ *
+ * Note: if you add plain CSS styles to this file,
+ * you'll end up seeing it repeated in development mode on every
+ * component that @imports this file.
+ */
+
+  /* ================ CSS Custom Property Sets ================ */
+
+  /* Full screen Background image located in root-folder/src/assets */
+  --backgroundImage: {
+    /* Gradient direction and overlaying the black color on top of the image for better readability */
+    background: url('../../assets/home-bg.png') right no-repeat;
+
+    /* Add loading color for the div */
+    /* background-color: var(--matterColor); */
+
+    /* Cover the whole screen with the background image */
+
+    background-position: right -6.688rem bottom 0rem;
+    background-size: 100%;
+    display: inline-block;
+
+    @media (--viewportMedium) {
+      background-size: auto;
+      background-position: right 13.375rem top -4.5rem;
+    }
+
+    /* Align the image within the container */
+    /* background-position: 30% 30%; */
+  }
+
+  /**
+   * Usage example: .root { @apply --marketplaceDefaultFontStyles; }
+   */
+  --marketplaceDefaultFontStyles: {
+    font-family: var(--fontFamily);
+    font-weight: var(--fontWeightMedium);
+    font-size: 0.875rem;
+    line-height: 130%;
+    letter-spacing: -0.006rem;
+
+    @media (--viewportLargeWithPaddings) {
+      font-size: 1rem;
+    }
+  }
+
+  --marketplaceSmallFontStyles: {
+    font-family: var(--fontFamily);
+    font-weight: var(--fontWeightMedium);
+    font-size: 0.875rem;
+    line-height: 1.125rem;
+  }
+
+  /* ================ Body font ================ */
+
+  --marketplaceBodyFontStyles: {
+    font-family: var(--fontFamily);
+    font-weight: var(--fontWeightMedium);
+    font-size: 0.938rem;
+    line-height: 1.25rem;
+    letter-spacing: -0.006rem;
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+
+    @media (--viewportMedium) {
+      font-size: 1rem;
+      line-height: 2rem;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+  }
+
+  /* ================ Hero title ================ */
+
+  --marketplaceHeroTitleFontStyles: {
+    font-weight: var(--fontWeightBold);
+    font-style: normal;
+    font-size: 1.625rem;
+    line-height: 1.825rem;
+    text-transform: uppercase;
+    color: var(--matterColorDark);
+    letter-spacing: normal;
+    margin-top: 0;
+    margin-bottom: 1rem;
+
+    @media (--viewportMedium) {
+      font-size: 1.875rem;
+      line-height: 1.876rem;
+    }
+
+    @media (--viewportLarge) {
+      font-size: 2.125rem;
+      line-height: 2.563rem;
+      margin-bottom: 3rem;
+    }
+  }
+
+  --marketplaceHeroSubTitleFontStyles: {
+    font-weight: var(--fontWeightMedium);
+    font-style: normal;
+    font-size: 1.125rem;
+    line-height: 1.375rem;
+    color: var(--matterColorDark);
+    letter-spacing: normal;
+    margin-top: 0;
+    margin-bottom: 3rem;
+  }
+
+  /* margin-top + n * line-height + margin-bottom => x * 8rem */
+  /* ================ Topbar ================ */
+
+  /* Compose text label items on top of this */
+  /* This stretches inline element (link) to take available vertical space (big hover area),
+   * and align baselines
+   */
+  --TopbarDesktop_label: {
+    display: inline-block;
+    margin: 1.75rem 0;
+    text-decoration: inherit;
+
+    @media (--viewportMedium) {
+      margin: 1.75rem 0;
+    }
+  }
+
+  --TopbarDesktop_linkHover: {
+    border-bottom: 0rem solid;
+    transition: var(--transitionStyleButton);
+
+    &:hover {
+      border-bottom: 0rem solid var(--marketplaceColor);
+      border-radius: 0;
+      text-decoration: none;
+    }
+  }
+
+  /* ================ Modal title ================ */
+
+  --marketplaceModalTitleStyles {
+    font-weight: var(--fontWeightSemiBold);
+    margin: 0;
+
+    @media (--viewportMedium) {
+      font-weight: var(--fontWeightSemiBold);
+      margin: 0;
+    }
+  }
+
+  /* ================ H1, H2, H3, H4, H5 & H6 ================ */
+
+  --marketplaceH1FontStyles: {
+    font-family: var(--fontFamily);
+    font-style: normal;
+    font-size: 1.5rem;
+    line-height: 1.813rem;
+    text-transform: uppercase;
+    font-weight: var(--fontWeightBold);
+    color: var(--matterColorDark);
+
+    @media (--viewportMedium) {
+    }
+  }
+
+  --marketplaceH2FontStyles: {
+    font-weight: var(--fontWeightSemiBold);
+    font-size: 1.313rem;
+    line-height: 1.5rem;
+    margin-top: 1.313rem;
+    margin-bottom: 1.063rem;
+
+    @media (--viewportMedium) {
+      line-height: 2rem;
+      margin-top: 1.313rem;
+      margin-bottom: 1.188rem;
+    }
+  }
+
+  --marketplaceH3FontStyles: {
+    font-weight: var(--fontWeightSemiBold);
+    font-size: 1.125rem;
+    line-height: 1.5rem;
+    margin-top: 1rem;
+    margin-bottom: 0.875rem;
+
+    @media (--viewportMedium) {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+  }
+
+  --marketplaceH4FontStyles: {
+    font-weight: var(--fontWeightMedium);
+    font-size: 0.938rem;
+    line-height: 1.125rem;
+    letter-spacing: 0;
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+
+    @media (--viewportMedium) {
+      font-weight: var(--fontWeightMedium);
+      margin-top: 1.063rem;
+      margin-bottom: 0.938rem;
+    }
+  }
+
+  --marketplaceH5FontStyles: {
+    font-weight: var(--fontWeightMedium);
+    font-size: 0.875rem;
+    line-height: 1.125rem;
+    letter-spacing: 0;
+    margin-top: 0.625rem;
+    margin-bottom: 0.5rem;
+
+    @media (--viewportMedium) {
+      line-height: 1rem;
+      margin-top: 0.625rem;
+      margin-bottom: 0.875rem;
+    }
+  }
+
+  --marketplaceH6FontStyles: {
+    font-weight: var(--fontWeightBold);
+    font-size: 0.875rem;
+    line-height: 1.125rem;
+    letter-spacing: 0.094rem;
+    text-transform: uppercase;
+    margin-top: 0.625;
+    margin-bottom: 0.5rem;
+
+    @media (--viewportMedium) {
+      line-height: 1rem;
+      margin-top: 0.625rem;
+      margin-bottom: 0.375rem;
+    }
+  }
+
+  /* ================ Other fonts ================ */
+
+  --marketplaceTinyFontStyles: {
+    font-family: var(--fontFamily);
+    font-weight: var(--fontWeightRegular);
+    font-size: 0.813rem;
+    line-height: 1.125rem;
+    margin-top: 0.594rem;
+    margin-bottom: 0.531rem;
+    -webkit-font-smoothing: subpixel-antialiased;
+
+    @media (--viewportMedium) {
+      line-height: 1rem;
+      margin-top: 0.656rem;
+      margin-bottom: 0.844rem;
+    }
+  }
+
+  --marketplaceMessageFontStyles {
+    font-family: var(--fontFamily);
+    font-weight: var(--fontWeightRegular);
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+
+  --marketplaceMessageDateFontStyles {
+    font-family: var(--fontFamily);
+    font-weight: var(--fontWeightRegular);
+    font-size: 0.75rem;
+    line-height: 1.125rem;
+
+    @media (--viewportMedium) {
+      font-weight: var(--fontWeightMedium);
+      font-size: 0.75rem;
+      line-height: 1.125rem;
+    }
+  }
+
+  --marketplaceTxTransitionFontStyles {
+    font-family: var(--fontFamily);
+    font-weight: var(--fontWeightMedium);
+    font-size: 1rem;
+    line-height: 1.125rem;
+
+    @media (--viewportMedium) {
+      font-size: 1rem;
+      line-height: 1.125rem;
+    }
+  }
+
+  --marketplaceSearchFilterLabelFontStyles {
+    font-family: var(--fontFamily);
+    font-weight: var(--fontWeightSemiBold);
+    font-size: 0.813rem;
+    line-height: 1.125rem;
+
+    @media (--viewportMedium) {
+      font-weight: var(--fontWeightMedium);
+      font-size: 0.813rem;
+      line-height: 1.25rem;
+    }
+  }
+
+  --marketplaceSearchFilterSublabelFontStyles {
+    font-family: var(--fontFamily);
+    font-weight: var(--fontWeightMedium);
+    font-size: 1.125rem;
+    line-height: 1.125rem;
+  }
+
+  --marketplaceListingAttributeFontStyles {
+    font-family: var(--fontFamily);
+    font-weight: var(--fontWeightMedium);
+    font-size: 1rem;
+    line-height: 1.125rem;
+  }
+
+  /* ================ Tabbed navigation font styles ================ */
+
+  --marketplaceTabNavFontStyles {
+    font-weight: var(--fontWeightBold);
+    font-size: 1rem;
+    line-height: 1.5rem;
+    letter-spacing: 0;
+
+    @media (--viewportLarge) {
+      font-weight: var(--fontWeightBold);
+      font-size: 1.25rem;
+      line-height: 1.5rem;
+    }
+  }
+
+  --marketplaceTabNavHorizontalFontStyles {
+    font-weight: var(--fontWeightMedium);
+    font-size: 0.875rem;
+    line-height: 1.125rem;
+    letter-spacing: 0;
+  }
+
+  /* ================ Clearfix solution ================ */
+
+  --clearfix {
+    &::after {
+      content: '';
+      display: table;
+      clear: both;
+    }
+  }
+
+  /* ================ Links ================ */
+
+  --marketplaceLinkStyles: {
+    /* Position and dimensions */
+    display: inline;
+    margin: 0;
+    padding: 0;
+
+    /* Borders */
+    border: none;
+
+    /* Colors */
+    color: var(--marketplaceColor);
+
+    /* Text size should be inherited */
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+
+  /* ================ Buttons ================ */
+
+  --marketplaceButtonFontStyles: {
+    font-family: var(--fontFamily);
+    font-weight: var(--fontWeightSemiBold);
+    font-size: 1.2rem;
+    line-height: 1.5rem;
+    letter-spacing: 0.013rem;
+  }
+
+  --marketplaceButtonStyles {
+    @apply --marketplaceButtonFontStyles;
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 1.063rem 1.5rem;
+    border: none;
+    border-radius: var(--borderRadius);
+    background-color: var(--marketplaceColor);
+    color: var(--matterColorLight);
+    text-align: center;
+    text-decoration: none;
+    transition: all var(--transitionStyleButton);
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+      outline: none;
+      text-decoration: none;
+      box-shadow: var(--boxShadowButton);
+    }
+
+    @media (--viewportMedium) {
+      min-height: 2.813rem;
+    }
+  }
+
+  --marketplaceButtonStylesPrimary {
+    @apply --marketplaceButtonStyles;
+
+    background-color: var(--successColor);
+    color: var(--matterColorLight);
+
+    &:hover,
+    &:focus {
+      background-color: var(--successColorDark);
+    }
+
+    &:disabled {
+      background-color: var(--matterColorNegative);
+      color: var(--matterColorLight);
+    }
+  }
+
+  --marketplaceButtonStylesSecondary {
+    @apply --marketplaceButtonStyles;
+
+    background-color: var(--matterColorLight);
+    color: var(--matterColor);
+
+    /* Padding is only for <a> elements where button styles are applied,
+   buttons elements should have zero padding */
+    padding: 1.125rem 0 0 0;
+
+    border-width: 1rem;
+    border-style: solid;
+    border-color: var(--matterColorNegative);
+
+    &:hover,
+    &:focus {
+      background-color: var(--matterColorLight);
+      border-color: var(--matterColorAnti);
+    }
+
+    &:disabled {
+      background-color: var(--matterColorNegative);
+      color: var(--matterColorLight);
+      border-color: var(--matterColorNegative);
+    }
+  }
+
+  /* ================ Inputs ================ */
+
+  --marketplaceInputStyles: {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding: 0.313rem 1rem;
+    background-color: #fff;
+    border: none;
+    border-radius: 0;
+    height: 45px;
+
+    &::placeholder {
+      font-style: normal;
+      font-weight: var(--fontWeightRegular);
+      font-size: 1.131rem;
+      line-height: 1.5rem;
+    }
+
+    /* Effects */
+
+    transition: border-color var(--transitionStyle);
+
+    &:hover,
+    &:focus {
+      border-color: var(--matterColor);
+      outline: none;
+    }
+
+    @media (--viewportMedium) {
+      padding: 0.25rem 1rem;
+      height: 45px;
+    }
+  }
+
+  --marketplaceInputFontStyles: {
+    font-family: var(--fontFamily);
+    font-weight: var(--fontWeightMedium);
+    font-size: 1rem;
+    line-height: 1.5rem;
+    /* letter-spacing: -0.1rem; */
+
+    @media (--viewportMedium) {
+      font-size: 1rem;
+      line-height: 2rem;
+    }
+  }
+
+  --marketplaceSelectStyles: {
+    display: block;
+    width: 100%;
+    margin: 0;
+    appearance: none;
+    border: none;
+    padding: 0.313rem 1rem;
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--marketplaceColor);
+    border-radius: 0;
+    background-image: url('data:image/svg+xml;utf8,<svg width="14" height="9" viewBox="0 0 14 9" xmlns="http://www.w3.org/2000/svg"><path d="M6.53 7.472c.26.26.68.26.94 0l5.335-5.333c.26-.263.26-.684 0-.944-.26-.26-.683-.26-.943 0L7 6.056l-4.862-4.86c-.26-.26-.683-.26-.943 0-.26.26-.26.68 0 .943L6.53 7.47z" stroke="%234A4A4A" fill="%234A4A4A" fill-rule="evenodd"/></svg>');
+    background-size: 1rem 1rem;
+    background-position: center right 0.75rem;
+    height: 45px;
+
+    &:disabled {
+      background-image: url('data:image/svg+xml;utf8,<svg width="14" height="9" viewBox="0 0 14 9" xmlns="http://www.w3.org/2000/svg"><path d="M6.53 7.472c.26.26.68.26.94 0l5.335-5.333c.26-.263.26-.684 0-.944-.26-.26-.683-.26-.943 0L7 6.056l-4.862-4.86c-.26-.26-.683-.26-.943 0-.26.26-.26.68 0 .943L6.53 7.47z" stroke="%23E7E7E7" fill="%23E7E7E7" fill-rule="evenodd"/></svg>');
+    }
+
+    cursor: pointer;
+    transition: border-color var(--transitionStyle);
+
+    &:hover,
+    &:focus {
+      border-color: var(--matterColor);
+      outline: none;
+    }
+
+    @media (--viewportMedium) {
+      padding: 0.25rem 1rem;
+    }
+  }
+
+  /* ================ Modals ================ */
+
+  --marketplaceModalRootStyles {
+    flex-grow: 1;
+    display: flex;
+
+    @media (--viewportMedium) {
+      justify-content: center;
+      align-items: flex-start;
+    }
+  }
+
+  --marketplaceModalFormRootStyles {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: space-between;
+    height: 100%;
+  }
+
+  --marketplaceModalBaseStyles {
+    flex-grow: 1;
+
+    /* Create context so the close button can be positioned within it */
+    position: relative;
+
+    /* Display and dimensions */
+    display: flex;
+    flex-direction: column;
+    padding: var(--modalPadding);
+
+    background-color: var(--matterColorLight);
+    border-radius: var(--borderRadius);
+    border-bottom: none;
+
+    @media (--viewportMedium) {
+      flex-basis: 37.5rem;
+      flex-grow: 0;
+      padding: var(--modalPaddingMedium);
+      margin-top: 12.5vh;
+      margin-bottom: 12.5vh;
+    }
+  }
+
+  --marketplaceModalInMobileBaseStyles {
+    flex-grow: 1;
+
+    /* Create context so the close button can be positioned within it */
+    position: relative;
+
+    /* Display and dimensions */
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding: 0;
+
+    background-color: var(--matterColorLight);
+    border-radius: var(--borderRadius);
+
+    @media (--viewportMedium) {
+      flex-basis: 480rem;
+      flex-grow: 0;
+      height: 100%;
+      padding: 0;
+      background-color: transparent;
+      border-radius: 0;
+    }
+  }
+
+  /* Modal title */
+
+  --marketplaceModalTitleStyles {
+    font-weight: var(--fontWeightSemiBold);
+    margin: 0;
+    font-weight: var(--fontWeightBold);
+
+    @media (--viewportMedium) {
+      font-weight: var(--fontWeightSemiBold);
+      margin: 0;
+    }
+  }
+
+  /* Modal message */
+
+  --marketplaceModalParagraphStyles {
+    margin: 1.125rem 0 0 0;
+
+    @media (--viewportMedium) {
+      margin: 0.094rem 0 0 0;
+    }
+  }
+
+  --marketplaceModalHelperText {
+    @apply --marketplaceTinyFontStyles;
+    color: var(--matterColorAnti);
+    margin: 0;
+
+    @media (--viewportMedium) {
+      margin: 0;
+    }
+  }
+
+  --marketplaceModalHelperLink {
+    @apply --marketplaceTinyFontStyles;
+    color: var(--matterColor);
+    margin: 0;
+
+    @media (--viewportMedium) {
+      margin: 0;
+    }
+  }
+
+  /* Modal Close icon */
+
+  --marketplaceModalCloseStyles {
+    /* Position inside modal */
+    position: fixed;
+    top: 0;
+    right: 0;
+
+    /* Some content (like map) is positioning itself on top of close button without z-index handling */
+    z-index: calc(var(--zIndexModal) + 1);
+
+    /* Safari didn't know how to baseline-align svg icon and text */
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin: 0;
+    border: 0;
+    background-color: #fff;
+    justify-content: flex-end;
+    color: var(--matterColor);
+    cursor: pointer;
+    padding: 2rem 1.5rem;
+    border-top-left-radius: var(--borderRadius);
+    border-top-right-radius: var(--borderRadius);
+
+    @media (--viewportMedium) {
+      padding: 2rem 3.75rem;
+      position: absolute;
+    }
+
+    &:enabled:hover {
+      background-color: transparent;
+      color: var(--matterColorDark);
+      box-shadow: none;
+      text-decoration: none;
+    }
+
+    &:enabled:active {
+      background-color: transparent;
+      color: var(--matterColorDark);
+    }
+
+    &:disabled {
+      background-color: transparent;
+    }
+  }
+
+  --marketplaceModalIconStyles {
+    margin-bottom: 0.75rem;
+
+    @media (--viewportMedium) {
+      margin-bottom: 2rem;
+    }
+  }
+
+  --marketplaceModalCloseText {
+    @apply --marketplaceH6FontStyles;
+    margin: 0;
+
+    @media (--viewportMedium) {
+      margin: 0;
+    }
+  }
+
+  --marketplaceModalCloseIcon {
+    display: inline-block;
+    margin-left: 0.5rem;
+    box-sizing: content-box;
+  }
+
+  --marketplaceModalErrorStyles {
+    @apply --marketplaceH4FontStyles;
+    margin-top: 0.094rem;
+    color: var(--failColor);
+  }
+
+  --marketplaceModalPasswordMargins {
+    margin-top: 1rem;
+  }
+
+  --marketplaceModalBottomWrapper {
+  }
+
+  --marketplaceModalBottomWrapperText {
+  }
+}
+::-webkit-scrollbar {
+  display: none;
+}
+.disableButton:disabled {
+  background: #c9696991 !important;
+  border: none !important;
+}

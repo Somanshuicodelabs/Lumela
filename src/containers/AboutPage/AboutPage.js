@@ -11,7 +11,7 @@ import PageBuilder, { SectionBuilder } from '../PageBuilder/PageBuilder';
 
 import FallbackPage, { fallbackSections } from './FallbackPage';
 import { ASSET_NAME } from './AboutPage.duck';
-import { manageToggleDrawer } from '../../ducks/UI.duck';
+import { manageToggleDrawer } from '../../ducks/ui.duck';
 
 // This "content-only" component can be used in modals etc.
 const AboutContent = props => {
@@ -86,7 +86,7 @@ AboutPageComponent.propTypes = {
 };
 
 const mapStateToProps = state => {
-  const { isDrawerOpen, authStep, redirectRoute } = state.UI;
+  const { isDrawerOpen, authStep, redirectRoute } = state.ui;
   const { pageAssetsData, inProgress, error } = state.hostedAssets || {};
   // console.log(isDrawerOpen, authStep, redirectRoute,"isDrawerOpen, authStep, redirectRoute");
   return { pageAssetsData, inProgress, error, isDrawerOpen, authStep, redirectRoute };

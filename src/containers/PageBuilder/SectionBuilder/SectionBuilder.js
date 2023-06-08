@@ -42,7 +42,7 @@ const defaultSectionComponents = {
 //////////////////////
 
 const SectionBuilder = props => {
-  const { sections, options, isDrawerOpen, authStep, redirectRoute, onManageToggleDrawer } = props;
+  const { sections, options, redirectRoute, onManageToggleDrawer } = props;
   const { sectionComponents = {}, isInsideContainer, ...otherOption } = options || {};
 
   // If there's no sections, we can't render the correct section component
@@ -144,8 +144,6 @@ const SectionBuilder = props => {
               defaultClasses={DEFAULT_CLASSES}
               isInsideContainer={isInsideContainer}
               options={otherOption}
-              isDrawerOpen={isDrawerOpen}
-              authStep={authStep}
               redirectRoute={redirectRoute}
               onManageToggleDrawer={onManageToggleDrawer}
               {...section}

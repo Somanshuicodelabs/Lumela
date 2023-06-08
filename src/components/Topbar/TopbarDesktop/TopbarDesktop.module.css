@@ -1,4 +1,4 @@
-@import '../../../styles/customMediaQueries.css';
+@import '../../../styles/propertySets.css';
 
 /* Desktop */
 .root {
@@ -459,6 +459,10 @@
   display: flex;
   align-items: center;
   grid-gap: 1.25rem;
+  & :global(.EZDrawer__container) {
+    max-width: 480px !important;
+    background: #fafafa !important;
+  }
   & .divider {
     height: 100%;
     width: 1px;

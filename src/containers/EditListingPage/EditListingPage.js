@@ -25,7 +25,7 @@ import {
 } from '../../ducks/stripeConnectAccount.duck';
 
 // Import shared components
-import { NamedRedirect, Page } from '../../components';
+import { NamedRedirect, Page, UserNav } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 // Import modules from this directory
@@ -113,6 +113,8 @@ export const EditListingPageComponent = props => {
     stripeAccount,
     updateStripeAccountError,
   } = props;
+
+  const listing = getOwnListing(listingId);
 
   const { id, type, returnURLType } = params;
   const isNewURI = type === LISTING_PAGE_PARAM_TYPE_NEW;
@@ -257,11 +259,17 @@ export const EditListingPageComponent = props => {
     return (
       <Page title={intl.formatMessage(loadingPageMsg)} scrollingDisabled={scrollingDisabled}>
         <TopbarContainer
-          className={css.topbar}
-          mobileRootClassName={css.mobileTopbar}
-          desktopClassName={css.desktopTopbar}
-          mobileClassName={css.mobileTopbar}
+          // className={css.topbar}
+          // mobileRootClassName={css.mobileTopbar}
+          // desktopClassName={css.desktopTopbar}
+          // mobileClassName={css.mobileTopbar}
         />
+        <UserNav
+          selectedPageName={listing ? 'EditListingPage' : 'NewListingPage'}
+          listing={listing}
+        />
+        <div className={css.placeholderWhileLoading} />
+        <Footer />
       </Page>
     );
   }

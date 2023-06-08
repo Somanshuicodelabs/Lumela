@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 import { propTypes } from '../../util/types';
 import { sendVerificationEmail, hasCurrentUserErrors } from '../../ducks/user.duck';
 import { logout, authenticationInProgress } from '../../ducks/auth.duck';
-import { manageDisableScrolling } from '../../ducks/ui.duck';
+import { manageDisableScrolling, manageToggleDrawer } from '../../ducks/ui.duck';
 import { Topbar } from '../../components';
 
 export const TopbarContainerComponent = props => {
@@ -30,8 +30,6 @@ export const TopbarContainerComponent = props => {
     onResendVerificationEmail,
     ...rest
   } = props;
-
-  console.log('ManageDisableScrolling', onManageDisableScrolling)
 
   return (
     <Topbar
@@ -120,6 +118,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
   onLogout: historyPush => dispatch(logout(historyPush)),
+  onManageToggleDrawer: (isDrawerOpen, authStep) =>
+    dispatch(manageToggleDrawer(isDrawerOpen, authStep)),
   onManageDisableScrolling: (componentId, disableScrolling) =>
     dispatch(manageDisableScrolling(componentId, disableScrolling)),
   onResendVerificationEmail: () => dispatch(sendVerificationEmail()),

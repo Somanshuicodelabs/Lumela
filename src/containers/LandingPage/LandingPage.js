@@ -2,21 +2,24 @@ import React, { useEffect, useState } from 'react';
 import { bool, object } from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
+import { injectIntl } from 'react-intl';
+import { withRouter } from 'react-router-dom';
 
 import { camelize } from '../../util/string';
 import { propTypes } from '../../util/types';
+import { intlShape } from '../../util/reactIntl';
+import { withViewport } from '../../util/contextHelpers';
 
 import { H1 } from '../PageBuilder/Primitives/Heading';
+import FallbackPage, { fallbackSections } from './FallbackPage';
 import PageBuilder, { SectionBuilder } from '../PageBuilder/PageBuilder';
 
-import FallbackPage, { fallbackSections } from './FallbackPage';
 import { ASSET_NAME } from './LandingPage.duck';
 import { manageToggleDrawer } from '../../ducks/ui.duck';
-import css from './LandingPage.module.css';
-import { injectIntl } from 'react-intl';
-import { withViewport } from '../../util/contextHelpers';
-import { intlShape } from '../../util/reactIntl';
 import { getListingsById } from '../../ducks/marketplaceData.duck';
+import { authenticationInProgress, logout, login, signup } from '../../ducks/auth.duck';
+
+import css from './LandingPage.module.css';
 
 // This "content-only" component can be used in modals etc.
 const LandingPageContent = props => {
@@ -33,7 +36,6 @@ const LandingPageContent = props => {
   if (inProgress) {
     return null;
   }
-console.log('onManageToggleDrawerabc', onManageToggleDrawer)
   // We don't want to add h1 heading twice to the HTML (SEO issue).
   // Modal's header is mapped as h2
   const hasContent = data => typeof data?.content === 'string';
@@ -70,11 +72,18 @@ const LandingPageComponent = props => {
     error,
     isDrawerOpen,
     authStep,
+    onLogout,
+    loginError,
+    signupError,
+    submitLogin,
+    submitSignup,
     redirectRoute,
+    authInProgress,
     onManageToggleDrawer,
     listings,
+    history,
+    isAuthenticated,
   } = props;
-  console.log('onManageToggleDrawerabc', onManageToggleDrawer)
 
   const [scroll, setScroll] = useState(false);
   useEffect(() => {
@@ -104,10 +113,18 @@ const LandingPageComponent = props => {
         authStep: authStep,
         redirectRoute: redirectRoute,
         onManageToggleDrawer: onManageToggleDrawer,
+        history: history,
         listings: listings,
+        onLogout: onLogout,
+        submitLogin: submitLogin,
+        submitSignup: submitSignup,
+        loginError: loginError,
+        signupError: signupError,
+        authInProgress: authInProgress,
       }}
       fallbackPage={<FallbackPage />}
       isLandingPage={true}
+      isAuthenticated={isAuthenticated}
       isHeaderSticky={isHeaderSticky}
     />
   );
@@ -125,8 +142,9 @@ LandingPageComponent.propTypes = {
 };
 
 const mapStateToProps = state => {
-  console.log('state', state)
   const { isDrawerOpen, authStep, redirectRoute } = state.ui;
+  const { isAuthenticated, loginError, signupError } = state.auth;
+
   const { currentPageResultIds ,landing_page_data_request,
     landing_page_data  } = state.landingPageReducer;
   const pageListings = getListingsById(state, currentPageResultIds);
@@ -166,12 +184,16 @@ const mapStateToProps = state => {
     pageAssetsData[camelize(ASSET_NAME)].data.sections = sectionsTemp;
   }
   return {
+    authInProgress: authenticationInProgress(state),
     pageAssetsData,
     inProgress,
     error,
     isDrawerOpen,
     authStep,
     redirectRoute,
+    isAuthenticated,
+    loginError,
+    signupError,
     listings: pageListings,
     landing_page_data_request,
     landing_page_data,
@@ -179,6 +201,9 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
+  submitLogin: ({ email, password }) => dispatch(login(email, password)),
+  submitSignup: params => dispatch(signup(params)),
+  onLogout: historyPush => dispatch(logout(historyPush)),
   onManageToggleDrawer: (isDrawerOpen, authStep) =>
     dispatch(manageToggleDrawer(isDrawerOpen, authStep)),
 });
@@ -192,6 +217,7 @@ const mapDispatchToProps = dispatch => ({
 const LandingPagePage = compose(
   connect(mapStateToProps, mapDispatchToProps),
   injectIntl,
+  withRouter,
   withViewport
 )(LandingPageComponent);
 

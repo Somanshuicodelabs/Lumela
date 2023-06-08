@@ -62,7 +62,7 @@ export class ModalComponent extends Component {
   }
 
   componentDidMount() {
-    const { id, isOpen, onManageDisableScrolling } = this.props;
+    const { id, isOpen, onManageDisableScrolling = () => {} } = this.props;
     onManageDisableScrolling(id, isOpen);
     window.document.body.addEventListener('keyup', this.handleBodyKeyUp);
 
@@ -92,7 +92,7 @@ export class ModalComponent extends Component {
   }
 
   componentWillUnmount() {
-    const { id, onManageDisableScrolling } = this.props;
+    const { id, onManageDisableScrolling = () => {} } = this.props;
     window.document.body.removeEventListener('keyup', this.handleBodyKeyUp);
     window.document.body.removeEventListener('resize', this.handleResize);
     onManageDisableScrolling(id, false);

@@ -46,20 +46,65 @@ import EditListingWizardTab, {
 } from './EditListingWizardTab';
 import css from './EditListingWizard.module.css';
 
+// Show availability calendar only if environment variable availabilityEnabled is true
+const availabilityMaybe = config.enableAvailability ? [AVAILABILITY] : [];
+
+
+
 // You can reorder these panels.
 // Note 1: You need to change save button translations for new listing flow
 // Note 2: Ensure that draft listing is created after the first panel
 // and listing publishing happens after last panel.
-const TABS_DETAILS_ONLY = [DETAILS];
-const TABS_PRODUCT = [DETAILS, PRICING_AND_STOCK, DELIVERY, PHOTOS];
-const TABS_BOOKING = [DETAILS, LOCATION, PRICING, AVAILABILITY, PHOTOS];
-const TABS_ALL = [...TABS_PRODUCT, ...TABS_BOOKING];
+// const TABS_DETAILS_ONLY = [DETAILS];
+// const TABS_PRODUCT = [DETAILS, PRICING_AND_STOCK, DELIVERY, PHOTOS];
+// const TABS_BOOKING = [DETAILS, LOCATION, PRICING, AVAILABILITY, PHOTOS];
+// const TABS_ALL = [...TABS_PRODUCT, ...TABS_BOOKING];
+
+export const TABS = [
+  DESCRIPTION,
+  PHOTOS,
+  OFFERS,
+  HAIR_TEXTURES,
+  SKIN_TONES,
+  SKIN_TYPES,
+  TEAM_SIZE,
+  ...availabilityMaybe,
+  BOOKING_SYSTEM,
+  // PRICING,
+];
 
 // Tabs are horizontal in small screens
 const MAX_HORIZONTAL_NAV_SCREEN_WIDTH = 1023;
 
 const STRIPE_ONBOARDING_RETURN_URL_SUCCESS = 'success';
 const STRIPE_ONBOARDING_RETURN_URL_FAILURE = 'failure';
+
+
+const tabLabel = (intl, tab) => {
+  let key = null;
+  if (tab === DESCRIPTION) {
+    key = 'EditListingWizard.tabLabelDescription';
+  } else if (tab === OFFERS) {
+    key = 'EditListingWizard.tabLabelFeatures';
+  } else if (tab === TEAM_SIZE) {
+    key = 'EditListingWizard.tabLabelPolicy';
+  } else if (tab === HAIR_TEXTURES) {
+    key = 'EditListingWizard.tabLabelLocation';
+  } else if (tab === PHOTOS) {
+    key = 'EditListingWizard.tabLabelPhotos';
+  } else if (tab === AVAILABILITY) {
+    key = 'EditListingWizard.tabLabelAvailability';
+  } else if (tab === PRICING) {
+    key = 'EditListingWizard.tabLabelPricing';
+  } else if (tab === BOOKING_SYSTEM) {
+    key = 'EditListingWizard.tabLabelPricing';
+  } else if (tab === SKIN_TONES) {
+    key = 'EditListingWizard.tabLabelPricing';
+  } else if (tab === SKIN_TYPES) {
+    key = 'EditListingWizard.tabLabelPricing';
+  }
+  return intl.formatMessage({ id: key });
+};
 
 /**
  * Return translations for wizard tab: label and submit button.
@@ -69,6 +114,9 @@ const STRIPE_ONBOARDING_RETURN_URL_FAILURE = 'failure';
  * @param {boolean} isNewListingFlow
  * @param {string} processName
  */
+
+
+
 const tabLabelAndSubmit = (intl, tab, isNewListingFlow, processName) => {
   const processNameString = isNewListingFlow ? `${processName}.` : '';
   const newOrEdit = isNewListingFlow ? 'new' : 'edit';
@@ -178,27 +226,27 @@ const tabCompleted = (tab, listing, config) => {
   const deliveryOptionPicked = publicData && (shippingEnabled || pickupEnabled);
 
   switch (tab) {
-    case DETAILS:
-      return !!(
-        description &&
-        title &&
-        listingType &&
-        transactionProcessAlias &&
-        unitType &&
-        hasValidListingFieldsInExtendedData(publicData, privateData, config)
-      );
+    case DESCRIPTION:
+      return !!(title && publicData.businessName && publicData.email);
+    case OFFERS:
+      return !!(publicData.offers);
+    case TEAM_SIZE:
+      return !!(publicData.teamSize);
+    case HAIR_TEXTURES:
+      // return !!(geolocation && publicData && publicData.location && publicData.location.address);
+      return !!(publicData.hairTextures);
+    case SKIN_TONES:
+      return !!(publicData.skinTones);
+    case SKIN_TYPES:
+      return !!(publicData.skinTypes);
+    case PHOTOS:
+      return images && images.length > 0 ;
     case PRICING:
       return !!price;
-    case PRICING_AND_STOCK:
-      return !!price;
-    case DELIVERY:
-      return !!deliveryOptionPicked;
-    case LOCATION:
-      return !!(geolocation && publicData?.location?.address);
+      case BOOKING_SYSTEM:
+      return !!(publicData.bookingSystem && publicData.other);
     case AVAILABILITY:
-      return !!availabilityPlan;
-    case PHOTOS:
-      return images && images.length > 0;
+      return !!(availabilityPlan);
     default:
       return false;
   }
@@ -221,7 +269,7 @@ const tabsActive = (isNew, listing, tabs, config) => {
     const hasListingType = !!listing?.attributes?.publicData?.listingType;
     const prevTabComletedInNewFlow = tabCompleted(tabs[previousTabIndex], listing, config);
     const isActive =
-      validTab && !isNew ? hasListingType : validTab && isNew ? prevTabComletedInNewFlow : true;
+      previousTabIndex >= 0 ? !isNew || tabCompleted(filteredTabs[previousTabIndex], listing) : true;
     return { ...acc, [tab]: isActive };
   }, {});
 };

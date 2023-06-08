@@ -8,6 +8,7 @@ import { propTypes } from '../../../util/types';
 import {
   Avatar,
   InlineTextButton,
+  IconUser,
   LinkedLogo,
   Menu,
   MenuLabel,
@@ -19,7 +20,7 @@ import {
   Modal,
   Page,
 } from '../../../components';
-
+import cartImg from '../../../assets/businessImg2.png';
 import TopbarSearchForm from '../TopbarSearchForm/TopbarSearchForm';
 import hair from './assets/hair.png';
 import hairProduct from './assets/hair-products.png';
@@ -35,7 +36,7 @@ import newIn from './assets/new-in.png';
 import shopLifestyle from './assets/shop-lifestyle.png';
 import latestArticle from './assets/latest-article.png';
 import menArticle from './assets/men-article.png';
-// import AuthenticationPage from '../../../containers/AuthenticationPage/AuthenticationPage';
+import TermsAndConditions from '../../../containers/AuthenticationPage/TermsAndConditions/TermsAndConditions';
 import IconRightArrow from '../../IconRightArrow/IconRightArrow';
 import IconBag from '../../IconBag/IconBag';
 import IconBin from '../../IconBin/IconBin';
@@ -50,11 +51,150 @@ import IconHeartFilled from '../../IconHeartFilled/IconHeartFilled';
 import IconUserProfile from '../../IconUserProfile/IconUserProfile';
 import IconPaymentMethod from '../../IconPaymentMethod/IconPaymentMethod';
 import IconCollection from '../../IconCollection/IconCollection';
-import {OutsideClickHandler} from '../../../components';
+import { OutsideClickHandler } from '../../../components';
 import Drawer from 'react-modern-drawer';
-// import '../../styles/react-modern-drawer.css';
+import '../../../styles/react-modern-drawer.css';
+import './drawer.css';
+import SignupForm from '../../../containers/AuthenticationPage/SignupForm/SignupForm';
+import PasswordRecoveryForm from '../../../containers/PasswordRecoveryPage/PasswordRecoveryForm/PasswordRecoveryForm';
+import LoginForm from '../../../containers/AuthenticationPage/LoginForm/LoginForm';
+import { isSignupEmailTakenError } from '../../../util/errors';
 
 import css from './TopbarDesktop.module.css';
+
+const AuthenticationForms = props => {
+  const {
+    isLogin,
+    submitLogin,
+    loginError,
+    signupError,
+    authInProgress,
+    submitSignup,
+    authStep,
+    redirectRoute,
+    isDrawerOpen,
+    onManageToggleDrawer,
+  } = props;
+
+  const MAX_MOBILE_SCREEN_WIDTH = 768;
+  const isMobileLayout = typeof window !== 'undefined' && window.innerWidth < MAX_MOBILE_SCREEN_WIDTH;
+
+  const handleSubmitSignup = values => {
+    const { fname, lname, ...rest } = values;
+    const params = { firstName: fname.trim(), lastName: lname.trim(), ...rest };
+    submitSignup(params).then(() => onManageToggleDrawer(true, 'SIDE-MENU'));
+  };
+
+  const loginErrorMessage = (
+    <div className={css.error}>
+      <FormattedMessage id="AuthenticationPage.loginFailed" />
+    </div>
+  );
+
+  const signupErrorMessage = (
+    <div className={css.error}>
+      {isSignupEmailTakenError(signupError) ? (
+        <FormattedMessage id="AuthenticationPage.signupFailedEmailAlreadyTaken" />
+      ) : (
+        <FormattedMessage id="AuthenticationPage.signupFailed" />
+      )}
+    </div>
+  );
+
+  // eslint-disable-next-line no-confusing-arrow
+  const errorMessage = (error, message) => (error ? message : null);
+  const loginOrSignupError = isLogin
+    ? errorMessage(loginError, loginErrorMessage)
+    : errorMessage(signupError, signupErrorMessage);
+    
+  return (
+    <div className={css.content}>
+      <div className={css.authHeader}>
+        <h1>
+          <IconCollection name='PROFILE_ICON' />
+          <span>ACCOUNT</span>
+        </h1>
+        <span className={css.closeIcon} onClick={() => onManageToggleDrawer(isDrawerOpen, null)}>
+          Close <span> &times;</span>
+        </span>
+      </div>
+      <div className={css.authContentWrapper}>
+        <div className={css.welcomeDiv}>
+          <h2>
+            {authStep == 'SIGNUP'
+              ? 'Sign up to Lumela!'
+              : authStep == 'FORGOT'
+                ? 'Forgot Password?'
+                : 'Welcome back!'}
+          </h2>
+        </div>
+        {loginOrSignupError}
+        {authStep == 'SIGNUP'
+          ? (
+            <SignupForm
+              className={css.signupForm}
+              onSubmit={handleSubmitSignup}
+              inProgress={authInProgress}
+              onOpenTermsOfService={() => this.setState({ tosModalOpen: true })}
+            />
+          )
+          : authStep == 'FORGOT'
+            ? (
+              <PasswordRecoveryForm
+                className={css.PasswordRecoveryForm}
+                // onSubmit={() => submitPasswordRecovery}
+                inProgress={authInProgress}
+                authStep={authStep}
+                isDrawerOpen={isDrawerOpen}
+                onSubmit={values => onSubmitEmail(values.email)}
+                onManageToggleDrawer={onManageToggleDrawer}
+              />
+            )
+            : (
+              <LoginForm
+                className={css.loginForm}
+                onSubmit={submitLogin}
+                inProgress={authInProgress}
+                authStep={authStep}
+                isDrawerOpen={isDrawerOpen}
+                onManageToggleDrawer={onManageToggleDrawer}
+                loginError={loginError}
+              />
+            )}
+        {/* {SocialLoginButtonsMaybe} */}
+        {/* <span className={css.accountIcon}>
+          <Logo format="AccountIcon" />
+        </span> */}
+        {authStep == 'SIGNUP'
+          ? (
+            <div className={css.accountIconWrapper}>
+              <div className={css.signupNow}>
+                <span onClick={() => onManageToggleDrawer(!isDrawerOpen, 'LOGIN')}>
+                  Already have an account.{' '}Sign in!
+                </span>
+              </div>
+            </div>
+          )
+          : (
+            <div className={css.accountIconWrapper}>
+              <div className={css.signupNow}>
+                No Account?{' '}
+                <span onClick={() => onManageToggleDrawer(!isDrawerOpen, 'SIGNUP')}>
+                  Click here to Signup!
+                </span>
+              </div>
+            </div>
+          )}
+
+        <div className={css.startWithUs}>
+          <NamedLink name="BusinessLandingPage">
+            <IconCollection name="START_WITH_US" />
+          </NamedLink>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const TopbarDesktop = props => {
   const {
@@ -80,6 +220,11 @@ const TopbarDesktop = props => {
     isOpen,
     pathname,
     onManageDisableScrolling,
+    loginError,
+    signupError,
+    submitLogin,
+    authInProgress,
+    submitSignup,
   } = props;
   const [mounted, setMounted] = useState(false);
 
@@ -566,7 +711,8 @@ const TopbarDesktop = props => {
       {pathname === '/business-landing-page' ? null : (
         <span className={css.loginLink}>
           <NamedLink name="BusinessLandingPage">
-            <FormattedMessage id="TopbarDesktop.business" />
+            Business Link
+            {/* <FormattedMessage id="TopbarDesktop.business" /> */}
           </NamedLink>
         </span>
       )}
@@ -638,7 +784,6 @@ const TopbarDesktop = props => {
     width: '100%',
     display: 'initial',
   };
-
 
   return (
     <>
@@ -732,7 +877,7 @@ const TopbarDesktop = props => {
                               className={css.menuLink}
                               name="BusinessLandingPage"
                               to={{ search: 'Dreadlocks' }}
-                              // search: `pub_categoryId=${cat.key}`,
+                            // search: `pub_categoryId=${cat.key}`,
                             >
                               Dreadlocks
                             </NamedLink>
@@ -1412,18 +1557,39 @@ const TopbarDesktop = props => {
         </OutsideClickHandler>
       </nav>
 
-      {/* <AuthenticationPage
-        // authStep={authStep}
-        // redirectRoute={redirectRoute}
-        // isDrawerOpen={isDrawerOpen}
-        // onManageToggleDrawer={onManageToggleDrawer}
-      /> */}
+      <Drawer
+        open={!!isAuthenticated ? false : isDrawerOpen}
+        onClose={() => onManageToggleDrawer(isDrawerOpen, null)}
+        direction="right"
+        className="bla bla bla"
+      >
+        <AuthenticationForms
+          isLogin={true}
+          // showFacebookLogin={showFacebookLogin}
+          // showGoogleLogin={showGoogleLogin}
+          // from={from}
+          loginError={loginError}
+          signupError={signupError}
+          submitLogin={submitLogin}
+          authInProgress={authInProgress}
+          submitSignup={submitSignup}
+          termsAndConditions={<TermsAndConditions
+            onOpenTermsOfService={() => setTosModalOpen(true)}
+            onOpenPrivacyPolicy={() => setPrivacyModalOpen(true)}
+            intl={intl}
+          />}
+          authStep={authStep}
+          redirectRoute={redirectRoute}
+          isDrawerOpen={isDrawerOpen}
+          onManageToggleDrawer={onManageToggleDrawer}
+        />
+      </Drawer>
       <Modal
         id="TopbarMobileMenu"
         isOpen={isOpen && isAuthenticated && isTabeLayout}
         onClose={onClose}
         usePortal
-        // onManageDisableScrolling={onManageDisableScrolling}
+        onManageDisableScrolling={onManageDisableScrolling}
         isMobileMenuModal={true}
       >
         {mobileProfileMenuContent}

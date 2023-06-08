@@ -12,6 +12,8 @@ import { NamedRedirect } from '../components';
 
 const pageDataLoadingAPI = getPageDataLoadingAPI();
 
+
+const AboutPage = loadable(() => import(/* webpackChunkName: "AboutPage" */ '../containers/AboutPage/AboutPage'));
 const AuthenticationPage = loadable(() => import(/* webpackChunkName: "AuthenticationPage" */ '../containers/AuthenticationPage/AuthenticationPage'));
 const BusinessLandingPage = loadable(() => import(/* webpackChunkName: "AuthenticationPage" */ '../containers/BusinessLandingPage/BusinessLandingPage'));
 const CheckoutPage = loadable(() => import(/* webpackChunkName: "CheckoutPage" */ '../containers/CheckoutPage/CheckoutPage'));
@@ -172,20 +174,26 @@ const routeConfiguration = (layoutConfig) => {
       authPage: 'LoginPage',
       component: ProfileSettingsPage,
     },
+    {
+      path: '/about',
+      name: 'AboutPage',
+      component: AboutPage,
+      loadData: pageDataLoadingAPI.AboutPage.loadData,
+    },
 
     // Note: authenticating with IdP (e.g. Facebook) expects that /login path exists
     // so that in the error case users can be redirected back to the LoginPage
     // In case you change this, remember to update the route in server/api/auth/loginWithIdp.js
     {
-      path: '/login',
+      path: '/',
       name: 'LoginPage',
-      component: AuthenticationPage,
+      component: LandingPage,
       extraProps: { tab: 'login' },
     },
     {
-      path: '/signup',
+      path: '/',
       name: 'SignupPage',
-      component: AuthenticationPage,
+      component: LandingPage,
       extraProps: { tab: 'signup' },
       loadData: pageDataLoadingAPI.AuthenticationPage.loadData,
     },

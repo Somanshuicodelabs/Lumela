@@ -1,7 +1,7 @@
-@import '../../../styles/customMediaQueries.css';
+@import '../../../styles/propertySets.css';
 
 .root {
-  composes: marketplaceModalFormRootStyles from global;
+  @apply --marketplaceModalFormRootStyles;
 
   justify-content: flex-start;
 
@@ -11,22 +11,121 @@
 }
 
 .password {
-  composes: marketplaceModalPasswordMargins from global;
+  @apply --marketplaceModalPasswordMargins;
+}
+
+.validation {
+  color: red;
+  text-align: center;
 }
 
 .bottomWrapper {
-  composes: marketplaceModalBottomWrapper from global;
+  text-align: center;
+  & h6 {
+    font-family: 'Didact Gothic';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 24px;
+    text-align: center;
+    color: var(--blogSmallTitleColor);
+    margin: 20px 0;
+    text-transform: capitalize;
+  }
+  & > button {
+    width: 158px;
+    height: 32px;
+    background: #c96969;
+    border: none;
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 22px;
+    color: #ffffff;
+    &:disabled {
+      &:hover {
+        background-color: var(--matterColorNegative);
+        color: var(--matterColorLight);
+        box-shadow: none;
+      }
+    }
+
+    &:hover {
+      background-color: var(--marketplaceSecondaryColor);
+    }
+  }
 }
 
 /* Adjust the bottomWrapper's margin to match modals without the helper text */
 .bottomWrapperText {
-  composes: marketplaceModalBottomWrapperText from global;
+  margin: 0;
 }
 
 .recoveryLink {
-  composes: marketplaceModalHelperLink from global;
+  text-align: center;
+  width: 100%;
+  display: inline-block;
+  font-size: 1rem;
+  line-height: 1.25rem;
+  color: var(--matterColorDark);
+  font-weight: var(--fontWeightMedium);
+  margin: 10px 0 14px;
+
+  &:hover {
+    color: var(--marketplaceSecondaryColor);
+    text-decoration: none;
+    cursor: pointer;
+  }
 }
 
 .recoveryLinkInfo {
-  composes: marketplaceModalHelperText from global;
+  @apply --marketplaceModalHelperText;
+}
+
+.authFormFields {
+  width: 294px;
+  margin: auto;
+  & > div:first-child {
+    margin: 0 0 10px;
+  }
+  & label {
+    display: none;
+    padding: 0;
+    font-size: 1rem;
+    font-weight: 1.25rem;
+    color: var(--matterColorDark);
+    font-weight: var(--fontWeightMedium);
+    margin-bottom: 0.375rem;
+  }
+
+  & input {
+    padding: 0 0.75rem;
+    border: 0.063rem solid #b9b9b9;
+    height: 34px;
+    background: #ffffff;
+    border: 1px solid #b9b9b9;
+    border-radius: 2px;
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus,
+    &:-webkit-autofill:active {
+      -webkit-box-shadow: 0 0 0 30px white inset !important;
+    }
+  }
+}
+.authFormFields input::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  font-family: 'Didact Gothic';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 24px;
+  color: #000000;
+
+  opacity: 1; /* Firefox */
+  text-align: center;
+}
+.authFormFields input:focus::placeholder {
+  color: transparent;
 }

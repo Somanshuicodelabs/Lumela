@@ -86,7 +86,7 @@ BusinessLandingPageComponent.propTypes = {
 };
 
 const mapStateToProps = state => {
-  const { isDrawerOpen, authStep, redirectRoute } = state.UI;
+  const { isDrawerOpen, authStep, redirectRoute } = state.ui;
   const { pageAssetsData, inProgress, error } = state.hostedAssets || {};
   // console.log(isDrawerOpen, authStep, redirectRoute,"isDrawerOpen, authStep, redirectRoute");
   return { pageAssetsData, inProgress, error, isDrawerOpen, authStep, redirectRoute };

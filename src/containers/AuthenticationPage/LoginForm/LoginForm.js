@@ -1,23 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
+import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
-
-import { 
-  FormattedMessage, 
-  injectIntl, 
-  intlShape 
-} from '../../../util/reactIntl';
+import { Form, PrimaryButton, FieldTextInput, NamedLink } from '../../../components';
 import * as validators from '../../../util/validators';
-import { 
-  Form, 
-  PrimaryButton, 
-  FieldTextInput, 
-  NamedLink } from '../../../components';
-  import IconCollection from '../../../components/IconCollection/IconCollection';
 
 import css from './LoginForm.module.css';
+import IconCollection from '../../../components/IconCollection/IconCollection';
 
 const LoginFormComponent = props => (
   <FinalForm
@@ -30,6 +21,7 @@ const LoginFormComponent = props => (
         handleSubmit,
         inProgress,
         intl,
+        loginError,
         invalid,
         values,
         isDrawerOpen,
@@ -69,15 +61,13 @@ const LoginFormComponent = props => (
       const submitDisabled = invalid || submitInProgress;
 
       const passwordRecoveryLink = (
-        <NamedLink name="PasswordRecoveryPage" className={css.recoveryLink}>
-          <FormattedMessage id="LoginForm.forgotPassword" />
-        </NamedLink>
+        <span className={css.recoveryLink}><FormattedMessage id="LoginForm.forgotPassword" /></span>
       );
-
       return (
         <Form className={classes} onSubmit={handleSubmit}>
-          <div>
+          <div className={css.authFormFields}>
             <FieldTextInput
+              // onFocus="placeholder=''" 
               type="email"
               id={formId ? `${formId}.email` : 'email'}
               name="email"
@@ -109,7 +99,7 @@ const LoginFormComponent = props => (
                 />
               </span>
             </p>
-            <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
+            <PrimaryButton type="submit" inProgress={submitInProgress} >
               <FormattedMessage id="LoginForm.logIn" />
             </PrimaryButton>
             <h6>-Or-</h6>

@@ -256,7 +256,7 @@
   }
 }
 .exploreHeadContainer {
-  grid-template-columns: repeat(5, calc(100% / 2.5));
+  grid-template-columns: repeat(5, calc(100% / 2.1));
   gap: 10px;
   overflow-x: auto;
   -ms-overflow-style: none;

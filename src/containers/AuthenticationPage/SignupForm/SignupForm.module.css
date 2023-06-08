@@ -1,7 +1,7 @@
-@import '../../../styles/customMediaQueries.css';
+@import '../../../styles/propertySets.css';
 
 .root {
-  composes: marketplaceModalFormRootStyles from global;
+  @apply --marketplaceModalFormRootStyles;
 
   justify-content: flex-start;
 
@@ -21,17 +21,121 @@
 }
 
 .firstNameRoot {
-  width: calc(34% - 9px);
+  width: 100%;
+  /* margin-bottom: 1rem; */
 }
 
 .lastNameRoot {
-  width: calc(66% - 9px);
+  width: 100%;
+  /* margin-bottom: 1rem; */
 }
 
 .password {
-  composes: marketplaceModalPasswordMargins from global;
+  @apply --marketplaceModalPasswordMargins;
 }
 
 .bottomWrapper {
-  composes: marketplaceModalBottomWrapper from global;
+  text-align: center;
+  margin: 20px 0 60px;
+  & > button {
+    width: 158px;
+    height: 32px;
+    background: #c96969;
+    border: none;
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 22px;
+    color: #ffffff;
+    text-transform: uppercase;
+    cursor: pointer;
+    &:disabled {
+      background-color: var(--matterColorNegative);
+      color: var(--matterColorLight);
+      box-shadow: none;
+      cursor: not-allowed;
+      &:hover {
+        background-color: var(--matterColorNegative);
+        color: var(--matterColorLight);
+        box-shadow: none;
+      }
+    }
+
+    &:hover {
+      background-color: var(--marketplaceSecondaryColor);
+    }
+  }
+}
+
+.bottomWrapperText {
+  margin: 0;
+}
+
+.termsText {
+  width: 100%;
+  display: inline-block;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  color: var(--matterColor);
+  font-weight: var(--fontWeightMedium);
+  margin: 0.75rem 0 1.5rem;
+
+  & > span {
+    width: 100%;
+    display: inline-block;
+
+    & .termsLink {
+      color: var(--matterColorDark);
+      font-weight: var(--fontWeightMedium);
+
+      &:hover {
+        color: var(--marketplaceSecondaryColor);
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+.authFormFields {
+  & > div {
+    width: 294px;
+    margin: auto;
+  }
+  & label {
+    padding: 0;
+    font-family: 'Didact Gothic';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 24px;
+    color: #000000;
+    margin-bottom: 2px;
+  }
+
+  & input {
+    padding: 0 0.75rem;
+    height: 34px;
+    border: 0.063rem solid #b9b9b9;
+    background: #ffffff;
+    border: 1px solid #b9b9b9;
+    border-radius: 2px;
+    margin-bottom: 20px;
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus,
+    &:-webkit-autofill:active {
+      -webkit-box-shadow: 0 0 0 30px white inset !important;
+    }
+  }
+}
+.authFormFields input::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  text-align: left;
+}
+.authFormFields input:focus::placeholder {
+  color: transparent;
+}
+.locationfld {
+  position: relative;
 }
