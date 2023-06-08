@@ -6,7 +6,7 @@ import React from 'react';
 import { bool, func, number, string } from 'prop-types';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 import classNames from 'classnames';
-import { ACCOUNT_SETTINGS_PAGES } from '../../routeConfiguration';
+import { ACCOUNT_SETTINGS_PAGES } from '../../routing/routeConfiguration';
 import { propTypes } from '../../util/types';
 import { ensureCurrentUser } from '../../util/data';
 import {
@@ -42,9 +42,10 @@ import categoryImg4 from '../../assets/categoryImg4.png';
 import categoryImg5 from '../../assets/categoryImg5.png';
 import categoryImg6 from '../../assets/categoryImg6.png';
 
-import config from '../../config';
+// import config from '../../config';
 import { twitterPageURL } from '../../util/urlHelpers';
 import IconInstagram from '../IconInstagram/IconInstagram';
+import { useConfiguration } from '../../context/configurationContext';
 
 // const renderSocialMediaLinks = intl => {
 //   const {
@@ -130,6 +131,7 @@ const TopbarMobileMenu = props => {
   // const socialMediaLinks = renderSocialMediaLinks(intl);
 
   const user = ensureCurrentUser(currentUser);
+  const config = useConfiguration();
 
   if (!isAuthenticated) {
     const signup = (

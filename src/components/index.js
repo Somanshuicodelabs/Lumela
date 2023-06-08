@@ -104,6 +104,7 @@ export { default as LocationAutocompleteInput } from './LocationAutocompleteInpu
 export { default as StripeBankAccountTokenInputField } from './StripeBankAccountTokenInputField/StripeBankAccountTokenInputField';
 export { default as TopbarMobileMenu } from './TopbarMobileMenu/TopbarMobileMenu';
 export { default as TopbarDesktop } from './TopbarDesktop/TopbarDesktop';
+export { default as TopbarSearchForm } from './Topbar/TopbarSearchForm/TopbarSearchForm';
 
 // Tab navigation
 export { default as TabNav } from './TabNav/TabNav';

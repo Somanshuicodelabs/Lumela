@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { bool, func, object, number, string } from 'prop-types';
 import { FormattedMessage, intlShape } from '../../util/reactIntl';
 import classNames from 'classnames';
-import { ACCOUNT_SETTINGS_PAGES } from '../../routeConfiguration';
+import { ACCOUNT_SETTINGS_PAGES } from '../../routing/routeConfiguration';
 import { propTypes } from '../../util/types';
 import {
   Avatar,
@@ -18,10 +18,11 @@ import {
   Modal,
   Page,
 } from '../../components';
-import { LoginForm, SignupForm, TopbarSearchForm } from '../../forms';
-import IconNotification from '../IconNotification/IconNotification';
+// import { LoginForm, SignupForm,  } from '../../components';
+import TopbarSearchForm from '../../components/Topbar/TopbarSearchForm/TopbarSearchForm';
+// import IconNotification from '../IconNotification/IconNotification';
 import IconDashboard from '../IconDashboard/IconDashboard';
-import IconMessage from '../IconMessage/IconMessage';
+// import IconMessage from '../IconMessage/IconMessage';
 import IconUser from '../IconUser/IconUser';
 
 import hair from './assets/hair.png';

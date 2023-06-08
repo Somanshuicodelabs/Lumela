@@ -5,6 +5,7 @@ import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
 import pickBy from 'lodash/pickBy';
 import classNames from 'classnames';
 // import config from '../../config';
+import {search} from '../../config/configMaps';
 import routeConfiguration from '../../routing/routeConfiguration';
 import { withViewport } from '../../util/contextHelpers';
 import { parse, stringify } from '../../util/urlHelpers';
@@ -28,11 +29,6 @@ import {
 import TopbarSearchForm from '../../containers/SearchPage/TopbarSearchForm/TopbarSearchForm';
 import AuthenticationPage from '../../containers/AuthenticationPage/AuthenticationPage';
 
-// import MenuIcon from './MenuIcon';
-// import IconBag from '../IconBag/IconBag';
-// import IconBin from '../IconBin/IconBin';
-// import IconCollection from '../IconCollection/IconCollection';
-
 import cartImg from '../../assets/businessImg2.png';
 
 // import SearchIcon from './SearchIcon';
@@ -42,6 +38,11 @@ import cartImg from '../../assets/businessImg2.png';
 // import IconNotification from '../IconNotification/IconNotification';
 
 import css from './Topbar.module.css';
+import { useConfiguration } from '../../context/configurationContext';
+import IconBag from '../IconBag/IconBag';
+import IconBin from '../IconBin/IconBin';
+import MenuIcon from '../Topbar/MenuIcon';
+import IconCollection from '../IconCollection/IconCollection';
 
 const MAX_MOBILE_SCREEN_WIDTH = 992;
 
@@ -196,6 +197,7 @@ class TopbarComponent extends Component {
       // sendVerificationEmailInProgress,
       // sendVerificationEmailError,
     } = this.props;
+    const { config } = this.props;
 
     const { mobilemenu, mobilesearch, address, origin, bounds } = parse(location.search, {
       latlng: ['origin'],
@@ -228,7 +230,7 @@ class TopbarComponent extends Component {
     );
 
     // Only render current search if full place object is available in the URL params
-    const locationFieldsPresent = config.sortSearchByDistance
+    const locationFieldsPresent = search.sortSearchByDistance
       ? address && origin && bounds
       : address && bounds;
     const initialSearchFormValues = {
