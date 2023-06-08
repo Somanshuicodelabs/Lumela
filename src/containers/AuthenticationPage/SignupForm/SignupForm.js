@@ -7,10 +7,16 @@ import classNames from 'classnames';
 
 import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
 import * as validators from '../../../util/validators';
-import { Form, PrimaryButton, FieldTextInput } from '../../../components';
+import { Form,
+         PrimaryButton, 
+         FieldTextInput,
+         LocationAutocompleteInput 
+       } from '../../../components';
 
 import css from './SignupForm.module.css';
 
+const KEY_CODE_ENTER = 13;
+const identity = v => v;
 const SignupFormComponent = props => (
   <FinalForm
     {...props}
@@ -25,6 +31,8 @@ const SignupFormComponent = props => (
         invalid,
         intl,
         termsAndConditions,
+        isMobile,
+        desktopInputRoot,
       } = fieldRenderProps;
 
       // email
@@ -74,9 +82,25 @@ const SignupFormComponent = props => (
         passwordMaxLength
       );
 
+       //address
+
+       const locationLabel = intl.formatMessage({
+        id: 'SignupForm.locationLabel',
+      });
+      const locationRequiredMessage = intl.formatMessage({
+        id: 'SignupForm.locationRequired',
+      });
+      const locationRequired = validators.required(locationRequiredMessage);
+      // const emailInvalidMessage = intl.formatMessage({
+      //   id: 'SignupForm.emailInvalid',
+      // });
+      const addressValid = validators.emailFormatValid(emailInvalidMessage);
+
+
       const classes = classNames(rootClassName || css.root, className);
       const submitInProgress = inProgress;
       const submitDisabled = invalid || submitInProgress;
+      const desktopInputRootClass = desktopInputRoot || css.desktopInputRoot;
 
       return (
         <Form className={classes} onSubmit={handleSubmit}>
@@ -146,7 +170,61 @@ const SignupFormComponent = props => (
               })}
               validate={passwordValidators}
             />
+            <FieldTextInput
+              className={css.password}
+              type="password"
+              id={formId ? `${formId}.confirm-password` : 'confirm-password'}
+              name="confirm-password"
+              autoComplete="new-password"
+              label={confirmpasswordLabel}
+              placeholder={passwordPlaceholder}
+              validate={passwordValidators}
+            />
           </div>
+          <div className={css.locationfld}>
+              <label htmlFor="location">{locationLabel}</label>
+
+              <Field
+                name="location"
+                format={identity}
+                render={({ input, meta }) => {
+                  const { onChange, ...restInput } = input;
+
+                  // Merge the standard onChange function with custom behaviur. A better solution would
+                  // be to use the FormSpy component from Final Form and pass this.onChange to the
+                  // onChange prop but that breaks due to insufficient subscription handling.
+                  // See: https://github.com/final-form/react-final-form/issues/159
+                  const searchOnChange = value => {
+                    onChange(value);
+                    onChange(value);
+                  };
+
+                  let searchInput = { ...restInput, onChange: searchOnChange };
+                  return (
+                    <LocationAutocompleteInput
+                      className={isMobile ? css.mobileInputRoot : desktopInputRootClass}
+                      iconClassName={isMobile ? css.mobileIcon : css.desktopIcon}
+                      inputClassName={isMobile ? css.mobileInput : css.desktopInput}
+                      predictionsClassName={
+                        isMobile ? css.mobilePredictions : css.desktopPredictions
+                      }
+                      predictionsAttributionClassName={
+                        isMobile ? css.mobilePredictionsAttribution : null
+                      }
+                      placeholder={intl.formatMessage({ id: 'TopbarSearchForm.placeholder' })}
+                      closeOnBlur={!isMobile}
+                      inputRef={node => {
+                        searchInput = node;
+                      }}
+                      useDefaultPredictions={false}
+                      input={searchInput}
+                      meta={meta}
+                      isSignupLocation={true}
+                    />
+                  );
+                }}
+              />
+            </div>
 
           <div className={css.bottomWrapper}>
             {termsAndConditions}

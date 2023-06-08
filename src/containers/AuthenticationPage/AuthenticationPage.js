@@ -34,6 +34,8 @@ import {
   Footer,
   Modal,
   LayoutSingleColumn,
+  IconEmailSent,
+  IconClose,
 } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
@@ -54,6 +56,11 @@ import { TOS_ASSET_NAME, PRIVACY_POLICY_ASSET_NAME } from './AuthenticationPage.
 
 import css from './AuthenticationPage.module.css';
 import { FacebookLogo, GoogleLogo } from './socialLoginLogos';
+import Drawer from 'react-modern-drawer';
+// import '../../styles/react-modern-drawer.css';
+// import './drawer.css';
+import { recoverPassword } from '../PasswordRecoveryPage/PasswordRecoveryPage.duck';
+import IconCollection from '../../components/IconCollection/IconCollection';
 
 // Social login buttons are needed by AuthenticationForms
 export const SocialLoginButtonsMaybe = props => {
@@ -141,7 +148,28 @@ export const AuthenticationForms = props => {
     authInProgress,
     submitSignup,
     termsAndConditions,
+    currentUser,
+    intl,
+    isAuthenticated,
+    location,
+    authStep,
+    redirectRoute,
+    isDrawerOpen,
+    onManageToggleDrawer,
+    confirmError,
+    submitSingupWithIdp,
+    tab,
+    sendVerificationEmailInProgress,
+    sendVerificationEmailError,
+    onResendVerificationEmail,
+    onManageDisableScrolling,
   } = props;
+  const MAX_MOBILE_SCREEN_WIDTH = 768;
+    const isMobileLayout =typeof window !== 'undefined' && window.innerWidth < MAX_MOBILE_SCREEN_WIDTH;
+    // const isConfirm = tab === 'confirm';
+    // const isLogin = tab === 'login';
+    const user = ensureCurrentUser(currentUser);
+    const currentUserLoaded = !!user.id;
   const fromState = { state: from ? { from } : null };
   const tabs = [
     {
@@ -173,7 +201,10 @@ export const AuthenticationForms = props => {
   const handleSubmitSignup = values => {
     const { fname, lname, ...rest } = values;
     const params = { firstName: fname.trim(), lastName: lname.trim(), ...rest };
-    submitSignup(params);
+    submitSignup(params).then(() =>{
+      console.log(redirectRoute, '**** submitSignup **** => redirectRoute');
+      onManageToggleDrawer(true, 'SIDE-MENU'); 
+    });
   };
 
   const loginErrorMessage = (
@@ -325,7 +356,8 @@ export const AuthenticationOrConfirmInfoForm = props => {
       authInProgress={authInProgress}
       submitSignup={submitSignup}
       termsAndConditions={termsAndConditions}
-    ></AuthenticationForms>
+    >
+    </AuthenticationForms>
   );
 };
 

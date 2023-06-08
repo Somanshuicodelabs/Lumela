@@ -35,6 +35,7 @@ import TopbarMobileMenu from './TopbarMobileMenu/TopbarMobileMenu';
 import TopbarDesktop from './TopbarDesktop/TopbarDesktop';
 // import cartImg from '../../assets/fonts'
 
+
 import css from './Topbar.module.css';
 
 const MAX_MOBILE_SCREEN_WIDTH = 768;
@@ -192,8 +193,9 @@ class TopbarComponent extends Component {
       isHeaderSticky,
       pathname,
     } = this.props;
+    console.log('onManageToggleDrawerjgvjhgvb', onManageDisableScrolling)
 
-    const { mobilemenu, mobilesearch, keywords, address, origin, bounds } = parse(location.search, {
+    const { mobilemenu, mobilesearch, keywords, address, origin, bounds } = parse(location?.search, {
       latlng: ['origin'],
       latlngBounds: ['bounds'],
     });
@@ -206,7 +208,7 @@ class TopbarComponent extends Component {
 
     const mobileMenu = (
       <TopbarMobileMenu
-        onManageDisableScrolling={onManageDisableScrolling}
+        // onManageDisableScrolling={onManageDisableScrolling}
         onClose={this.handleMobileMenuClose}
         isAuthenticated={isAuthenticated}
         currentUserHasListings={currentUserHasListings}
@@ -517,7 +519,7 @@ class TopbarComponent extends Component {
         </div>
         <div className={css.desktop}>
           <TopbarDesktop
-            onManageDisableScrolling={onManageDisableScrolling}
+            // onManageDisableScrolling={onManageDisableScrolling}
             isOpen={this.state.modalIsOpen}
             onClose={this.isMobileAccountOpen}
             className={desktopClassName}
@@ -537,6 +539,7 @@ class TopbarComponent extends Component {
             isDrawerOpen={isDrawerOpen}
             onManageToggleDrawer={onManageToggleDrawer}
             pathname={pathname}
+            appConfig={config}
           />
         </div>
         <Modal
@@ -544,7 +547,7 @@ class TopbarComponent extends Component {
           isOpen={isMobileMenuOpen}
           onClose={this.handleMobileMenuClose}
           usePortal
-          onManageDisableScrolling={onManageDisableScrolling}
+          // onManageDisableScrolling={onManageDisableScrolling}
           isMobileMenuModal={true}
         >
           {authInProgress ? null : mobileMenu}
@@ -555,12 +558,13 @@ class TopbarComponent extends Component {
           isOpen={isMobileSearchOpen}
           onClose={this.handleMobileSearchClose}
           usePortal
-          onManageDisableScrolling={onManageDisableScrolling}
+          // onManageDisableScrolling={onManageDisableScrolling}
         >
           <div className={css.searchContainer}>
             <TopbarSearchForm
               onSubmit={this.handleSubmit}
               initialValues={initialSearchFormValues}
+              appConfig={config}
               isMobile
             />
             <p className={css.mobileHelp}>

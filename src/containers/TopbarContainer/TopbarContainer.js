@@ -31,6 +31,8 @@ export const TopbarContainerComponent = props => {
     ...rest
   } = props;
 
+  console.log('ManageDisableScrolling', onManageDisableScrolling)
+
   return (
     <Topbar
       authInProgress={authInProgress}

@@ -13,6 +13,7 @@ import { NamedRedirect } from '../components';
 const pageDataLoadingAPI = getPageDataLoadingAPI();
 
 const AuthenticationPage = loadable(() => import(/* webpackChunkName: "AuthenticationPage" */ '../containers/AuthenticationPage/AuthenticationPage'));
+const BusinessLandingPage = loadable(() => import(/* webpackChunkName: "AuthenticationPage" */ '../containers/BusinessLandingPage/BusinessLandingPage'));
 const CheckoutPage = loadable(() => import(/* webpackChunkName: "CheckoutPage" */ '../containers/CheckoutPage/CheckoutPage'));
 const CMSPage = loadable(() => import(/* webpackChunkName: "CMSPage" */ '../containers/CMSPage/CMSPage'));
 const ContactDetailsPage = loadable(() => import(/* webpackChunkName: "ContactDetailsPage" */ '../containers/ContactDetailsPage/ContactDetailsPage'));
@@ -74,6 +75,12 @@ const routeConfiguration = (layoutConfig) => {
       name: 'LandingPage',
       component: LandingPage,
       loadData: pageDataLoadingAPI.LandingPage.loadData,
+    },
+    {
+      path: '/business-landing-page',
+      name: 'BusinessLandingPage',
+      component: BusinessLandingPage,
+      loadData: pageDataLoadingAPI.BusinessLandingPage.loadData,
     },
     {
       path: '/p/:pageId',

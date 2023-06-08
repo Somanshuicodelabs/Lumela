@@ -4,9 +4,18 @@ import { compose } from 'redux';
 import { Form as FinalForm } from 'react-final-form';
 import classNames from 'classnames';
 
-import { FormattedMessage, injectIntl, intlShape } from '../../../util/reactIntl';
+import { 
+  FormattedMessage, 
+  injectIntl, 
+  intlShape 
+} from '../../../util/reactIntl';
 import * as validators from '../../../util/validators';
-import { Form, PrimaryButton, FieldTextInput, NamedLink } from '../../../components';
+import { 
+  Form, 
+  PrimaryButton, 
+  FieldTextInput, 
+  NamedLink } from '../../../components';
+  import IconCollection from '../../../components/IconCollection/IconCollection';
 
 import css from './LoginForm.module.css';
 
@@ -22,6 +31,9 @@ const LoginFormComponent = props => (
         inProgress,
         intl,
         invalid,
+        values,
+        isDrawerOpen,
+        onManageToggleDrawer,
       } = fieldRenderProps;
 
       // email
@@ -85,9 +97,12 @@ const LoginFormComponent = props => (
               validate={passwordRequired}
             />
           </div>
+          {loginError? <div className={css.validation}>Invalid Username and Password</div>:null}
           <div className={css.bottomWrapper}>
             <p className={css.bottomWrapperText}>
-              <span className={css.recoveryLinkInfo}>
+              <span className={css.recoveryLinkInfo} 
+                onClick={()=> onManageToggleDrawer(!isDrawerOpen, 'FORGOT')}
+              >
                 <FormattedMessage
                   id="LoginForm.forgotPasswordInfo"
                   values={{ passwordRecoveryLink }}
@@ -97,6 +112,8 @@ const LoginFormComponent = props => (
             <PrimaryButton type="submit" inProgress={submitInProgress} disabled={submitDisabled}>
               <FormattedMessage id="LoginForm.logIn" />
             </PrimaryButton>
+            <h6>-Or-</h6>
+            <IconCollection name="GOOGLE_SIGN"/>
           </div>
         </Form>
       );

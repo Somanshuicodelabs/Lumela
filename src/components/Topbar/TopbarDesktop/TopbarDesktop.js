@@ -35,10 +35,20 @@ import newIn from './assets/new-in.png';
 import shopLifestyle from './assets/shop-lifestyle.png';
 import latestArticle from './assets/latest-article.png';
 import menArticle from './assets/men-article.png';
-import AuthenticationPage from '../../../containers/AuthenticationPage/AuthenticationPage';
+// import AuthenticationPage from '../../../containers/AuthenticationPage/AuthenticationPage';
 import IconRightArrow from '../../IconRightArrow/IconRightArrow';
 import IconBag from '../../IconBag/IconBag';
 import IconBin from '../../IconBin/IconBin';
+
+import IconAppointment from '../../IconAppointment/IconAppointment';
+import IconMyOrders from '../../IconMyOrders/IconMyOrders';
+import IconForm from '../../IconForm/IconForm';
+import IconHelp from '../../IconHelp/IconHelp';
+import IconLogOff from '../../IconLogOff/IconLogOff';
+
+import IconHeartFilled from '../../IconHeartFilled/IconHeartFilled';
+import IconUserProfile from '../../IconUserProfile/IconUserProfile';
+import IconPaymentMethod from '../../IconPaymentMethod/IconPaymentMethod';
 import IconCollection from '../../IconCollection/IconCollection';
 import {OutsideClickHandler} from '../../../components';
 import Drawer from 'react-modern-drawer';
@@ -141,76 +151,77 @@ const TopbarDesktop = props => {
 
   const { firstName, lastName } = (currentUser && currentUser.attributes.profile) || {};
 
-  const profileMenuContent = (
-    <div className={css.profileMenuContent}>
-      <div className={css.authHeader}>
-        <h1>
-          <IconCollection name="PROFILE_ICON" />
-          <span>
-            Welcome {firstName} {lastName}
+  const profileMenuContent = authenticatedOnClientSide
+    ? (
+      <div className={css.profileMenuContent}>
+        <div className={css.authHeader}>
+          <h1>
+            <IconCollection name="PROFILE_ICON" />
+            <span>
+              Welcome {firstName} {lastName}
+            </span>
+          </h1>
+          <span className={css.closeIcon} onClick={onClose}>
+            &times;
           </span>
-        </h1>
-        <span className={css.closeIcon} onClick={onClose}>
-          &times;
-        </span>
-      </div>
-      <div key="Profile">
-        <div className={css.currentUserDetails}>
-          {/* {
+        </div>
+        <div key="Profile">
+          <div className={css.currentUserDetails}>
+            {/* {
               isAuthenticated ? <h2>{firstName}{" "}{lastName}</h2> : null
             } */}
-          <p>Be sure to validate your email address*</p>
-          <IconCollection name="PROFILE_PICTURE" />
+            <p>Be sure to validate your email address*</p>
+            <IconCollection name="PROFILE_PICTURE" />
+          </div>
         </div>
-      </div>
-      <div key="StoreManager">
-        {currentUserListingPresent ? (
+        <div key="StoreManager">
+          {currentUserListingPresent ? (
+            <NamedLink className={css.dropdownLink} name="BusinessLandingPage">
+              Store Manager
+            </NamedLink>
+          ) : null}
+        </div>
+        <div key="">
           <NamedLink className={css.dropdownLink} name="BusinessLandingPage">
-            Store Manager
+            PERSONAL DETAILS
           </NamedLink>
-        ) : null}
-      </div>
-      <div key="">
-        <NamedLink className={css.dropdownLink} name="BusinessLandingPage">
-          PERSONAL DETAILS
-        </NamedLink>
-      </div>
-      <div key="Order">
-        <NamedLink className={css.dropdownLink} name="BusinessLandingPage">
-          PAYMENT METHODS
-        </NamedLink>
-      </div>
-      <div key="Message">
-        <NamedLink className={css.dropdownLink} name="BusinessLandingPage">
-          ORDERS
-        </NamedLink>
-      </div>
-      <div key="Message">
-        <NamedLink className={css.dropdownLink} name="BusinessLandingPage">
-          APPOINTMENTS
-        </NamedLink>
-      </div>
-      {/* <div key="Message">
+        </div>
+        <div key="Order">
+          <NamedLink className={css.dropdownLink} name="BusinessLandingPage">
+            PAYMENT METHODS
+          </NamedLink>
+        </div>
+        <div key="Message">
+          <NamedLink className={css.dropdownLink} name="BusinessLandingPage">
+            ORDERS
+          </NamedLink>
+        </div>
+        <div key="Message">
+          <NamedLink className={css.dropdownLink} name="BusinessLandingPage">
+            APPOINTMENTS
+          </NamedLink>
+        </div>
+        {/* <div key="Message">
         <NamedLink className={css.dropdownLink} name="ProfileSettingsPage">
           My Forms
         </NamedLink>
       </div> */}
-      <div key="Message">
-        <NamedLink className={css.dropdownLink} name="BusinessLandingPage">
-          Liked Items
-        </NamedLink>
-      </div>
-      <div key="Message">
-        <NamedLink className={css.dropdownLink} name="BusinessLandingPage">
-          GET HELP
-        </NamedLink>
-      </div>
-      <div key="logout">
-        <InlineTextButton rootClassName={css.logoutButton} onClick={onLogout}>
-          <FormattedMessage id="TopbarDesktop.logout" />
-        </InlineTextButton>
-      </div>
-      {/* <MenuItem key="EditListingPage">
+        <div key="Message">
+          <NamedLink className={css.dropdownLink} name="BusinessLandingPage">
+            Liked Items
+          </NamedLink>
+        </div>
+        <div key="Message">
+          <NamedLink className={css.dropdownLink} name="BusinessLandingPage">
+            GET HELP
+          </NamedLink>
+        </div>
+        <div key="logout">
+          <InlineTextButton rootClassName={css.logoutButton} onClick={onLogout}>
+            <FormattedMessage id="TopbarDesktop.logout" />
+          </InlineTextButton>
+        </div>
+        {/* <MenuItem key="EditListingPage">
           <OwnListingLink
             listing={currentUserListing}
             listingFetched={currentUserListingFetched}
@@ -225,7 +236,7 @@ const TopbarDesktop = props => {
             </div>
           </OwnListingLink>
         </MenuItem> */}
-      {/* 
+        {/* 
         <MenuItem key="ProfileSettingsPage">
           <NamedLink
             className={classNames(css.profileSettingsLink, currentPageClass('ProfileSettingsPage'))}
@@ -242,13 +253,13 @@ const TopbarDesktop = props => {
             <FormattedMessage id="TopbarDesktop.accountSettingsLink" />
           </NamedLink>
         </MenuItem> */}
-      <div className={css.startWithUs}>
-        <NamedLink name="ProfileSettingsPage">
-          <IconCollection name="YOUR_BUSINESS" />
-        </NamedLink>
+        <div className={css.startWithUs}>
+          <NamedLink name="ProfileSettingsPage">
+            <IconCollection name="YOUR_BUSINESS" />
+          </NamedLink>
+        </div>
       </div>
-    </div>
-  );
+    ) : null;
 
   const mobileProfileMenuContent = (
     <div className={css.profileMenuContent}>
@@ -321,7 +332,7 @@ const TopbarDesktop = props => {
     </div>
   ) : null;
 
-  const cart = (
+  const cart = authenticatedOnClientSide ? (
     <Menu className={css.menuDropdown}>
       <MenuLabel className={css.profileMenuLabel} isOpenClassName={css.profileMenuIsOpen}>
         <IconBag />
@@ -537,7 +548,7 @@ const TopbarDesktop = props => {
         </MenuItem>
       </MenuContent>
     </Menu>
-  );
+  ) : null;
 
   const signupLink = isAuthenticatedOrJustHydrated ? null : (
     <NamedLink name="SignupPage" className={css.signupLink}>
@@ -1401,18 +1412,18 @@ const TopbarDesktop = props => {
         </OutsideClickHandler>
       </nav>
 
-      <AuthenticationPage
-        authStep={authStep}
-        redirectRoute={redirectRoute}
-        isDrawerOpen={isDrawerOpen}
-        onManageToggleDrawer={onManageToggleDrawer}
-      />
+      {/* <AuthenticationPage
+        // authStep={authStep}
+        // redirectRoute={redirectRoute}
+        // isDrawerOpen={isDrawerOpen}
+        // onManageToggleDrawer={onManageToggleDrawer}
+      /> */}
       <Modal
         id="TopbarMobileMenu"
         isOpen={isOpen && isAuthenticated && isTabeLayout}
         onClose={onClose}
         usePortal
-        onManageDisableScrolling={onManageDisableScrolling}
+        // onManageDisableScrolling={onManageDisableScrolling}
         isMobileMenuModal={true}
       >
         {mobileProfileMenuContent}

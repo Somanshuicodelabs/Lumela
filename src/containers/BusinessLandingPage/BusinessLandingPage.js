@@ -11,7 +11,7 @@ import PageBuilder, { SectionBuilder } from '../PageBuilder/PageBuilder';
 
 import FallbackPage, { fallbackSections } from './FallbackPage';
 import { ASSET_NAME } from './BusinessLandingPage.duck';
-import { manageToggleDrawer } from '../../ducks/UI.duck';
+import { manageToggleDrawer } from '../../ducks/ui.duck';
 
 // This "content-only" component can be used in modals etc.
 const BusinessLandingContent = props => {

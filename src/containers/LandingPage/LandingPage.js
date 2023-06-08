@@ -33,7 +33,7 @@ const LandingPageContent = props => {
   if (inProgress) {
     return null;
   }
-
+console.log('onManageToggleDrawerabc', onManageToggleDrawer)
   // We don't want to add h1 heading twice to the HTML (SEO issue).
   // Modal's header is mapped as h2
   const hasContent = data => typeof data?.content === 'string';
@@ -74,6 +74,7 @@ const LandingPageComponent = props => {
     onManageToggleDrawer,
     listings,
   } = props;
+  console.log('onManageToggleDrawerabc', onManageToggleDrawer)
 
   const [scroll, setScroll] = useState(false);
   useEffect(() => {

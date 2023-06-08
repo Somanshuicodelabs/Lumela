@@ -8,6 +8,7 @@ import { validProps } from './Field';
 import LayoutComposer from './LayoutComposer/index.js';
 import SectionBuilder from './SectionBuilder/SectionBuilder.js';
 import StaticPage from './StaticPage.js';
+import Topbar from "../../components/Topbar/Topbar"
 
 import css from './PageBuilder.module.css';
 // Mandatory css no need to hook with other
@@ -86,11 +87,12 @@ const PageBuilder = props => {
     isDrawerOpen,
     authStep,
     redirectRoute,
-    onManageToggleDrawer,
     isLandingPage,
     isHeaderSticky,
     ...pageProps
   } = props;
+  const {onManageToggleDrawer}= options || {};
+  console.log('onManageToggleDrawer', onManageToggleDrawer)
   if (!pageAssetsData && fallbackPage && !inProgress && error) {
     return fallbackPage;
   }
@@ -108,8 +110,8 @@ const PageBuilder = props => {
   return (
     <StaticPage {...pageMetaProps} {...pageProps}>
       <LayoutComposer areas={layoutAreas} className={css.layout}>
-        {props => {
-          const { Topbar, Main, Footer } = props;
+      {props => {
+          const {Main, Footer } = props;
           return (
             <>
               <Topbar
@@ -117,6 +119,7 @@ const PageBuilder = props => {
                 className={css.topbar}
                 isHeaderStick={isHeaderSticky}
                 isLandingPage={landingPageHeaderStyle}
+                onManageToggleDrawer={onManageToggleDrawer}
               >
                 <TopbarContainer
                   isHeaderSticky={isHeaderSticky}
