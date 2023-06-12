@@ -69,6 +69,7 @@ export { default as ValidationError } from './ValidationError/ValidationError';
 
 export { default as Button, PrimaryButton, PrimaryButtonInline, SecondaryButton, SecondaryButtonInline, InlineTextButton, SocialLoginButton } from './Button/Button';
 export { default as ImageFromFile } from './ImageFromFile/ImageFromFile';
+export { default as AddImages } from './AddImages/AddImages';
 export { default as LinkedLogo } from './Logo/LinkedLogo';
 export { default as ListingLink } from './ListingLink/ListingLink';
 export { default as PaginationLinks } from './PaginationLinks/PaginationLinks';
@@ -101,6 +102,7 @@ export { default as FieldPhoneNumberInput } from './FieldPhoneNumberInput/FieldP
 export { default as LocationAutocompleteInput, FieldLocationAutocompleteInput } from './LocationAutocompleteInput/LocationAutocompleteInput';
 // Fields and inputs using old naming pattern
 export { default as StripeBankAccountTokenInputField } from './StripeBankAccountTokenInputField/StripeBankAccountTokenInputField';
+export { default as LocationAutocompleteInputField } from './LocationAutocompleteInput/LocationAutocompleteInput';
 
 // Tab navigation
 export { default as TabNav } from './TabNav/TabNav';

@@ -37,41 +37,34 @@ import {
 // Import modules from this directory
 import EditListingWizardTab, {
   DETAILS,
-  PRICING,
-  PRICING_AND_STOCK,
-  DELIVERY,
-  LOCATION,
-  AVAILABILITY,
+  DESCRIPTION,
+  OFFERS,
+  TEAM_SIZE,
+  HAIR_TEXTURES,
   PHOTOS,
+  AVAILABILITY,
+  PRICING,
+  BOOKING_SYSTEM,
+  SKIN_TONES,
+  SKIN_TYPES
 } from './EditListingWizardTab';
 import css from './EditListingWizard.module.css';
-
-// Show availability calendar only if environment variable availabilityEnabled is true
-const availabilityMaybe = config.enableAvailability ? [AVAILABILITY] : [];
-
-
 
 // You can reorder these panels.
 // Note 1: You need to change save button translations for new listing flow
 // Note 2: Ensure that draft listing is created after the first panel
 // and listing publishing happens after last panel.
-// const TABS_DETAILS_ONLY = [DETAILS];
-// const TABS_PRODUCT = [DETAILS, PRICING_AND_STOCK, DELIVERY, PHOTOS];
-// const TABS_BOOKING = [DETAILS, LOCATION, PRICING, AVAILABILITY, PHOTOS];
-// const TABS_ALL = [...TABS_PRODUCT, ...TABS_BOOKING];
-
-export const TABS = [
-  DESCRIPTION,
+const TABS_DETAILS_ONLY = [DESCRIPTION];
+const TABS_PRODUCT = [DESCRIPTION, PHOTOS];
+const TABS_BOOKING = [ DESCRIPTION,
   PHOTOS,
   OFFERS,
   HAIR_TEXTURES,
   SKIN_TONES,
   SKIN_TYPES,
   TEAM_SIZE,
-  ...availabilityMaybe,
-  BOOKING_SYSTEM,
-  // PRICING,
-];
+  BOOKING_SYSTEM,];
+const TABS_ALL = [...TABS_PRODUCT, ...TABS_BOOKING];
 
 // Tabs are horizontal in small screens
 const MAX_HORIZONTAL_NAV_SCREEN_WIDTH = 1023;
@@ -79,9 +72,17 @@ const MAX_HORIZONTAL_NAV_SCREEN_WIDTH = 1023;
 const STRIPE_ONBOARDING_RETURN_URL_SUCCESS = 'success';
 const STRIPE_ONBOARDING_RETURN_URL_FAILURE = 'failure';
 
+/**
+ * Return translations for wizard tab: label and submit button.
+ *
+ * @param {Object} intl
+ * @param {string} tab name of the tab/panel in the wizard
+ * @param {boolean} isNewListingFlow
+ * @param {string} processName
+ */
+const tabLabelAndSubmit = (intl, tab, isNewListingFlow, processName) => {
+  let key = "null";
 
-const tabLabel = (intl, tab) => {
-  let key = null;
   if (tab === DESCRIPTION) {
     key = 'EditListingWizard.tabLabelDescription';
   } else if (tab === OFFERS) {
@@ -103,54 +104,13 @@ const tabLabel = (intl, tab) => {
   } else if (tab === SKIN_TYPES) {
     key = 'EditListingWizard.tabLabelPricing';
   }
-  return intl.formatMessage({ id: key });
-};
-
-/**
- * Return translations for wizard tab: label and submit button.
- *
- * @param {Object} intl
- * @param {string} tab name of the tab/panel in the wizard
- * @param {boolean} isNewListingFlow
- * @param {string} processName
- */
-
-
-
-const tabLabelAndSubmit = (intl, tab, isNewListingFlow, processName) => {
-  const processNameString = isNewListingFlow ? `${processName}.` : '';
-  const newOrEdit = isNewListingFlow ? 'new' : 'edit';
-
-  let labelKey = null;
-  let submitButtonKey = null;
-  if (tab === DETAILS) {
-    labelKey = 'EditListingWizard.tabLabelDetails';
-    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveDetails`;
-  } else if (tab === PRICING) {
-    labelKey = 'EditListingWizard.tabLabelPricing';
-    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.savePricing`;
-  } else if (tab === PRICING_AND_STOCK) {
-    labelKey = 'EditListingWizard.tabLabelPricingAndStock';
-    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.savePricingAndStock`;
-  } else if (tab === DELIVERY) {
-    labelKey = 'EditListingWizard.tabLabelDelivery';
-    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveDelivery`;
-  } else if (tab === LOCATION) {
-    labelKey = 'EditListingWizard.tabLabelLocation';
-    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveLocation`;
-  } else if (tab === AVAILABILITY) {
-    labelKey = 'EditListingWizard.tabLabelAvailability';
-    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.saveAvailability`;
-  } else if (tab === PHOTOS) {
-    labelKey = 'EditListingWizard.tabLabelPhotos';
-    submitButtonKey = `EditListingWizard.${processNameString}${newOrEdit}.savePhotos`;
-  }
 
   return {
-    label: intl.formatMessage({ id: labelKey }),
-    submitButton: intl.formatMessage({ id: submitButtonKey }),
+    label: intl?.formatMessage({ id: key }),
+    // submitButton: intl.formatMessage({ id: submitButtonKey }),
   };
 };
+
 
 /**
  * Validate listing fields (in extended data) that are included through configListing.js
@@ -210,20 +170,18 @@ const hasValidListingFieldsInExtendedData = (publicData, privateData, config) =>
  *
  * @return true if tab / step is completed.
  */
-const tabCompleted = (tab, listing, config) => {
+
+
+const tabCompleted = (tab, listing) => {
   const {
     availabilityPlan,
-    description,
-    geolocation,
     price,
     title,
     publicData,
-    privateData,
+    // description,
+    // geolocation,
   } = listing.attributes;
   const images = listing.images;
-  const { listingType, transactionProcessAlias, unitType, shippingEnabled, pickupEnabled } =
-    publicData || {};
-  const deliveryOptionPicked = publicData && (shippingEnabled || pickupEnabled);
 
   switch (tab) {
     case DESCRIPTION:
@@ -269,7 +227,7 @@ const tabsActive = (isNew, listing, tabs, config) => {
     const hasListingType = !!listing?.attributes?.publicData?.listingType;
     const prevTabComletedInNewFlow = tabCompleted(tabs[previousTabIndex], listing, config);
     const isActive =
-      previousTabIndex >= 0 ? !isNew || tabCompleted(filteredTabs[previousTabIndex], listing) : true;
+      validTab && !isNew ? hasListingType : validTab && isNew ? prevTabComletedInNewFlow : true;
     return { ...acc, [tab]: isActive };
   }, {});
 };
@@ -410,6 +368,7 @@ class EditListingWizard extends Component {
       currentUser,
       config,
       routeConfiguration,
+      onImageUpload,
       ...rest
     } = this.props;
 
@@ -420,6 +379,39 @@ class EditListingWizard extends Component {
     const rootClasses = rootClassName || css.root;
     const classes = classNames(rootClasses, className);
     const currentListing = ensureListing(listing);
+
+    const { offers } = (currentListing && currentListing.attributes.publicData) || {};
+
+    const FILTERED_TABS = TABS_ALL.filter(ft => {
+      let checkTab = {
+        [HAIR_TEXTURES]: false,
+        [SKIN_TONES]: false,
+        [SKIN_TYPES]: false,
+      };
+      const step1 = offers?.length && offers?.split(',')?.length && offers?.split(',')?.findIndex(o => ["makeupArtist", "skinSpecialist", "dermatologist"].includes(o));
+      const step2 = offers?.length && offers?.split(',')?.length && offers?.split(',')?.findIndex(o => ["hairStylist", "barberShop", "braidsandlocs", "eyebrows", "eyeLashes", "extensions", "hairRemoval"].includes(o));
+      if (step1 > -1) {
+        checkTab[SKIN_TONES] = true;
+        checkTab[SKIN_TYPES] = true;
+      }
+      if (step2 > -1) {
+        checkTab[HAIR_TEXTURES] = true;
+      }
+
+      if (Object.keys(checkTab).includes(ft)) {
+        if (checkTab[ft]) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+      return true;
+    });
+
+
+
+
+
     const savedProcessAlias = currentListing.attributes?.publicData?.transactionProcessAlias;
     const transactionProcessAlias = savedProcessAlias || this.state.transactionProcessAlias;
     const processName = transactionProcessAlias
@@ -531,7 +523,7 @@ class EditListingWizard extends Component {
           navRootClassName={css.nav}
           tabRootClassName={css.tab}
         >
-          {tabs.map(tab => {
+          {FILTERED_TABS.map(tab => {
             const tabTranslations = tabLabelAndSubmit(intl, tab, isNewListingFlow, processName);
             return (
               <EditListingWizardTab
@@ -546,7 +538,8 @@ class EditListingWizard extends Component {
                 tab={tab}
                 params={params}
                 listing={listing}
-                marketplaceTabs={tabs}
+                marketplaceTabs={FILTERED_TABS}
+                onImageUpload={onImageUpload}
                 errors={errors}
                 handleCreateFlowTabScrolling={this.handleCreateFlowTabScrolling}
                 handlePublishListing={this.handlePublishListing}

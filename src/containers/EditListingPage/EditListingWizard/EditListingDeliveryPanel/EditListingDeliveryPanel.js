@@ -87,7 +87,7 @@ const EditListingDeliveryPanel = props => {
 
   return (
     <div className={classes}>
-      <H3 as="h1">
+      {/* <H3 as="h1">
         {isPublished ? (
           <FormattedMessage
             id="EditListingDeliveryPanel.title"
@@ -99,7 +99,10 @@ const EditListingDeliveryPanel = props => {
             values={{ lineBreak: <br /> }}
           />
         )}
-      </H3>
+      </H3> */}
+      <div className={css.editListingContent}>
+      <h2>What are you currently using for a booking system?</h2>
+      <p>If you need help transitioning from your current system to your Lumela profile, we can help you</p>
       <EditListingDeliveryForm
         className={css.form}
         initialValues={state.initialValues}
@@ -123,12 +126,12 @@ const EditListingDeliveryPanel = props => {
           const shippingDataMaybe =
             shippingEnabled && shippingPriceInSubunitsOneItem
               ? {
-                  // Note: we only save the "amount" because currency should not differ from listing's price.
-                  // Money is always dealt in subunits (e.g. cents) to avoid float calculations.
-                  shippingPriceInSubunitsOneItem: shippingPriceInSubunitsOneItem.amount,
-                  shippingPriceInSubunitsAdditionalItems:
-                    shippingPriceInSubunitsAdditionalItems?.amount,
-                }
+                // Note: we only save the "amount" because currency should not differ from listing's price.
+                // Money is always dealt in subunits (e.g. cents) to avoid float calculations.
+                shippingPriceInSubunitsOneItem: shippingPriceInSubunitsOneItem.amount,
+                shippingPriceInSubunitsAdditionalItems:
+                  shippingPriceInSubunitsAdditionalItems?.amount,
+              }
               : {};
 
           // New values for listing attributes
@@ -166,6 +169,7 @@ const EditListingDeliveryPanel = props => {
         autoFocus
       />
     </div>
+    </div >
   );
 };
 

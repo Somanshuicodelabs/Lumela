@@ -59,22 +59,45 @@ const AboutContent = props => {
 
 // Presentational component for PrivacyPolicyPage
 const AboutPageComponent = props => {
-  const { pageAssetsData, inProgress, error, isDrawerOpen,
+  const { pageAssetsData,
+    inProgress,
+    error,
+    isDrawerOpen,
     authStep,
+    onLogout,
+    loginError,
+    signupError,
+    submitLogin,
+    submitSignup,
     redirectRoute,
-    onManageToggleDrawer, } = props;
+    authInProgress,
+    onManageToggleDrawer,
+    listings,
+    history,
+    isAuthenticated,} = props;
     // console.log(props,"props1");
   return (
     <PageBuilder
       pageAssetsData={pageAssetsData?.[camelize(ASSET_NAME)]?.data}
       inProgress={inProgress}
       error={error}
-      options={{isDrawerOpen:isDrawerOpen,
-      authStep:authStep,
-      redirectRoute:redirectRoute,
-      onManageToggleDrawer:onManageToggleDrawer}}
+      options={{
+        isDrawerOpen: isDrawerOpen,
+        authStep: authStep,
+        redirectRoute: redirectRoute,
+        onManageToggleDrawer: onManageToggleDrawer,
+        history: history,
+        listings: listings,
+        onLogout: onLogout,
+        submitLogin: submitLogin,
+        submitSignup: submitSignup,
+        loginError: loginError,
+        signupError: signupError,
+        authInProgress: authInProgress,
+      }}
       
       fallbackPage={<FallbackPage />}
+      isAuthenticated={isAuthenticated}
     />
   );
 };
@@ -87,12 +110,16 @@ AboutPageComponent.propTypes = {
 
 const mapStateToProps = state => {
   const { isDrawerOpen, authStep, redirectRoute } = state.ui;
+  const { isAuthenticated, loginError, signupError } = state.auth;
   const { pageAssetsData, inProgress, error } = state.hostedAssets || {};
   // console.log(isDrawerOpen, authStep, redirectRoute,"isDrawerOpen, authStep, redirectRoute");
-  return { pageAssetsData, inProgress, error, isDrawerOpen, authStep, redirectRoute };
+  return { pageAssetsData, inProgress, error, isDrawerOpen, authStep, redirectRoute, loginError , isAuthenticated, signupError};
 };
 
 const mapDispatchToProps = dispatch => ({
+  submitLogin: ({ email, password }) => dispatch(login(email, password)),
+  submitSignup: params => dispatch(signup(params)),
+  onLogout: historyPush => dispatch(logout(historyPush)),
   onManageToggleDrawer: (isDrawerOpen, authStep) => dispatch(manageToggleDrawer(isDrawerOpen, authStep)),
 });
 

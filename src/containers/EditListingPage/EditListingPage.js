@@ -25,7 +25,7 @@ import {
 } from '../../ducks/stripeConnectAccount.duck';
 
 // Import shared components
-import { NamedRedirect, Page, UserNav } from '../../components';
+import { Footer, NamedRedirect, Page, UserNav } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 // Import modules from this directory
@@ -114,14 +114,14 @@ export const EditListingPageComponent = props => {
     updateStripeAccountError,
   } = props;
 
-  const listing = getOwnListing(listingId);
-
+  
   const { id, type, returnURLType } = params;
   const isNewURI = type === LISTING_PAGE_PARAM_TYPE_NEW;
   const isDraftURI = type === LISTING_PAGE_PARAM_TYPE_DRAFT;
   const isNewListingFlow = isNewURI || isDraftURI;
-
+  
   const listingId = page.submittedListingId || (id ? new UUID(id) : null);
+  const listing = getOwnListing(listingId);
   const currentListing = ensureOwnListing(getOwnListing(listingId));
   const { state: currentListingState } = currentListing.attributes;
 

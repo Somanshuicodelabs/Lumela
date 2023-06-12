@@ -13,8 +13,8 @@ const IconCollection = ({ name }) => {
         >
           <rect x="2" y="2" width="76" height="76" rx="38" fill="#E3E3E3" />
           <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
+            fillRule="evenodd"
+            clipRule="evenodd"
             d="M39.9988 43.6362C48.7015 43.6362 55.7564 36.5813 55.7564 27.8787C55.7564 19.176 48.7015 12.1211 39.9988 12.1211C31.2961 12.1211 24.2412 19.176 24.2412 27.8787C24.2412 36.5813 31.2961 43.6362 39.9988 43.6362Z"
             fill="#91D6D5"
           />
@@ -22,7 +22,7 @@ const IconCollection = ({ name }) => {
             d="M61 74C48.5 80 41.214 80 41.214 80C41.214 80 30 80 22 75.5L13.3799 66.6666C17.0112 54.7391 28.0991 46.0605 41.214 46.0605C54.3289 46.0605 65.4168 54.7391 69.0481 66.6666L61 74Z"
             fill="#91D6D5"
           />
-          <rect x="2" y="2" width="76" height="76" rx="38" stroke="#FAFAFA" stroke-width="4" />
+          <rect x="2" y="2" width="76" height="76" rx="38" stroke="#FAFAFA" strokeWidth="4" />
         </svg>
       );
     case 'YOUR_BUSINESS':
@@ -43,7 +43,7 @@ const IconCollection = ({ name }) => {
           <path
             d="M282.389 100.258H327.678M327.678 100.258L323.744 97.2168M327.678 100.258L323.744 103.398"
             stroke="black"
-            stroke-width="2"
+            strokeWidth="2"
           />
         </svg>
       );
@@ -1235,7 +1235,7 @@ const IconCollection = ({ name }) => {
             height="108"
             stroke="#E3E3E3"
             strokeWidth="2"
-            stroke-dasharray="12 5"
+            strokeDasharray="12 5"
           />
         </svg>
       );

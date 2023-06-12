@@ -711,8 +711,7 @@ const TopbarDesktop = props => {
       {pathname === '/business-landing-page' ? null : (
         <span className={css.loginLink}>
           <NamedLink name="BusinessLandingPage">
-            Business Link
-            {/* <FormattedMessage id="TopbarDesktop.business" /> */}
+            <FormattedMessage id="TopbarDesktop.business" />
           </NamedLink>
         </span>
       )}

@@ -150,7 +150,7 @@ class TopbarComponent extends Component {
       // In production we ensure that data is really lost,
       // but in development mode we use stored values for debugging
       if (appSettings.dev) {
-        history.push(path);
+        history?.push(path);
       } else if (typeof window !== 'undefined') {
         window.location = path;
       }

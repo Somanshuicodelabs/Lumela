@@ -12,11 +12,8 @@ import { H3, ListingLink } from '../../../../components';
 // Import modules from this directory
 import EditListingPhotosForm from './EditListingPhotosForm';
 import css from './EditListingPhotosPanel.module.css';
+import { ensureOwnListing } from '../../../../util/data';
 
-const getInitialValues = params => {
-  const { images } = params;
-  return { images };
-};
 
 const EditListingPhotosPanel = props => {
   const {
@@ -28,20 +25,60 @@ const EditListingPhotosPanel = props => {
     listing,
     onImageUpload,
     submitButtonText,
+    onChange,
     panelUpdated,
     updateInProgress,
     onSubmit,
     onRemoveImage,
     listingImageConfig,
+    onPrevious,
+    onUpdateImageOrder,
+    images
   } = props;
 
   const rootClass = rootClassName || css.root;
   const classes = classNames(rootClass, className);
   const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;
+  const currentListing = ensureOwnListing(listing);
+  const { geolocation, publicData, description } = currentListing.attributes || {};
+
+  // Only render current search if full place object is available in the URL params
+  // TODO bounds are missing - those need to be queried directly from Google Places
+  const locationFieldsPresent =
+    publicData &&
+    publicData.location &&
+    publicData.location.address &&
+    geolocation;
+  const locationField =
+    publicData && publicData.location ? publicData.location : {};
+  const { address } = locationField || {};
+  const location = locationFieldsPresent
+    ? {
+      search: address,
+      selectedPlace: { address, origin: geolocation },
+    }
+    : null;
+  const { mainImageId } = publicData || {};
+
+
+
+  const restImages = images && images.length
+    ? mainImageId
+      ? images.filter(image => !image.imageType && mainImageId && image.id && (!image.id.uuid || (image.id.uuid && image.id.uuid != mainImageId)))
+      : images.filter(image => !image.imageType)
+    : [];
+
+  const mainImage = images && images.length
+    ? images.filter(image => image.imageType == 'main').length
+      ? images.filter(image => image.imageType == 'main')[images.filter(image => image.imageType == 'main').length - 1]
+      : images.filter(image => mainImageId && image.id && image.id.uuid == mainImageId).length
+        ? images.filter(image => mainImageId && image.id && image.id.uuid == mainImageId)[0]
+        : []
+    : [];
 
   return (
     <div className={classes}>
-      <H3 as="h1">
+      {/* <H3 as="h1">
         {isPublished ? (
           <FormattedMessage
             id="EditListingPhotosPanel.title"
@@ -53,24 +90,75 @@ const EditListingPhotosPanel = props => {
             values={{ lineBreak: <br /> }}
           />
         )}
-      </H3>
-      <EditListingPhotosForm
-        className={css.form}
-        disabled={disabled}
-        ready={ready}
-        fetchErrors={errors}
-        initialValues={getInitialValues(props)}
-        onImageUpload={onImageUpload}
-        onSubmit={values => {
-          const { addImage, ...updateValues } = values;
-          onSubmit(updateValues);
-        }}
-        onRemoveImage={onRemoveImage}
-        saveActionMsg={submitButtonText}
-        updated={panelUpdated}
-        updateInProgress={updateInProgress}
-        listingImageConfig={listingImageConfig}
-      />
+      </H3> */}
+      <div className={css.editListingContent}>
+        <h2><FormattedMessage id="EditListingPhoto.heading" /> </h2>
+        <EditListingPhotosForm
+          className={css.form}
+          disabled={disabled}
+          onPrevious={onPrevious}
+          ready={ready}
+          fetchErrors={errors}
+          initialValues={{ images, description }}
+          images={restImages}
+          mainImage={mainImage}
+          onImageUpload={onImageUpload}
+          onSubmit={values => {
+            console.log('mainImage :>> ', mainImage);
+            const { mainImage: dummyMainImage, location, addImage, description, canDo, ...updateValues } = values;
+            if (mainImage && mainImage.imageId && mainImage.imageId.uuid) {
+              
+              if (updateValues.images && updateValues.images.length) {
+                updateValues.images.push(mainImage);
+              } else {
+                updateValues.images = [mainImage];
+              }
+            } else {
+              if (updateValues.images && updateValues.images.length) {
+                updateValues.images.push(mainImage);
+              } else {
+                updateValues.images = [mainImage];
+              }
+            }
+            if (updateValues.images && updateValues.images.length) {
+              if (mainImageId) {
+                updateValues.images.filter(image => image.id.uuid != mainImageId);
+              }
+              //  const {
+              //    selectedPlace: { address, origin },
+              //  } = location || {};
+              Object.assign(updateValues, {
+                geolocation: origin,
+
+                publicData: {
+                  mainImageId: mainImage?.imageId?.uuid ? mainImage?.imageId?.uuid : mainImageId ? mainImageId : '',
+                  //  location: { address },
+                  // description: { description },
+                  //  canDo : canDo
+                }
+
+              });
+              //  setState({
+              //    initialValues: {
+              //      location: {
+              //        search: address,
+              //        selectedPlace: { address, origin },
+              //      },
+              //    },
+              //  });
+            }
+            
+            onSubmit(updateValues);
+          }}
+          onChange={onChange}
+          onUpdateImageOrder={onUpdateImageOrder}
+          onRemoveImage={onRemoveImage}
+          saveActionMsg={submitButtonText}
+          updated={panelUpdated}
+          updateInProgress={updateInProgress}
+          listingImageConfig={listingImageConfig}
+        />
+      </div>
     </div>
   );
 };

@@ -4,6 +4,7 @@ import PropTypes, { arrayOf } from 'prop-types';
 // Import configs and util modules
 import {
   LISTING_PAGE_PARAM_TYPE_DRAFT,
+  LISTING_PAGE_PARAM_TYPE_EDIT,
   LISTING_PAGE_PARAM_TYPE_NEW,
   LISTING_PAGE_PARAM_TYPES,
 } from '../../../util/urlHelpers';
@@ -12,33 +13,42 @@ import { createResourceLocatorString } from '../../../util/routes';
 import { propTypes } from '../../../util/types';
 
 // Import modules from this directory
-import EditListingAvailabilityPanel from './EditListingAvailabilityPanel/EditListingAvailabilityPanel';
-import EditListingDetailsPanel from './EditListingDetailsPanel/EditListingDetailsPanel';
-import EditListingDeliveryPanel from './EditListingDeliveryPanel/EditListingDeliveryPanel';
-import EditListingLocationPanel from './EditListingLocationPanel/EditListingLocationPanel';
+import EditListingDescriptionPanel from './EditListingDescriptionPanel/EditListingDescriptionPanel';
 import EditListingPhotosPanel from './EditListingPhotosPanel/EditListingPhotosPanel';
+import EditListingAvailabilityPanel from './EditListingAvailabilityPanel/EditListingAvailabilityPanel';
 import EditListingPricingPanel from './EditListingPricingPanel/EditListingPricingPanel';
-import EditListingPricingAndStockPanel from './EditListingPricingAndStockPanel/EditListingPricingAndStockPanel';
+import EditListingHairTexturesPanel from './EditListingHairTexturesPanel/EditListingHairTexturesPanel';
+import EditListingTeamSizePanel from './EditListingTeamSizePanel/EditListingTeamSizePanel';
+// import EditListingBookingSystemPanel from './EditListingBookingSystemPanel/EditListingBookingSystemPanel';
+import EditListingSkinTypesPanel from './EditListingSkinTypesPanel/EditListingSkinTypesPanel';
+import EditListingSkinTonesPanel from './EditListingSkinTonesPanel/EditListingSkinTonesPanel';
+import EditListingOffersPanel from './EditListingOffersPanel/EditListingOffersPanel'
 
 import css from './EditListingWizardTab.module.css';
 
-export const DETAILS = 'details';
-export const PRICING = 'pricing';
-export const PRICING_AND_STOCK = 'pricing-and-stock';
-export const DELIVERY = 'delivery';
-export const LOCATION = 'location';
-export const AVAILABILITY = 'availability';
+export const DESCRIPTION = 'description';
+export const OFFERS = 'offers';
+export const HAIR_TEXTURES = 'hair_texture';
+export const TEAM_SIZE = 'team_size';
 export const PHOTOS = 'photos';
+export const AVAILABILITY = 'availability';
+export const PRICING = 'pricing';
+export const BOOKING_SYSTEM = "booking_system";
+export const SKIN_TONES = 'skin_tones';
+export const SKIN_TYPES = 'skin_types';
 
 // EditListingWizardTab component supports these tabs
 export const SUPPORTED_TABS = [
-  DETAILS,
-  PRICING,
-  PRICING_AND_STOCK,
-  DELIVERY,
-  LOCATION,
-  AVAILABILITY,
+  DESCRIPTION,
+  OFFERS,
+  HAIR_TEXTURES,
+  TEAM_SIZE,
   PHOTOS,
+  AVAILABILITY,
+  BOOKING_SYSTEM,
+  PRICING,
+  SKIN_TYPES,
+  SKIN_TONES,
 ];
 
 const pathParamsToNextTab = (params, tab, marketplaceTabs) => {
@@ -48,6 +58,15 @@ const pathParamsToNextTab = (params, tab, marketplaceTabs) => {
       ? marketplaceTabs[nextTabIndex]
       : marketplaceTabs[marketplaceTabs.length - 1];
   return { ...params, tab: nextTab };
+};
+
+const pathParamsToPrevTab = (params, tab, marketplaceTabs) => {
+  const prevTabIndex = marketplaceTabs.findIndex(s => s === tab) - 1;
+  const prevTab =
+    prevTabIndex < marketplaceTabs.length
+      ? marketplaceTabs[prevTabIndex]
+      : marketplaceTabs[marketplaceTabs.length - 1];
+  return { ...params, tab: prevTab };
 };
 
 // When user has update draft listing, he should be redirected to next EditListingWizardTab
@@ -70,6 +89,26 @@ const redirectAfterDraftUpdate = (listingId, params, tab, marketplaceTabs, histo
   const nextPathParams = pathParamsToNextTab(currentPathParams, tab, marketplaceTabs);
   const to = createResourceLocatorString('EditListingPage', routes, nextPathParams, {});
   history.push(to);
+};
+const redirectPrevDraftUpdate = (listingId, params, tab, marketplaceTabs, history) => {
+  const currentPathParams = {
+    ...params,
+    type: LISTING_PAGE_PARAM_TYPE_DRAFT,
+    id: listingId,
+  };
+  const routes = routeConfiguration();
+
+  // Replace current "new" path to "draft" path.
+  // Browser's back button should lead to editing current draft instead of creating a new one.
+  if (params.type === LISTING_PAGE_PARAM_TYPE_NEW) {
+    const draftURI = createResourceLocatorString('EditListingPage', routes, currentPathParams, {});
+    history.replace(draftURI);
+  }
+
+  // Redirect to next tab
+  const nextPathParams = pathParamsToPrevTab(currentPathParams, tab, marketplaceTabs);
+  const to = createResourceLocatorString('EditListingPage', routes, nextPathParams, {});
+  history?.push(to);
 };
 
 const EditListingWizardTab = props => {
@@ -97,10 +136,12 @@ const EditListingWizardTab = props => {
     onImageUpload,
     onManageDisableScrolling,
     onProcessChange,
+    onUpdateImageOrder,
     onRemoveImage,
     updatedTab,
     updateInProgress,
     tabSubmitButtonText,
+    intl,
     config,
     routeConfiguration,
   } = props;
@@ -109,6 +150,7 @@ const EditListingWizardTab = props => {
   const isNewURI = type === LISTING_PAGE_PARAM_TYPE_NEW;
   const isDraftURI = type === LISTING_PAGE_PARAM_TYPE_DRAFT;
   const isNewListingFlow = isNewURI || isDraftURI;
+  const isEdit = type == LISTING_PAGE_PARAM_TYPE_EDIT;
 
   const currentListing = ensureListing(listing);
 
@@ -179,78 +221,206 @@ const EditListingWizardTab = props => {
 
   // TODO: add missing cases for supported tabs
   switch (tab) {
-    case DETAILS: {
+    case DESCRIPTION: {
+      const submitButtonTranslationKey = isNewListingFlow
+        ? 'EditListingWizard.saveNewDescription'
+        : 'EditListingWizard.saveEditDescription';
       return (
-        <EditListingDetailsPanel
-          {...panelProps(DETAILS)}
-          onProcessChange={onProcessChange}
-          config={config}
+        <EditListingDescriptionPanel
+          {...panelProps(DESCRIPTION)}
+          submitButtonText={intl?.formatMessage({ id: submitButtonTranslationKey })}
+          onSubmit={values => {
+            onCompleteEditListingWizardTab(tab, values)
+              .then(() => {
+                if (isEdit) history.push(nextTabPath)
+              })
+          }}
         />
       );
     }
-    case PRICING_AND_STOCK: {
+    case OFFERS: {
+      const submitButtonTranslationKey = isNewListingFlow
+        ? 'EditListingWizard.saveNewFeatures'
+        : 'EditListingWizard.saveEditFeatures';
       return (
-        <EditListingPricingAndStockPanel
-          {...panelProps(PRICING_AND_STOCK)}
-          marketplaceCurrency={config.currency}
-          listingMinimumPriceSubUnits={config.listingMinimumPriceSubUnits}
+        <EditListingOffersPanel
+          {...panelProps(OFFERS)}
+          submitButtonText={intl.formatMessage({ id: submitButtonTranslationKey })}
+          onSubmit={values => {
+            onCompleteEditListingWizardTab(tab, values)
+              .then((res) => {
+                console.log(res, updateInProgress, 'updateInProgress , updateInProgress');
+                if (isEdit) setTimeout(() => {
+                  history.push(nextTabPath);
+                }, 500);
+              })
+          }}
+          onPrevious={() => redirectPrevDraftUpdate(listing.id.uuid, params, tab, marketplaceTabs, history.goBack())}
         />
       );
     }
-    case PRICING: {
+    case TEAM_SIZE: {
+      const submitButtonTranslationKey = isNewListingFlow
+        ? 'EditListingWizard.saveNewPolicies'
+        : 'EditListingWizard.saveEditPolicies';
       return (
-        <EditListingPricingPanel
-          {...panelProps(PRICING)}
-          marketplaceCurrency={config.currency}
-          listingMinimumPriceSubUnits={config.listingMinimumPriceSubUnits}
+        <EditListingTeamSizePanel
+          {...panelProps(TEAM_SIZE)}
+          submitButtonText={intl.formatMessage({ id: submitButtonTranslationKey })}
+          onSubmit={values => {
+            onCompleteEditListingWizardTab(tab, values)
+              .then(() => {
+                if (isEdit) history.push(nextTabPath)
+              })
+          }}
+          onPrevious={() => redirectPrevDraftUpdate(listing.id.uuid, params, tab, marketplaceTabs, history.goBack())}
         />
       );
     }
-    case DELIVERY: {
+    case HAIR_TEXTURES: {
+      const submitButtonTranslationKey = isNewListingFlow
+        ? // ? 'EditListingWizard.saveNewLocation'
+        'EditListingWizard.saveNewAvailability'
+        : 'EditListingWizard.saveEditLocation';
       return (
-        <EditListingDeliveryPanel {...panelProps(DELIVERY)} marketplaceCurrency={config.currency} />
+        <EditListingHairTexturesPanel
+          {...panelProps(HAIR_TEXTURES)}
+          submitButtonText={intl.formatMessage({ id: submitButtonTranslationKey })}
+          onSubmit={values => {
+            onCompleteEditListingWizardTab(tab, values)
+              .then(() => {
+                if (isEdit) history.push(nextTabPath)
+              })
+          }}
+          onPrevious={() => redirectPrevDraftUpdate(listing.id.uuid, params, tab, marketplaceTabs, history.goBack())}
+        />
       );
     }
-    case LOCATION: {
-      return <EditListingLocationPanel {...panelProps(LOCATION)} />;
-    }
-    case AVAILABILITY: {
+    case SKIN_TYPES: {
+      const submitButtonTranslationKey = isNewListingFlow
+        ? // ? 'EditListingWizard.saveNewLocation'
+        'EditListingWizard.saveNewAvailability'
+        : 'EditListingWizard.saveEditLocation';
       return (
-        <EditListingAvailabilityPanel
-          allExceptions={allExceptions}
-          weeklyExceptionQueries={weeklyExceptionQueries}
-          monthlyExceptionQueries={monthlyExceptionQueries}
-          onFetchExceptions={onFetchExceptions}
-          onAddAvailabilityException={onAddAvailabilityException}
-          onDeleteAvailabilityException={onDeleteAvailabilityException}
-          onNextTab={() =>
-            redirectAfterDraftUpdate(
-              listing.id,
-              params,
-              tab,
-              marketplaceTabs,
-              history,
-              routeConfiguration
-            )
-          }
-          config={config}
-          history={history}
-          routeConfiguration={routeConfiguration}
-          {...panelProps(AVAILABILITY)}
+        <EditListingSkinTypesPanel
+          {...panelProps(SKIN_TYPES)}
+          submitButtonText={intl.formatMessage({ id: submitButtonTranslationKey })}
+          onSubmit={values => {
+            onCompleteEditListingWizardTab(tab, values)
+              .then(() => {
+                if (isEdit) history.push(nextTabPath)
+              })
+          }}
+          onPrevious={() => redirectPrevDraftUpdate(listing.id.uuid, params, tab, marketplaceTabs, history.goBack())}
+        />
+      );
+    }
+    case SKIN_TONES: {
+      const submitButtonTranslationKey = isNewListingFlow
+        ? // ? 'EditListingWizard.saveNewLocation'
+        'EditListingWizard.saveNewAvailability'
+        : 'EditListingWizard.saveEditLocation';
+      return (
+        <EditListingSkinTonesPanel
+          {...panelProps(SKIN_TONES)}
+          submitButtonText={intl.formatMessage({ id: submitButtonTranslationKey })}
+          onSubmit={values => {
+            onCompleteEditListingWizardTab(tab, values)
+              .then(() => {
+                if (isEdit) history.push(nextTabPath)
+              })
+          }}
+          onPrevious={() => redirectPrevDraftUpdate(listing.id.uuid, params, tab, marketplaceTabs, history.goBack())}
         />
       );
     }
     case PHOTOS: {
+      const submitButtonTranslationKey = isNewListingFlow
+        ? 'EditListingWizard.saveNewPricing'
+        : 'EditListingWizard.saveEditPhotos';
+
       return (
         <EditListingPhotosPanel
           {...panelProps(PHOTOS)}
-          listingImageConfig={config.layout.listingImage}
+          submitButtonText={intl?.formatMessage({ id: submitButtonTranslationKey })}
           images={images}
           onImageUpload={onImageUpload}
           onRemoveImage={onRemoveImage}
+          onSubmit={values => {
+            onCompleteEditListingWizardTab(tab, values)
+              .then(() => {
+                if (isEdit) history.push(nextTabPath)
+              })
+          }}
+          onUpdateImageOrder={onUpdateImageOrder}
+          onPrevious={() => redirectPrevDraftUpdate(listing.id.uuid, params, tab, marketplaceTabs, history.goBack())}
+          listingImageConfig={config.layout.listingImage}
         />
       );
     }
+
+    case AVAILABILITY: {
+      const submitButtonTranslationKey = isNewListingFlow
+        ? 'EditListingWizard.saveNewAvailability'
+        : 'EditListingWizard.saveEditAvailability';
+      return (
+        <EditListingAvailabilityPanel
+          {...panelProps(AVAILABILITY)}
+          fetchExceptionsInProgress={fetchExceptionsInProgress}
+          availabilityExceptions={availabilityExceptions}
+          submitButtonText={intl.formatMessage({ id: submitButtonTranslationKey })}
+          onAddAvailabilityException={onAddAvailabilityException}
+          onDeleteAvailabilityException={onDeleteAvailabilityException}
+          onSubmit={values => {
+            // We want to return the Promise to the form,
+            // so that it doesn't close its modal if an error is thrown.
+            return onCompleteEditListingWizardTab(tab, values, true);
+          }}
+          onNextTab={() =>
+            redirectAfterDraftUpdate(listing.id.uuid, params, tab, marketplaceTabs, history)
+          }
+          onPrevious={() => redirectPrevDraftUpdate(listing.id.uuid, params, tab, marketplaceTabs, history.goBack())}
+        />
+      );
+    }
+    case BOOKING_SYSTEM: {
+      const submitButtonTranslationKey = isNewListingFlow
+        ? // ? 'EditListingWizard.saveNewLocation'
+        'EditListingWizard.saveNewAvailability'
+        : 'EditListingWizard.saveEditLocation';
+      return (
+        <EditListingBookingSystemPanel
+          {...panelProps(BOOKING_SYSTEM)}
+          submitButtonText={intl.formatMessage({ id: submitButtonTranslationKey })}
+          onSubmit={values => {
+            onCompleteEditListingWizardTab(tab, values)
+              .then(() => {
+                if (isEdit) history.push(nextTabPath)
+              })
+          }}
+          onPrevious={() => redirectPrevDraftUpdate(listing.id.uuid, params, tab, marketplaceTabs, history.goBack())}
+        />
+      );
+    }
+    case PRICING: {
+      const submitButtonTranslationKey = isNewListingFlow
+        ? 'EditListingWizard.saveNewPricing'
+        : 'EditListingWizard.saveEditPricing';
+      return (
+        <EditListingPricingPanel
+          {...panelProps(PRICING)}
+          submitButtonText={intl.formatMessage({ id: submitButtonTranslationKey })}
+          onSubmit={values => {
+            onCompleteEditListingWizardTab(tab, values)
+              .then(() => {
+                if (isEdit) history.push(nextTabPath)
+              })
+          }}
+          onPrevious={() => redirectPrevDraftUpdate(listing.id.uuid, params, tab, marketplaceTabs, history.goBack())}
+        />
+      );
+    }
+
     default:
       return null;
   }

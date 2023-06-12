@@ -41,6 +41,7 @@ import { propTypes } from '../../util/types';
 
 import NoImageIcon from './NoImageIcon';
 import css from './ResponsiveImage.module.css';
+import { closeListing } from '../../containers/ManageListingsPage/ManageListingsPage.duck';
 
 const ResponsiveImage = props => {
   const {
@@ -54,7 +55,6 @@ const ResponsiveImage = props => {
     ...rest
   } = props;
   const classes = classNames(rootClassName || css.root, className);
-
   if (image == null || variants.length === 0) {
     const noImageClasses = classNames(rootClassName || css.root, css.noImageContainer, className);
 
@@ -69,7 +69,7 @@ const ResponsiveImage = props => {
     );
   }
 
-  const imageVariants = image.attributes.variants;
+  const imageVariants = image?.attributes?.variants;
 
   const srcSet = variants
     .map(variantName => {
@@ -89,7 +89,6 @@ const ResponsiveImage = props => {
     srcSet,
     ...rest,
   };
-
   return <img alt={alt} {...imgProps} />;
 };
 

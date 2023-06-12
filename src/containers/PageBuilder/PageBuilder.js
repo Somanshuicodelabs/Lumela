@@ -106,6 +106,7 @@ const PageBuilder = props => {
     return fallbackPage;
   }
   const landingPageHeaderStyle = isLandingPage;
+  console.log('submitLogin :>> ', submitLogin);
   // Page asset contains UI info and metadata related to it.
   // - "sections" (data that goes inside <body>)
   // - "meta" (which is data that goes inside <head>)
@@ -139,11 +140,11 @@ const PageBuilder = props => {
                 isAuthenticated={isAuthenticated}
                 isLandingPage={landingPageHeaderStyle}
                 onManageToggleDrawer={onManageToggleDrawer}
-              >
+                >
                 <TopbarContainer
                   isHeaderSticky={isHeaderSticky}
                   isLandingPage={landingPageHeaderStyle}
-                />
+                  />
               </Topbar>
               <Main as="main" className={css.main}>
                 <SectionBuilder

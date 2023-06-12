@@ -1,4 +1,4 @@
-@import '../../../styles/customMediaQueries.css';
+@import '../../../styles/propertySets.css';
 
 .root {
   /* Layout */
@@ -26,28 +26,35 @@
   }
 }
 
+.modalContainer {
+  @apply --marketplaceModalBaseStyles;
+  background-color: var(--matterColorLight);
+  padding: 4rem 0 0;
+}
+
 .nav {
   /* Layout */
-  display: flex;
+  display: none;
   flex-direction: row;
   padding: 0;
   flex-shrink: 0;
-  background-color: var(--colorWhite);
+  background-color: var(--matterColorLight);
   box-shadow: var(--boxShadowLight);
-  border-top: 1px solid var(--colorGrey100);
+  border-top: 1px solid var(--matterColorNegative);
   overflow-x: scroll;
+  display: none;
 
   @media (--viewportLarge) {
-    padding: 72px 0 82px 36px;
+    padding: 128px 0 82px 36px;
     flex-direction: column;
     overflow-x: auto;
-    background-color: var(--colorGrey50);
+    background-color: var(--matterColorBright);
     box-shadow: none;
     border-top: none;
   }
 
   @media (--viewportLargeWithPaddings) {
-    padding: 72px 0 82px calc((100% - 1056px) / 2);
+    padding: 128px 0 82px calc((100% - 1056px) / 2);
   }
 }
 
@@ -80,33 +87,30 @@
   }
 }
 
+.panel {
+  flex-grow: 1;
+}
+
+.payoutDetails {
+  margin-bottom: 100px;
+
+  @media (--viewportMedium) {
+    margin-bottom: 0;
+  }
+}
+
 .modalTitle {
-  composes: marketplaceModalTitleStyles from global;
+  @apply --marketplaceModalTitleStyles;
+  margin-bottom: 1rem;
+  font-size: 1.135rem;
 }
 
 .modalPayoutDetailsWrapper {
-  @media (--viewportMedium) {
-    width: 604px;
-    padding-top: 11px;
-  }
+  padding: 1.5rem 2rem 2rem 2rem;
 }
 
 .modalMessage {
-  composes: marketplaceModalParagraphStyles from global;
-}
-
-.customField {
-  margin-bottom: 24px;
-
-  @media (--viewportMedium) {
-    margin-bottom: 32px;
-  }
-}
-
-.customFieldMultiEnum {
-  margin-bottom: 24px;
-
-  @media (--viewportMedium) {
-    margin-bottom: 40px;
-  }
+  @apply --marketplaceModalParagraphStyles;
+  line-height: 1.5rem;
+  color: var(--matterColor);
 }

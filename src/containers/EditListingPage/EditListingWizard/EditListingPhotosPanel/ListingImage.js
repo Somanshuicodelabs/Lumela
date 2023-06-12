@@ -93,7 +93,7 @@ const ListingImage = props => {
     // This is shown when image is uploaded,
     // but the new responsive image is not yet downloaded by the browser.
     // This is absolutely positioned behind the actual image.
-    const fallbackWhileDownloading = image.file ? (
+    const fallbackWhileDownloading = image?.file ? (
       <ImageFromFile
         id={image.id}
         className={css.fallbackWhileDownloading}
