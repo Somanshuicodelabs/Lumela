@@ -25,6 +25,7 @@ import EditListingSkinTonesPanel from './EditListingSkinTonesPanel/EditListingSk
 import EditListingOffersPanel from './EditListingOffersPanel/EditListingOffersPanel'
 
 import css from './EditListingWizardTab.module.css';
+import routeConfiguration from '../../../routing/routeConfiguration';
 
 export const DESCRIPTION = 'description';
 export const OFFERS = 'offers';
@@ -40,15 +41,15 @@ export const SKIN_TYPES = 'skin_types';
 // EditListingWizardTab component supports these tabs
 export const SUPPORTED_TABS = [
   DESCRIPTION,
+  PHOTOS,
   OFFERS,
   HAIR_TEXTURES,
+  SKIN_TONES,
+  SKIN_TYPES,
   TEAM_SIZE,
-  PHOTOS,
   AVAILABILITY,
   BOOKING_SYSTEM,
   PRICING,
-  SKIN_TYPES,
-  SKIN_TONES,
 ];
 
 const pathParamsToNextTab = (params, tab, marketplaceTabs) => {
@@ -71,6 +72,8 @@ const pathParamsToPrevTab = (params, tab, marketplaceTabs) => {
 
 // When user has update draft listing, he should be redirected to next EditListingWizardTab
 const redirectAfterDraftUpdate = (listingId, params, tab, marketplaceTabs, history, routes) => {
+  
+  
   const listingUUID = listingId.uuid;
   const currentPathParams = {
     ...params,
@@ -81,13 +84,19 @@ const redirectAfterDraftUpdate = (listingId, params, tab, marketplaceTabs, histo
   // Replace current "new" path to "draft" path.
   // Browser's back button should lead to editing current draft instead of creating a new one.
   if (params.type === LISTING_PAGE_PARAM_TYPE_NEW) {
+    
     const draftURI = createResourceLocatorString('EditListingPage', routes, currentPathParams, {});
+    
     history.replace(draftURI);
   }
 
   // Redirect to next tab
+  
+  
   const nextPathParams = pathParamsToNextTab(currentPathParams, tab, marketplaceTabs);
+  
   const to = createResourceLocatorString('EditListingPage', routes, nextPathParams, {});
+  
   history.push(to);
 };
 const redirectPrevDraftUpdate = (listingId, params, tab, marketplaceTabs, history) => {
@@ -141,9 +150,10 @@ const EditListingWizardTab = props => {
     updatedTab,
     updateInProgress,
     tabSubmitButtonText,
+    fetchExceptionsInProgress,
     intl,
     config,
-    routeConfiguration,
+    availabilityExceptions,
   } = props;
 
   const { type } = params;
@@ -153,11 +163,25 @@ const EditListingWizardTab = props => {
   const isEdit = type == LISTING_PAGE_PARAM_TYPE_EDIT;
 
   const currentListing = ensureListing(listing);
+  
+
+  // Redirect to next tab
+  const nextPathParams = pathParamsToNextTab(params, tab, marketplaceTabs);
+  
+  const nextTabPath = createResourceLocatorString(
+    'EditListingPage',
+    routeConfiguration(),
+    nextPathParams,
+    {}
+  );
 
   // New listing flow has automatic redirects to new tab on the wizard
   // and the last panel calls publishListing API endpoint.
   const automaticRedirectsForNewListingFlow = (tab, listingId) => {
+    
+    
     if (tab !== marketplaceTabs[marketplaceTabs.length - 1]) {
+      
       // Create listing flow: smooth scrolling polyfill to scroll to correct tab
       handleCreateFlowTabScrolling(false);
 
@@ -168,14 +192,17 @@ const EditListingWizardTab = props => {
         tab,
         marketplaceTabs,
         history,
-        routeConfiguration
+        routeConfiguration()
       );
     } else {
+      
       handlePublishListing(listingId);
     }
   };
 
   const onCompleteEditListingWizardTab = (tab, updateValues) => {
+    
+    
     const onUpdateListingOrCreateListingDraft = isNewURI
       ? (tab, values) => onCreateListingDraft(values, config)
       : (tab, values) => onUpdateListing(tab, values, config);
@@ -186,14 +213,19 @@ const EditListingWizardTab = props => {
 
     return onUpdateListingOrCreateListingDraft(tab, updateListingValues)
       .then(r => {
+        
+        
         // In Availability tab, the submitted data (plan) is inside a modal
         // We don't redirect provider immediately after plan is set
         if (isNewListingFlow && tab !== AVAILABILITY) {
           const listingId = r.data.data.id;
+          
           automaticRedirectsForNewListingFlow(tab, listingId);
         }
       })
       .catch(e => {
+        console.log(e, '&& >>>>>>> && => e');
+        
         // No need for extra actions
       });
   };
@@ -232,7 +264,7 @@ const EditListingWizardTab = props => {
           onSubmit={values => {
             onCompleteEditListingWizardTab(tab, values)
               .then(() => {
-                if (isEdit) history.push(nextTabPath)
+                if (isEdit) history.push(nextTabPath);
               })
           }}
         />
@@ -245,11 +277,10 @@ const EditListingWizardTab = props => {
       return (
         <EditListingOffersPanel
           {...panelProps(OFFERS)}
-          submitButtonText={intl.formatMessage({ id: submitButtonTranslationKey })}
+          submitButtonText={intl?.formatMessage({ id: submitButtonTranslationKey })}
           onSubmit={values => {
             onCompleteEditListingWizardTab(tab, values)
               .then((res) => {
-                console.log(res, updateInProgress, 'updateInProgress , updateInProgress');
                 if (isEdit) setTimeout(() => {
                   history.push(nextTabPath);
                 }, 500);
@@ -266,7 +297,7 @@ const EditListingWizardTab = props => {
       return (
         <EditListingTeamSizePanel
           {...panelProps(TEAM_SIZE)}
-          submitButtonText={intl.formatMessage({ id: submitButtonTranslationKey })}
+          submitButtonText={intl?.formatMessage({ id: submitButtonTranslationKey })}
           onSubmit={values => {
             onCompleteEditListingWizardTab(tab, values)
               .then(() => {
@@ -285,7 +316,7 @@ const EditListingWizardTab = props => {
       return (
         <EditListingHairTexturesPanel
           {...panelProps(HAIR_TEXTURES)}
-          submitButtonText={intl.formatMessage({ id: submitButtonTranslationKey })}
+          submitButtonText={intl?.formatMessage({ id: submitButtonTranslationKey })}
           onSubmit={values => {
             onCompleteEditListingWizardTab(tab, values)
               .then(() => {
@@ -304,7 +335,7 @@ const EditListingWizardTab = props => {
       return (
         <EditListingSkinTypesPanel
           {...panelProps(SKIN_TYPES)}
-          submitButtonText={intl.formatMessage({ id: submitButtonTranslationKey })}
+          submitButtonText={intl?.formatMessage({ id: submitButtonTranslationKey })}
           onSubmit={values => {
             onCompleteEditListingWizardTab(tab, values)
               .then(() => {
@@ -323,7 +354,7 @@ const EditListingWizardTab = props => {
       return (
         <EditListingSkinTonesPanel
           {...panelProps(SKIN_TONES)}
-          submitButtonText={intl.formatMessage({ id: submitButtonTranslationKey })}
+          submitButtonText={intl?.formatMessage({ id: submitButtonTranslationKey })}
           onSubmit={values => {
             onCompleteEditListingWizardTab(tab, values)
               .then(() => {
@@ -368,7 +399,7 @@ const EditListingWizardTab = props => {
           {...panelProps(AVAILABILITY)}
           fetchExceptionsInProgress={fetchExceptionsInProgress}
           availabilityExceptions={availabilityExceptions}
-          submitButtonText={intl.formatMessage({ id: submitButtonTranslationKey })}
+          submitButtonText={intl?.formatMessage({ id: submitButtonTranslationKey })}
           onAddAvailabilityException={onAddAvailabilityException}
           onDeleteAvailabilityException={onDeleteAvailabilityException}
           onSubmit={values => {
@@ -429,6 +460,7 @@ const EditListingWizardTab = props => {
 EditListingWizardTab.defaultProps = {
   listing: null,
   updatedTab: null,
+  availabilityExceptions: [],
 };
 
 const { array, bool, func, object, oneOf, shape, string } = PropTypes;
@@ -441,6 +473,7 @@ EditListingWizardTab.propTypes = {
     tab: oneOf(SUPPORTED_TABS).isRequired,
   }).isRequired,
   locationSearch: object,
+  availabilityExceptions: arrayOf(propTypes.availabilityException),
   errors: shape({
     createListingDraftError: object,
     publishListingError: object,
@@ -449,6 +482,7 @@ EditListingWizardTab.propTypes = {
     uploadImageError: object,
   }).isRequired,
   fetchInProgress: bool.isRequired,
+  fetchExceptionsInProgress: bool.isRequired,
   newListingPublished: bool.isRequired,
   history: shape({
     push: func.isRequired,

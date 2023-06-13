@@ -156,11 +156,11 @@ const EditListingDescriptionFormComponent = props => (
               </Button></NamedLink>
               <span className={css.stepNumber}>Step 1 of 7</span>
               <Button
-             className={classNames(css.submitButton, "disableButton")}
+                className={classNames(css.submitButton, "disableButton")}
                 type="submit"
                 inProgress={submitInProgress}
                 disabled={submitDisabled}
-                // ready={submitReady}
+              // ready={submitReady}
               >
                 {saveActionMsg}
               </Button>

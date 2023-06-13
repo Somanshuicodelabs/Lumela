@@ -3,6 +3,7 @@ import { bool, func, object, shape, string, oneOf } from 'prop-types';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import classNames from 'classnames';
 
 // Import configs and util modules
 import { intlShape, injectIntl } from '../../util/reactIntl';
@@ -14,6 +15,7 @@ import {
   LISTING_PAGE_PENDING_APPROVAL_VARIANT,
   createSlug,
   parse,
+  LISTING_PAGE_PARAM_TYPE_EDIT,
 } from '../../util/urlHelpers';
 import { LISTING_STATE_DRAFT, LISTING_STATE_PENDING_APPROVAL, propTypes } from '../../util/types';
 import { ensureOwnListing } from '../../util/data';
@@ -25,7 +27,7 @@ import {
 } from '../../ducks/stripeConnectAccount.duck';
 
 // Import shared components
-import { Footer, NamedRedirect, Page, UserNav } from '../../components';
+import { Footer, ModalMissingInformation, NamedRedirect, Page, UserNav } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 // Import modules from this directory
@@ -40,7 +42,10 @@ import {
   removeListingImage,
   savePayoutDetails,
 } from './EditListingPage.duck';
+
+import { sendVerificationEmail } from '../../ducks/user.duck';
 import EditListingWizard from './EditListingWizard/EditListingWizard';
+
 import css from './EditListingPage.module.css';
 
 const STRIPE_ONBOARDING_RETURN_URL_SUCCESS = 'success';
@@ -92,8 +97,10 @@ export const EditListingPageComponent = props => {
     getAccountLinkError,
     getAccountLinkInProgress,
     history,
+    currentUserListing,
     intl,
     onFetchExceptions,
+    currentUserListingFetched,
     onAddAvailabilityException,
     onDeleteAvailabilityException,
     onCreateListingDraft,
@@ -105,6 +112,7 @@ export const EditListingPageComponent = props => {
     onPayoutDetailsSubmit,
     onPayoutDetailsChange,
     onGetStripeConnectAccountLink,
+    currentUserHasOrders,
     page,
     params,
     location,
@@ -112,14 +120,17 @@ export const EditListingPageComponent = props => {
     stripeAccountFetched,
     stripeAccount,
     updateStripeAccountError,
+    onResendVerificationEmail,
+    sendVerificationEmailInProgress,
+    sendVerificationEmailError
   } = props;
 
-  
+
   const { id, type, returnURLType } = params;
   const isNewURI = type === LISTING_PAGE_PARAM_TYPE_NEW;
   const isDraftURI = type === LISTING_PAGE_PARAM_TYPE_DRAFT;
   const isNewListingFlow = isNewURI || isDraftURI;
-  
+
   const listingId = page.submittedListingId || (id ? new UUID(id) : null);
   const listing = getOwnListing(listingId);
   const currentListing = ensureOwnListing(getOwnListing(listingId));
@@ -141,22 +152,36 @@ export const EditListingPageComponent = props => {
 
     const redirectProps = isPendingApproval
       ? {
-          name: 'ListingPageVariant',
-          params: {
-            id: listingId.uuid,
-            slug: listingSlug,
-            variant: LISTING_PAGE_PENDING_APPROVAL_VARIANT,
-          },
-        }
+        name: 'ListingPageVariant',
+        params: {
+          id: listingId.uuid,
+          slug: listingSlug,
+          variant: LISTING_PAGE_PENDING_APPROVAL_VARIANT,
+        },
+      }
       : {
-          name: 'ListingPage',
-          params: {
-            id: listingId.uuid,
-            slug: listingSlug,
-          },
-        };
+        name: 'ListingPage',
+        params: {
+          id: listingId.uuid,
+          slug: listingSlug,
+        },
+      };
 
-    return <NamedRedirect {...redirectProps} />;
+    return isPendingApproval ? <NamedRedirect {...redirectProps} /> : <Redirect to="/p/listing-created-page" />;
+  } else if (isNewURI && currentUserListingFetched && currentUserListing) {
+    // If we allow only one listing per provider, we need to redirect to correct listing.
+    return (
+      <NamedRedirect
+        name="EditListingPage"
+        params={{
+          id: currentUserListing.id.uuid,
+          slug: createSlug(currentUserListing.attributes.title),
+          type: LISTING_PAGE_PARAM_TYPE_EDIT,
+          tab: 'description',
+        }}
+      />
+    );
+
   } else if (showForm) {
     const {
       createListingDraftError = null,
@@ -201,53 +226,72 @@ export const EditListingPageComponent = props => {
 
     return (
       <Page title={title} scrollingDisabled={scrollingDisabled}>
-        <TopbarContainer
+        <div
+          className={classNames(
+            css.fixedWidthContainer,
+            props.match.params.tab === 'pricing' ? css.pricingContainer : null
+          )}
+        >
+          <ModalMissingInformation
+            id="MissingInformationReminder"
+            containerClassName={css.missingInformationModal}
+            currentUser={currentUser}
+            currentUserHasListings={currentUserListing}
+            currentUserHasOrders={currentUserHasOrders}
+            location={location}
+            onManageDisableScrolling={onManageDisableScrolling}
+            onResendVerificationEmail={onResendVerificationEmail}
+            sendVerificationEmailInProgress={sendVerificationEmailInProgress}
+            sendVerificationEmailError={sendVerificationEmailError}
+          />
+          {/* <TopbarContainer
           className={css.topbar}
           mobileRootClassName={css.mobileTopbar}
           desktopClassName={css.desktopTopbar}
           mobileClassName={css.mobileTopbar}
-        />
-        <EditListingWizard
-          id="EditListingWizard"
-          className={css.wizard}
-          params={params}
-          locationSearch={parse(location.search)}
-          disabled={disableForm}
-          errors={errors}
-          fetchInProgress={fetchInProgress}
-          newListingPublished={newListingPublished}
-          history={history}
-          images={images}
-          listing={currentListing}
-          weeklyExceptionQueries={page.weeklyExceptionQueries}
-          monthlyExceptionQueries={page.monthlyExceptionQueries}
-          allExceptions={page.allExceptions}
-          onFetchExceptions={onFetchExceptions}
-          onAddAvailabilityException={onAddAvailabilityException}
-          onDeleteAvailabilityException={onDeleteAvailabilityException}
-          onUpdateListing={onUpdateListing}
-          onCreateListingDraft={onCreateListingDraft}
-          onPublishListingDraft={onPublishListingDraft}
-          onPayoutDetailsChange={onPayoutDetailsChange}
-          onPayoutDetailsSubmit={onPayoutDetailsSubmit}
-          onGetStripeConnectAccountLink={onGetStripeConnectAccountLink}
-          getAccountLinkInProgress={getAccountLinkInProgress}
-          onImageUpload={onImageUpload}
-          onRemoveImage={onRemoveListingImage}
-          currentUser={currentUser}
-          onManageDisableScrolling={onManageDisableScrolling}
-          stripeOnboardingReturnURL={params.returnURLType}
-          updatedTab={page.updatedTab}
-          updateInProgress={page.updateInProgress || page.createListingDraftInProgress}
-          payoutDetailsSaveInProgress={page.payoutDetailsSaveInProgress}
-          payoutDetailsSaved={page.payoutDetailsSaved}
-          stripeAccountFetched={stripeAccountFetched}
-          stripeAccount={stripeAccount}
-          stripeAccountError={
-            createStripeAccountError || updateStripeAccountError || fetchStripeAccountError
-          }
-          stripeAccountLinkError={getAccountLinkError}
-        />
+        /> */}
+          <EditListingWizard
+            id="EditListingWizard"
+            className={css.wizard}
+            params={params}
+            locationSearch={parse(location.search)}
+            disabled={disableForm}
+            errors={errors}
+            fetchInProgress={fetchInProgress}
+            newListingPublished={newListingPublished}
+            history={history}
+            images={images}
+            listing={currentListing}
+            weeklyExceptionQueries={page.weeklyExceptionQueries}
+            monthlyExceptionQueries={page.monthlyExceptionQueries}
+            allExceptions={page.allExceptions}
+            onFetchExceptions={onFetchExceptions}
+            onAddAvailabilityException={onAddAvailabilityException}
+            onDeleteAvailabilityException={onDeleteAvailabilityException}
+            onUpdateListing={onUpdateListing}
+            onCreateListingDraft={onCreateListingDraft}
+            onPublishListingDraft={onPublishListingDraft}
+            onPayoutDetailsChange={onPayoutDetailsChange}
+            onPayoutDetailsSubmit={onPayoutDetailsSubmit}
+            onGetStripeConnectAccountLink={onGetStripeConnectAccountLink}
+            getAccountLinkInProgress={getAccountLinkInProgress}
+            onImageUpload={onImageUpload}
+            onRemoveImage={onRemoveListingImage}
+            currentUser={currentUser}
+            onManageDisableScrolling={onManageDisableScrolling}
+            stripeOnboardingReturnURL={params.returnURLType}
+            updatedTab={page.updatedTab}
+            updateInProgress={page.updateInProgress || page.createListingDraftInProgress}
+            payoutDetailsSaveInProgress={page.payoutDetailsSaveInProgress}
+            payoutDetailsSaved={page.payoutDetailsSaved}
+            stripeAccountFetched={stripeAccountFetched}
+            stripeAccount={stripeAccount}
+            stripeAccountError={
+              createStripeAccountError || updateStripeAccountError || fetchStripeAccountError
+            }
+            stripeAccountLinkError={getAccountLinkError}
+          />
+        </div>
       </Page>
     );
   } else {
@@ -259,10 +303,10 @@ export const EditListingPageComponent = props => {
     return (
       <Page title={intl.formatMessage(loadingPageMsg)} scrollingDisabled={scrollingDisabled}>
         <TopbarContainer
-          // className={css.topbar}
-          // mobileRootClassName={css.mobileTopbar}
-          // desktopClassName={css.desktopTopbar}
-          // mobileClassName={css.mobileTopbar}
+        // className={css.topbar}
+        // mobileRootClassName={css.mobileTopbar}
+        // desktopClassName={css.desktopTopbar}
+        // mobileClassName={css.mobileTopbar}
         />
         <UserNav
           selectedPageName={listing ? 'EditListingPage' : 'NewListingPage'}
@@ -288,6 +332,7 @@ EditListingPageComponent.defaultProps = {
   listingDraft: null,
   notificationCount: 0,
   sendVerificationEmailError: null,
+  currentUserListingFetched: false,
 };
 
 EditListingPageComponent.propTypes = {
@@ -300,6 +345,7 @@ EditListingPageComponent.propTypes = {
   fetchInProgress: bool.isRequired,
   getOwnListing: func.isRequired,
   onFetchExceptions: func.isRequired,
+  currentUserListingFetched: bool,
   onAddAvailabilityException: func.isRequired,
   onDeleteAvailabilityException: func.isRequired,
   onGetStripeConnectAccountLink: func.isRequired,
@@ -348,6 +394,10 @@ const mapStateToProps = state => {
     stripeAccountFetched,
   } = state.stripeConnectAccount;
 
+  const { currentUser, currentUserListing, currentUserListingFetched, currentUserHasOrders, sendVerificationEmailInProgress, sendVerificationEmailError } = state.user;
+
+  const fetchInProgress = createStripeAccountInProgress;
+
   const getOwnListing = id => {
     const listings = getMarketplaceEntities(state, [{ id, type: 'ownListing' }]);
     return listings.length === 1 ? listings[0] : null;
@@ -356,13 +406,18 @@ const mapStateToProps = state => {
   return {
     getAccountLinkInProgress,
     getAccountLinkError,
+    sendVerificationEmailInProgress,
+    sendVerificationEmailError,
     createStripeAccountError,
     updateStripeAccountError,
     fetchStripeAccountError,
     stripeAccount,
     stripeAccountFetched,
-    currentUser: state.user.currentUser,
-    fetchInProgress: createStripeAccountInProgress,
+    currentUser,
+    currentUserListing,
+    currentUserListingFetched,
+    currentUserHasOrders,
+    fetchInProgress,
     getOwnListing,
     page,
     scrollingDisabled: isScrollingDisabled(state),
@@ -373,12 +428,11 @@ const mapDispatchToProps = dispatch => ({
   onFetchExceptions: params => dispatch(requestFetchAvailabilityExceptions(params)),
   onAddAvailabilityException: params => dispatch(requestAddAvailabilityException(params)),
   onDeleteAvailabilityException: params => dispatch(requestDeleteAvailabilityException(params)),
-
   onUpdateListing: (tab, values, config) => dispatch(requestUpdateListing(tab, values, config)),
   onCreateListingDraft: (values, config) => dispatch(requestCreateListingDraft(values, config)),
   onPublishListingDraft: listingId => dispatch(requestPublishListingDraft(listingId)),
-  onImageUpload: (data, listingImageConfig) =>
-    dispatch(requestImageUpload(data, listingImageConfig)),
+  onImageUpload: (data, listingImageConfig, imageType) =>
+    dispatch(requestImageUpload(data, listingImageConfig, imageType)),
   onManageDisableScrolling: (componentId, disableScrolling) =>
     dispatch(manageDisableScrolling(componentId, disableScrolling)),
   onPayoutDetailsChange: () => dispatch(stripeAccountClearError()),
@@ -386,6 +440,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(savePayoutDetails(values, isUpdateCall)),
   onGetStripeConnectAccountLink: params => dispatch(getStripeConnectAccountLink(params)),
   onRemoveListingImage: imageId => dispatch(removeListingImage(imageId)),
+  onResendVerificationEmail: () => dispatch(sendVerificationEmail()),
 });
 
 // Note: it is important that the withRouter HOC is **outside** the

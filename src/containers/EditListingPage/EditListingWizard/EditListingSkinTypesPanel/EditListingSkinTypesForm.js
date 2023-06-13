@@ -8,7 +8,7 @@ import { propTypes } from '../../../../util/types';
 import { Form, Button, FieldRadioButton, FieldTextInput, NamedLink, FieldCheckbox } from '../../../../components';
 
 import css from './EditListingSkinTypesForm.module.css';
-// import { skinTypes, teamSizes } from '../../marketplace-custom-config';
+import { skinTypes } from '../../../../marketplace-custom-config';
 
 export const EditListingSkinTypesFormComponent = props => (
   <FinalForm

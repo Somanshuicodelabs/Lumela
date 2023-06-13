@@ -8,7 +8,7 @@ import { propTypes } from '../../../../util/types';
 import { Form, Button, FieldRadioButton, NamedLink } from '../../../../components';
 
 import css from './EditListingSkinTonesForm.module.css';
-// import { skinTones, teamSizes } from '../../marketplace-custom-config';
+import { skinTones } from '../../../../marketplace-custom-config';
 
 export const EditListingSkinTonesFormComponent = props => (
   <FinalForm

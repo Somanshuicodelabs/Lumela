@@ -8,7 +8,7 @@ import { propTypes } from '../../../../util/types';
 import { Form, Button, FieldRadioButton, NamedLink } from '../../../../components';
 
 import css from './EditListingTeamSizeForm.module.css';
-// import { teamSizes } from '../../marketplace-custom-config';
+import { teamSizes } from '../../../../marketplace-custom-config';
 
 export const EditListingTeamSizeFormComponent = props => (
   <FinalForm

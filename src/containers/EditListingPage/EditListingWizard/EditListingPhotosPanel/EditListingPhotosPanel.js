@@ -40,27 +40,25 @@ const EditListingPhotosPanel = props => {
   const classes = classNames(rootClass, className);
   const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;
   const currentListing = ensureOwnListing(listing);
-  const { geolocation, publicData, description } = currentListing.attributes || {};
+  const {  publicData, description } = currentListing.attributes || {};
 
   // Only render current search if full place object is available in the URL params
   // TODO bounds are missing - those need to be queried directly from Google Places
-  const locationFieldsPresent =
-    publicData &&
-    publicData.location &&
-    publicData.location.address &&
-    geolocation;
-  const locationField =
-    publicData && publicData.location ? publicData.location : {};
-  const { address } = locationField || {};
-  const location = locationFieldsPresent
-    ? {
-      search: address,
-      selectedPlace: { address, origin: geolocation },
-    }
-    : null;
+  // const locationFieldsPresent =
+  //   publicData &&
+  //   publicData.location &&
+  //   publicData.location.address &&
+  //   geolocation;
+  // const locationField =
+  //   publicData && publicData.location ? publicData.location : {};
+  // const { address } = locationField || {};
+  // const location = locationFieldsPresent
+  //   ? {
+  //     search: address,
+  //     selectedPlace: { address, origin: geolocation },
+  //   }
+  //   : null;
   const { mainImageId } = publicData || {};
-
-
 
   const restImages = images && images.length
     ? mainImageId
@@ -104,36 +102,20 @@ const EditListingPhotosPanel = props => {
           mainImage={mainImage}
           onImageUpload={onImageUpload}
           onSubmit={values => {
-            console.log('mainImage :>> ', mainImage);
-            const { mainImage: dummyMainImage, location, addImage, description, canDo, ...updateValues } = values;
-            if (mainImage && mainImage.imageId && mainImage.imageId.uuid) {
-              
-              if (updateValues.images && updateValues.images.length) {
-                updateValues.images.push(mainImage);
-              } else {
-                updateValues.images = [mainImage];
-              }
-            } else {
-              if (updateValues.images && updateValues.images.length) {
-                updateValues.images.push(mainImage);
-              } else {
-                updateValues.images = [mainImage];
-              }
-            }
-            if (updateValues.images && updateValues.images.length) {
-              if (mainImageId) {
-                updateValues.images.filter(image => image.id.uuid != mainImageId);
-              }
+            const { mainImage: dummyMainImage, addImage, description, canDo, ...updateValues } = values;
+            if (updateValues.images && updateValues.images.length) {              
               //  const {
               //    selectedPlace: { address, origin },
               //  } = location || {};
               Object.assign(updateValues, {
-                geolocation: origin,
-
+                // description,
                 publicData: {
-                  mainImageId: mainImage?.imageId?.uuid ? mainImage?.imageId?.uuid : mainImageId ? mainImageId : '',
+                  mainImageId: mainImage && mainImage.imageId && mainImage.imageId.uuid
+                    ? mainImage.imageId.uuid
+                    : mainImageId
+                      ? mainImageId
+                      : '',
                   //  location: { address },
-                  // description: { description },
                   //  canDo : canDo
                 }
 

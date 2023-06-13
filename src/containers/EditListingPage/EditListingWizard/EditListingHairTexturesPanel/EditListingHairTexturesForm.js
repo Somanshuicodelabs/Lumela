@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import { propTypes } from '../../../../util/types';
 import { Form, Button, FieldCheckbox, NamedLink } from '../../../../components';
 import css from './EditListingHairTexturesForm.module.css';
-// import { hairTextures } from '../../marketplace-custom-config';
+import { hairTextures } from '../../../../marketplace-custom-config';
 
 export const EditListingHairTexturesFormComponent = props => (
   <FinalForm

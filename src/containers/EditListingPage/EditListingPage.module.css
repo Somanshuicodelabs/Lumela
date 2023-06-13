@@ -4,37 +4,54 @@
   z-index: 1;
 }
 
+.topbarHeader {
+  background-color: #fff;
+  box-shadow: 0px 0px 3px rgb(0 0 0 / 29%);
+
+  &.stickyNavbar {
+    background-color: #fff !important;
+    box-shadow: 0px 0px 3px rgb(0 0 0 / 29%) !important;
+  }
+}
+
+.fixedWidthContainer {
+  width: 100%;
+  /* max-width: 1080px; */
+  margin: 0px auto;
+  padding: 0 1.5rem 10.125rem 1.5rem;
+
+  &.pricingContainer {
+    text-align: center;
+    background-color: var(--bannerLightPinkColor);
+    max-width: 100%;
+    height: 100%;
+    min-height: calc(100vh - 80px);
+    padding-bottom: 0;
+  }
+}
+
 .mobileTopbar {
-  /* Size */
   width: 100%;
   height: var(--topbarHeight);
-
-  /* Layout for child components */
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-
-  /* fill */
-  background-color: var(--colorWhite);
-
-  /* shadows */
+  background-color: var(--matterColorLight);
   box-shadow: none;
 
-  @media (--viewportMedium) {
+  @media (min-width:992px) {
     display: none;
   }
 }
 
 .desktopTopbar,
 .mobileTopbar {
-  box-shadow: none;
-
-  @media (--viewportLarge) {
-    box-shadow: var(--boxShadowLight);
-  }
+  background-color: #fff;
+  box-shadow: 0px 0px 3px rgb(0 0 0 / 29%);
 }
 
-.wizard {
+.wizard,
+.placeholderWhileLoading {
   flex-grow: 1;
 }

@@ -7,7 +7,7 @@ import { FormattedMessage } from '../../../../util/reactIntl';
 import { propTypes } from '../../../../util/types';
 import { Button, FieldCheckbox, FieldTextInput, Form, NamedLink } from '../../../../components'
 import css from './EditListingOffersForm.module.css';
-// import { offers } from '../../marketplace-custom-config';
+import { offers } from '../../../../marketplace-custom-config';
 
 const EditListingOffersFormComponent = props => (
   <FinalForm

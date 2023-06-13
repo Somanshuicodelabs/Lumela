@@ -15,7 +15,7 @@ import { nonEmptyArray, composeValidators } from '../../../../util/validators';
 import { isUploadImageOverLimitError } from '../../../../util/errors';
 
 // Import shared components
-import { Button, Form, AspectRatioWrapper, NamedLink, FieldTextInput, AddImages, ValidationError, IconEdit, ImageFromFile } from '../../../../components';
+import { Button, Form, AspectRatioWrapper, NamedLink, FieldTextInput, AddImages, ValidationError, IconEdit, ImageFromFile, ResponsiveImage } from '../../../../components';
 
 // Import modules from this directory
 import ListingImage from './ListingImage';
@@ -114,23 +114,34 @@ const FieldListingImage = props => {
 };
 
 export const EditListingPhotosFormComponent = props => {
-  const [state, setState] = useState({ imageUploadRequested: false });
+  const [state, setState] = useState({ imageUploadRequested: false, mainImageUploadRequested: false });
   const [submittedImages, setSubmittedImages] = useState([]);
 
-  const onImageUploadHandler = file => {
+  const onImageUploadHandler = (file, imageType) => {
     const { listingImageConfig, onImageUpload } = props;
-    if (file) {
+    if (imageType) {
+      setState({ mainImageUploadRequested: true });
+    } else {
       setState({ imageUploadRequested: true });
-
-      onImageUpload({ id: `${file.name}_${Date.now()}`, file }, listingImageConfig)
-        .then(() => {
-          setState({ imageUploadRequested: false });
-        })
-        .catch(() => {
-          setState({ imageUploadRequested: false });
-        });
     }
+
+    onImageUpload({ id: `${file.name}_${Date.now()}`, file }, listingImageConfig, imageType)
+      .then(() => {
+        if (imageType) {
+          setState({ mainImageUploadRequested: false });
+        } else {
+          setState({ imageUploadRequested: false });
+        }
+      })
+      .catch(() => {
+        if (imageType) {
+          setState({ mainImageUploadRequested: false });
+        } else {
+          setState({ imageUploadRequested: false });
+        }
+      });
   };
+
 
   return (
     <FinalForm
@@ -189,8 +200,8 @@ export const EditListingPhotosFormComponent = props => {
           id: 'EditListingPhotosForm.imageRequired',
         });
 
-
-
+        const hasUploadError = !!uploadImageError && !mainImageUploadRequested;
+        const errorClasses = classNames({ [css.avatarUploadError]: hasUploadError });
         const submitReady = (updated && pristineSinceLastSubmit) || ready;
         const submitInProgress = updateInProgress;
         const submitDisabled =
@@ -214,6 +225,27 @@ export const EditListingPhotosFormComponent = props => {
           </span>
         );
         let uploadImageFailed = null;
+        const avatarComponent =
+          !mainImageUploadRequested && mainImage && mainImage.id && mainImage.id.uuid ? (
+            <ResponsiveImage
+              rootClassName={css.avatarImage}
+              alt={mainImage.id.uuid}
+              image={mainImage}
+              variants={['landscape-crop', 'landscape-crop2x']}
+              sizes={'(max-width: 767px) 96px, 240px'}
+            />
+          ) : null;
+        const imageFromFile = !fileUploadInProgress ? (
+          <ImageFromFile
+            id={mainImage.id}
+            className={errorClasses}
+            rootClassName={css.uploadingImage}
+            aspectRatioClassName={css.squareAspectRatio}
+            file={mainImage.file}
+          >
+            {uploadingOverlay}
+          </ImageFromFile>
+        ) : null;
         const chooseAvatarLabel =
           mainImage &&
             ((mainImage.id && mainImage.id.uuid) || mainImage.imageId || fileUploadInProgress) ? (
@@ -250,21 +282,6 @@ export const EditListingPhotosFormComponent = props => {
           );
         }
 
-        const hasUploadError = !!uploadImageError && !mainImageUploadRequested;
-
-        const errorClasses = classNames({ [css.avatarUploadError]: hasUploadError });
-
-        const imageFromFile = !fileUploadInProgress ? (
-          <ImageFromFile
-            id={mainImage.id}
-            className={errorClasses}
-            rootClassName={css.uploadingImage}
-            aspectRatioClassName={css.squareAspectRatio}
-            file={mainImage.file}
-          >
-            {uploadingOverlay}
-          </ImageFromFile>
-        ) : null;
         return (
           <Form
             className={classes}
@@ -307,6 +324,67 @@ export const EditListingPhotosFormComponent = props => {
                   ))
                 }
               </FieldArray>
+
+              {mainImage ? null : (
+                <Field
+                  accept={ACCEPT_IMAGES}
+                  id="mainImage"
+                  name="mainImage"
+                  label={chooseAvatarLabel}
+                  type="file"
+                  form={null}
+                  uploadImageError={uploadImageError}
+                  disabled={fileUploadInProgress}
+                >
+                  {fieldProps => {
+                    const { accept, id, input, label, disabled, uploadImageError } = fieldProps;
+                    const { name, type } = input;
+                    const onChange = e => {
+                      const file = e.target.files[0];
+                      form.change(`mainImage`, file);
+                      form.blur(`mainImage`);
+                      if (file != null) {
+                        const tempId = `${file.name}_${Date.now()}`;
+                        onImageUploadHandler(file, 'main');
+                      }
+                    };
+
+                    let error = null;
+
+                    if (isUploadImageOverLimitError(uploadImageError)) {
+                      error = (
+                        <div className={css.error}>
+                          <FormattedMessage id="ProfileSettingsForm.imageUploadFailedFileTooLarge" />
+                        </div>
+                      );
+                    } else if (uploadImageError) {
+                      error = (
+                        <div className={css.error}>
+                          <FormattedMessage id="ProfileSettingsForm.imageUploadFailed" />
+                        </div>
+                      );
+                    }
+
+                    return (
+                      <div className={css.uploadAvatarWrapper}>
+                        <label className={css.label} htmlFor={id}>
+                          {label}
+                        </label>
+                        <input
+                          accept={accept}
+                          id={id}
+                          name={name}
+                          className={css.uploadAvatarInput}
+                          disabled={disabled}
+                          onChange={onChange}
+                          type={type}
+                        />
+                        {error}
+                      </div>
+                    );
+                  }}
+                </Field>
+              )}
               <Field
                 accept={ACCEPT_IMAGES}
                 id="mainImage"
@@ -322,7 +400,6 @@ export const EditListingPhotosFormComponent = props => {
                   const { name, type } = input;
                   const onChange = e => {
                     const file = e.target.files[0];
-                    console.log('file :>> ', file);
                     form.change(`mainImage`, file);
                     form.blur(`mainImage`);
                     if (file != null) {
@@ -368,54 +445,6 @@ export const EditListingPhotosFormComponent = props => {
               </Field>
             </div>
 
-            {/* <FieldAddImage
-                id="mainImage"
-                name="mainImage"
-                accept={ACCEPT_IMAGES}
-                label={
-                  <span className={css.chooseImageText}>
-                    <span className={css.chooseImage}>
-                      <FormattedMessage id="EditListingPhotosForm.chooseImage" />
-                    </span>
-                    <span className={css.imageTypes}>
-                      <FormattedMessage id="EditListingPhotosForm.imageTypes" />
-                    </span>
-                  </span>
-                }
-                type="file"
-                disabled={state.imageUploadRequested}
-                formApi={form}
-                onImageUploadHandler={onImageUploadHandler}
-                aspectWidth={aspectWidth}
-                aspectHeight={aspectHeight}
-              />
-
-              
-            </div>
-
-            {imagesError ? <div className={css.arrayError}>{imagesError}</div> : null} */}
-
-            {/* <ImageUploadError
-              uploadOverLimit={uploadOverLimit}
-              uploadImageError={uploadImageError}
-            />
-
-            <p className={css.tip}>
-              <FormattedMessage id="EditListingPhotosForm.addImagesTip" />
-            </p> */}
-
-            {/* <PublishListingError error={publishListingError} />
-            <ShowListingsError error={showListingsError} /> */}
-
-            {/* <Button
-              className={css.submitButton}
-              type="submit"
-              inProgress={submitInProgress}
-              disabled={submitDisabled}
-              ready={submitReady}
-            >
-              {saveActionMsg}
-            </Button> */}
             {uploadImageFailed}
             <div className={css.hairByContents}>
               <h3>
@@ -424,12 +453,12 @@ export const EditListingPhotosFormComponent = props => {
               <p className={css.hairByEmail}>{email}</p>
             </div>
 
-            <div className={css.hairByContents}>
+            {/* <div className={css.hairByContents}>
               <h3>
                 <FormattedMessage id="EditListingPhotosForm.text" /> {businessName}
               </h3>
               <p className={css.hairByEmail}>{email}</p>
-            </div>
+            </div> */}
 
             <div className={css.locationDescription}>
               {/* <LocationAutocompleteInputField
@@ -603,7 +632,8 @@ export const EditListingPhotosFormComponent = props => {
       }}
     />
   );
-};
+}
+
 
 EditListingPhotosFormComponent.defaultProps = { fetchErrors: null };
 

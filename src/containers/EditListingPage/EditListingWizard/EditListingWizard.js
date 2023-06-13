@@ -56,15 +56,17 @@ import css from './EditListingWizard.module.css';
 // and listing publishing happens after last panel.
 const TABS_DETAILS_ONLY = [DESCRIPTION];
 const TABS_PRODUCT = [DESCRIPTION, PHOTOS];
-const TABS_BOOKING = [ DESCRIPTION,
+const TABS_BOOKING = [ 
+  DESCRIPTION,
   PHOTOS,
   OFFERS,
   HAIR_TEXTURES,
   SKIN_TONES,
   SKIN_TYPES,
   TEAM_SIZE,
+  AVAILABILITY,
   BOOKING_SYSTEM,];
-const TABS_ALL = [...TABS_PRODUCT, ...TABS_BOOKING];
+const TABS_ALL = TABS_BOOKING;
 
 // Tabs are horizontal in small screens
 const MAX_HORIZONTAL_NAV_SCREEN_WIDTH = 1023;
@@ -182,10 +184,12 @@ const tabCompleted = (tab, listing) => {
     // geolocation,
   } = listing.attributes;
   const images = listing.images;
-
+  
   switch (tab) {
     case DESCRIPTION:
       return !!(title && publicData.businessName && publicData.email);
+    case PHOTOS:
+      return images && images.length > 0;
     case OFFERS:
       return !!(publicData.offers);
     case TEAM_SIZE:
@@ -197,8 +201,6 @@ const tabCompleted = (tab, listing) => {
       return !!(publicData.skinTones);
     case SKIN_TYPES:
       return !!(publicData.skinTypes);
-    case PHOTOS:
-      return images && images.length > 0 ;
     case PRICING:
       return !!price;
       case BOOKING_SYSTEM:
@@ -227,7 +229,7 @@ const tabsActive = (isNew, listing, tabs, config) => {
     const hasListingType = !!listing?.attributes?.publicData?.listingType;
     const prevTabComletedInNewFlow = tabCompleted(tabs[previousTabIndex], listing, config);
     const isActive =
-      validTab && !isNew ? hasListingType : validTab && isNew ? prevTabComletedInNewFlow : true;
+    previousTabIndex >= 0 ? !isNew || tabCompleted(tabs[previousTabIndex], listing) : true;
     return { ...acc, [tab]: isActive };
   }, {});
 };
@@ -426,16 +428,13 @@ class EditListingWizard extends Component {
       existingListingType &&
       !config.listing.listingTypes.find(config => config.listingType === existingListingType);
 
-    const tabs = invalidExistingListingType
-      ? TABS_DETAILS_ONLY
-      : isBookingProcess(processName)
-      ? TABS_BOOKING
-      : TABS_PRODUCT;
+    const tabs = TABS_BOOKING;
 
     // Check if wizard tab is active / linkable.
     // When creating a new listing, we don't allow users to access next tab until the current one is completed.
     const tabsStatus = tabsActive(isNewListingFlow, currentListing, tabs, config);
-
+    
+    
     // If selectedTab is not active, redirect to the beginning of wizard
     if (!tabsStatus[selectedTab]) {
       const currentTabIndex = tabs.indexOf(selectedTab);

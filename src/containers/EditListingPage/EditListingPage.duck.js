@@ -260,8 +260,6 @@ export default function reducer(state = initialState, action = {}) {
         updateInProgress: false,
       };
     case PUBLISH_LISTING_ERROR: {
-      // eslint-disable-next-line no-console
-      console.error(payload);
       return {
         ...state,
         publishListingError: {
@@ -300,7 +298,6 @@ export default function reducer(state = initialState, action = {}) {
         : { ...initialState, listingId: listingIdFromPayload };
     }
     case SHOW_LISTINGS_ERROR:
-      // eslint-disable-next-line no-console
       console.error(payload);
       return { ...state, showListingsError: payload, redirectToListing: false };
 
@@ -409,8 +406,8 @@ export default function reducer(state = initialState, action = {}) {
     }
     case UPLOAD_IMAGE_SUCCESS: {
       // payload.params: { id: 'tempId', imageId: 'some-real-id', attributes, type }
-      const { id, ...rest } = payload;
-      const uploadedImages = { ...state.uploadedImages, [id]: { id, ...rest } };
+      const { id, imageType,...rest } = payload;
+      const uploadedImages = { ...state.uploadedImages, [id]: { id,imageType, ...rest } };
       return { ...state, uploadedImages };
     }
     case UPLOAD_IMAGE_ERROR: {
@@ -616,6 +613,7 @@ export function requestCreateListingDraft(data, config) {
       .createDraft(ownListingValues, queryParams)
       .then(response => {
         createDraftResponse = response;
+        
         const listingId = response.data.data.id;
         // If stockUpdate info is passed through, update stock
         return updateStockOfListingMaybe(listingId, stockUpdate, dispatch);
@@ -640,7 +638,7 @@ export function requestUpdateListing(tab, data, config) {
   return (dispatch, getState, sdk) => {
     dispatch(updateListingRequest(data));
     const { id, stockUpdate, images, ...rest } = data;
-
+    
     // If images should be saved, create array out of the image UUIDs for the API call
     const imageProperty = typeof images !== 'undefined' ? { images: imageIds(images) } : {};
     const ownListingUpdateValues = { id, ...imageProperty, ...rest };
@@ -659,8 +657,10 @@ export function requestUpdateListing(tab, data, config) {
 
     // Note: if update values include stockUpdate, we'll do that first
     // That way we get updated currentStock info among ownListings.update
-    return updateStockOfListingMaybe(id, stockUpdate, dispatch)
-      .then(() => sdk.ownListings.update(ownListingUpdateValues, queryParams))
+    // updateStockOfListingMaybe(id, stockUpdate, dispatch)
+    //   .then(() => )
+    return sdk.ownListings
+      .update(ownListingUpdateValues, queryParams)
       .then(response => {
         dispatch(updateListingSuccess(response));
         dispatch(addMarketplaceEntities(response));
@@ -701,7 +701,7 @@ export const requestPublishListingDraft = listingId => (dispatch, getState, sdk)
 };
 
 // Images return imageId which we need to map with previously generated temporary id
-export function requestImageUpload(actionPayload, listingImageConfig) {
+export function requestImageUpload(actionPayload, listingImageConfig,imageType) {
   return (dispatch, getState, sdk) => {
     const id = actionPayload.id;
     const imageVariantInfo = getImageVariantInfo(listingImageConfig);
@@ -710,8 +710,7 @@ export function requestImageUpload(actionPayload, listingImageConfig) {
       'fields.image': imageVariantInfo.fieldsImage,
       ...imageVariantInfo.imageVariants,
     };
-
-    dispatch(uploadImageRequest(actionPayload));
+    dispatch(uploadImageRequest(actionPayload,imageType));
     return sdk.images
       .upload({ image: actionPayload.file }, queryParams)
       .then(resp => {
@@ -719,7 +718,7 @@ export function requestImageUpload(actionPayload, listingImageConfig) {
         // Uploaded image has an existing id that refers to file
         // The UUID was created as a consequence of this upload call - it's saved to imageId property
         return dispatch(
-          uploadImageSuccess({ data: { ...img, id, imageId: img.id, file: actionPayload.file } })
+          uploadImageSuccess({ data: { ...img, id, imageId: img.id, file: actionPayload.file ,imageType} })
         );
       })
       .catch(e => dispatch(uploadImageError({ id, error: storableError(e) })));
