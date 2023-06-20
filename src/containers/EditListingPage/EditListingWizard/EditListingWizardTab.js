@@ -19,7 +19,7 @@ import EditListingAvailabilityPanel from './EditListingAvailabilityPanel/EditLis
 import EditListingPricingPanel from './EditListingPricingPanel/EditListingPricingPanel';
 import EditListingHairTexturesPanel from './EditListingHairTexturesPanel/EditListingHairTexturesPanel';
 import EditListingTeamSizePanel from './EditListingTeamSizePanel/EditListingTeamSizePanel';
-// import EditListingBookingSystemPanel from './EditListingBookingSystemPanel/EditListingBookingSystemPanel';
+import EditListingBookingSystemPanel from './EditListingBookingSystemPanel/EditListingBookingSystemPanel';
 import EditListingSkinTypesPanel from './EditListingSkinTypesPanel/EditListingSkinTypesPanel';
 import EditListingSkinTonesPanel from './EditListingSkinTonesPanel/EditListingSkinTonesPanel';
 import EditListingOffersPanel from './EditListingOffersPanel/EditListingOffersPanel'
@@ -71,32 +71,31 @@ const pathParamsToPrevTab = (params, tab, marketplaceTabs) => {
 };
 
 // When user has update draft listing, he should be redirected to next EditListingWizardTab
-const redirectAfterDraftUpdate = (listingId, params, tab, marketplaceTabs, history, routes) => {
-  
-  
-  const listingUUID = listingId.uuid;
+const redirectAfterDraftUpdate = (listingId, params, tab, marketplaceTabs, history) => {
+  const listingUUID = listingId;
   const currentPathParams = {
     ...params,
     type: LISTING_PAGE_PARAM_TYPE_DRAFT,
     id: listingUUID,
   };
+  const routes = routeConfiguration();
 
   // Replace current "new" path to "draft" path.
   // Browser's back button should lead to editing current draft instead of creating a new one.
   if (params.type === LISTING_PAGE_PARAM_TYPE_NEW) {
-    
+
     const draftURI = createResourceLocatorString('EditListingPage', routes, currentPathParams, {});
-    
+
     history.replace(draftURI);
   }
 
   // Redirect to next tab
-  
-  
+
+
   const nextPathParams = pathParamsToNextTab(currentPathParams, tab, marketplaceTabs);
-  
+
   const to = createResourceLocatorString('EditListingPage', routes, nextPathParams, {});
-  
+
   history.push(to);
 };
 const redirectPrevDraftUpdate = (listingId, params, tab, marketplaceTabs, history) => {
@@ -163,11 +162,11 @@ const EditListingWizardTab = props => {
   const isEdit = type == LISTING_PAGE_PARAM_TYPE_EDIT;
 
   const currentListing = ensureListing(listing);
-  
+
 
   // Redirect to next tab
   const nextPathParams = pathParamsToNextTab(params, tab, marketplaceTabs);
-  
+
   const nextTabPath = createResourceLocatorString(
     'EditListingPage',
     routeConfiguration(),
@@ -178,10 +177,10 @@ const EditListingWizardTab = props => {
   // New listing flow has automatic redirects to new tab on the wizard
   // and the last panel calls publishListing API endpoint.
   const automaticRedirectsForNewListingFlow = (tab, listingId) => {
-    
-    
+
+
     if (tab !== marketplaceTabs[marketplaceTabs.length - 1]) {
-      
+
       // Create listing flow: smooth scrolling polyfill to scroll to correct tab
       handleCreateFlowTabScrolling(false);
 
@@ -195,14 +194,14 @@ const EditListingWizardTab = props => {
         routeConfiguration()
       );
     } else {
-      
+
       handlePublishListing(listingId);
     }
   };
 
   const onCompleteEditListingWizardTab = (tab, updateValues) => {
-    
-    
+
+
     const onUpdateListingOrCreateListingDraft = isNewURI
       ? (tab, values) => onCreateListingDraft(values, config)
       : (tab, values) => onUpdateListing(tab, values, config);
@@ -213,19 +212,19 @@ const EditListingWizardTab = props => {
 
     return onUpdateListingOrCreateListingDraft(tab, updateListingValues)
       .then(r => {
-        
-        
+
+
         // In Availability tab, the submitted data (plan) is inside a modal
         // We don't redirect provider immediately after plan is set
         if (isNewListingFlow && tab !== AVAILABILITY) {
           const listingId = r.data.data.id;
-          
+
           automaticRedirectsForNewListingFlow(tab, listingId);
         }
       })
       .catch(e => {
         console.log(e, '&& >>>>>>> && => e');
-        
+
         // No need for extra actions
       });
   };
@@ -422,7 +421,7 @@ const EditListingWizardTab = props => {
       return (
         <EditListingBookingSystemPanel
           {...panelProps(BOOKING_SYSTEM)}
-          submitButtonText={intl.formatMessage({ id: submitButtonTranslationKey })}
+          submitButtonText={intl?.formatMessage({ id: submitButtonTranslationKey })}
           onSubmit={values => {
             onCompleteEditListingWizardTab(tab, values)
               .then(() => {

@@ -1,76 +1,264 @@
-@import '../../../../../styles/customMediaQueries.css';
+@import '../../../../../styles/propertySets.css';
 
 .root {
-  /* Dimensions */
   width: 100%;
   height: auto;
-
-  /* Layout */
   display: flex;
   flex-grow: 1;
   flex-direction: column;
-
-  padding-top: 1px;
-
-  @media (--viewportMedium) {
-    padding-top: 2px;
-    margin-top: -16px;
+  padding: 1.5rem 2rem 2rem 2rem;
+  @media (max-width: 767px) {
+    padding: 1.5rem 1.5rem 2rem 1.5rem;
   }
+}
+
+.heading {
+  margin-top: 0;
+  color: var(--matterColorDark);
+  font-size: 1.2rem;
 }
 
 .subheading {
-  composes: p from global;
-}
-
-.heading,
-.subheading,
-.timezonePicker,
-.submitButton {
-  padding-left: 30px;
-  padding-right: 30px;
-
-  @media (--viewportSmall) {
-    padding-left: 60px;
-    padding-right: 60px;
-  }
-}
-
-.subheading {
-  margin: 0 0 6px 0;
-  padding-top: 19px;
-  padding-bottom: 5px;
-
-  @media (--viewportMedium) {
-    margin: 0 0 8px 0;
-  }
+  margin: 16px 0 32px;
+  color: #6d6b6b;
+  font-size: 1.5rem;
+  line-height: 1.25rem;
+  font-weight: var(--fontWeightSemiBold);
+  text-align: center;
 }
 
 .error {
-  color: var(--colorFail);
+  color: var(--failColor);
 }
 
 .timezonePicker {
-  margin-bottom: 24px;
+  margin-top: 0.313rem;
+  margin-bottom: 2rem;
 }
 
 .week {
   display: flex;
-  flex-direction: column;
-
-  padding-top: 16px;
-  margin-bottom: 23px;
-
-  @media (--viewportLarge) {
-    margin-bottom: 95px;
+  /* justify-content: space-around; */
+  /* overflow-x: scroll; */
+  gap: 31px;
+  flex-wrap: wrap;
+  @media (max-width: 767px) {
+    gap: 12px;
   }
+  & > span {
+    border-radius: 100px;
+    height: 60px;
+    width: 60px;
+    border: 2px solid #e3e3e3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    &:hover,
+    &:focus,
+    &:active {
+      color: #361fef;
+      background: #005aff26;
+      border: none;
+    }
+    &.selectedDay {
+      color: #361fef;
+      background: #005aff26;
+      border: none !important;
+    }
+    &.completedStep {
+      background-color: var(--successColor);
+      color: var(--matterColorLight);
+      border-color: var(--successColor);
+    }
+  }
+}
+.contentDetails {
+  & .buttonSetHours {
+    display: none;
+  }
+  & .fieldWrapper {
+    /* display: none; */
+  }
+}
+
+.dayButtons {
+  display: flex;
+  flex-direction: column;
+}
+.weekDay {
+  font-weight: var(--fontWeightMedium);
+  font-size: 1rem;
+  line-height: 1.25rem;
+  color: var(--matterColorDark);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  height: 100%;
+  &:last-child {
+    padding-bottom: 0;
+  }
+  & button {
+    text-transform: capitalize;
+  }
+  &.hasEntries {
+    background-color: var(--matterColorLight);
+    display: block;
+
+    & .dayOfWeek {
+      margin-bottom: 0.5rem;
+      border-radius: 100px;
+      height: 60px;
+      width: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      /* border: 2px solid #E3E3E3; */
+    }
+    & .dayOfWeekSelected {
+      border: none;
+      background: #005aff26;
+      color: #878ceb;
+      font-weight: 600;
+      &:hover,
+      &:active,
+      &:focus {
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+.openCheckBox {
+  display: flex;
+  justify-content: space-between;
+  margin: 16px 0;
+  max-width: 254px;
+  gap: 42px;
+  @media (max-width: 767px) {
+    max-width: 220px;
+    gap: 18px;
+  }
+  & span {
+    color: #6d6b6b;
+  }
+}
+.selectTime {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.dayOfWeek {
+}
+
+.timePicker {
+  & .fieldWrapper {
+    display: flex;
+    border-bottom: 1px solid var(--matterColorNegative);
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    flex-grow: 1;
+    flex-shrink: 0;
+    flex-wrap: nowrap;
+    padding-bottom: 0.625rem;
+    margin-bottom: 0.625rem;
+    position: relative;
+  }
+}
+.fieldWrapper {
+  margin: 12px 0;
+}
+.formRow {
+  /* This container uses flexbox layout */
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  /* parent aka fieldWrapper is flexbox, this container takes all available space */
+  flex-grow: 1;
+  flex-shrink: 0;
+  flex-wrap: nowrap;
+
+  z-index: 1;
+  & label {
+    position: absolute;
+    top: -8px;
+    left: 7px;
+    padding: 0px 3px;
+    background: #ffffff;
+    color: #8080809c;
+    font-weight: 500;
+  }
+}
+
+.closeIcon {
+  @apply --marketplaceModalCloseIcon;
+  stroke: none;
+  fill: var(--matterColorAnti);
+
+  &:hover {
+    fill: var(--matterColor);
+  }
+}
+
+.dashBetweenTimes {
+  padding-left: 6px;
+  padding-right: 6px;
+  padding-bottom: 8px;
+}
+
+.buttonSetHours {
+  & > div {
+    border-radius: 100px;
+    height: 60px;
+    width: 60px;
+    border: 2px solid #e3e3e3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.buttonAddNew {
+  @apply --marketplaceH5FontStyles;
+  text-align: left;
+  margin: 12px 0 0;
+  color: #878ceb;
+  font-weight: 600;
 }
 
 .submitButton {
   margin-top: auto;
   flex-shrink: 0;
-  /* Mobile phones introduce bottom-bar, for which we need to give 96px vertical space */
-  padding-bottom: 96px;
-  @media (--viewportMedium) {
-    padding-bottom: unset;
+  padding-top: 3rem;
+  text-align: right;
+  & > button {
+    border: none;
+    color: #878ceb;
+    font-weight: 600;
+    cursor: pointer;
+    &:hover {
+      color: #361fef;
+    }
+    &:disabled {
+      color: var(--matterColorNegative);
+      cursor: not-allowed;
+    }
+  }
+}
+
+.fieldSelect {
+  @apply --marketplaceTabNavHorizontalFontStyles;
+  background: none;
+  height: 56px;
+  width: 280px;
+  border-radius: 6px;
+  @media (max-width: 767px) {
+    width: 110px;
+  }
+  &:select {
+    margin-right: 0;
   }
 }

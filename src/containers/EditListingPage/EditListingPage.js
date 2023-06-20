@@ -168,7 +168,7 @@ export const EditListingPageComponent = props => {
       };
 
     return isPendingApproval ? <NamedRedirect {...redirectProps} /> : <Redirect to="/p/listing-created-page" />;
-  } else if (isNewURI && currentUserListingFetched && currentUserListing) {
+  } else if (isNewURI && currentUserListing) {
     // If we allow only one listing per provider, we need to redirect to correct listing.
     return (
       <NamedRedirect
@@ -232,7 +232,13 @@ export const EditListingPageComponent = props => {
             props.match.params.tab === 'pricing' ? css.pricingContainer : null
           )}
         >
-          <ModalMissingInformation
+          {/* <TopbarContainer
+          className={css.topbar}
+          mobileRootClassName={css.mobileTopbar}
+          desktopClassName={css.desktopTopbar}
+          mobileClassName={css.mobileTopbar}
+        /> */}
+          {/* <ModalMissingInformation
             id="MissingInformationReminder"
             containerClassName={css.missingInformationModal}
             currentUser={currentUser}
@@ -243,13 +249,7 @@ export const EditListingPageComponent = props => {
             onResendVerificationEmail={onResendVerificationEmail}
             sendVerificationEmailInProgress={sendVerificationEmailInProgress}
             sendVerificationEmailError={sendVerificationEmailError}
-          />
-          {/* <TopbarContainer
-          className={css.topbar}
-          mobileRootClassName={css.mobileTopbar}
-          desktopClassName={css.desktopTopbar}
-          mobileClassName={css.mobileTopbar}
-        /> */}
+          /> */}
           <EditListingWizard
             id="EditListingWizard"
             className={css.wizard}
@@ -262,12 +262,12 @@ export const EditListingPageComponent = props => {
             history={history}
             images={images}
             listing={currentListing}
+            onAddAvailabilityException={onAddAvailabilityException}
+            onDeleteAvailabilityException={onDeleteAvailabilityException}
             weeklyExceptionQueries={page.weeklyExceptionQueries}
             monthlyExceptionQueries={page.monthlyExceptionQueries}
             allExceptions={page.allExceptions}
             onFetchExceptions={onFetchExceptions}
-            onAddAvailabilityException={onAddAvailabilityException}
-            onDeleteAvailabilityException={onDeleteAvailabilityException}
             onUpdateListing={onUpdateListing}
             onCreateListingDraft={onCreateListingDraft}
             onPublishListingDraft={onPublishListingDraft}
@@ -395,7 +395,6 @@ const mapStateToProps = state => {
   } = state.stripeConnectAccount;
 
   const { currentUser, currentUserListing, currentUserListingFetched, currentUserHasOrders, sendVerificationEmailInProgress, sendVerificationEmailError } = state.user;
-
   const fetchInProgress = createStripeAccountInProgress;
 
   const getOwnListing = id => {

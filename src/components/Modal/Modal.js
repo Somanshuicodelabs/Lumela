@@ -129,6 +129,9 @@ export class ModalComponent extends Component {
       isClosedClassName,
       isOpen,
       usePortal,
+      TitleName,
+      isMobileMenuModal,
+      isAvailabilityPanel,
     } = this.props;
 
     const closeModalMessage = intl.formatMessage({ id: 'Modal.closeModal' });
@@ -154,7 +157,15 @@ export class ModalComponent extends Component {
     // visible, hidden, or none (ModalInMobile's children are always visible on desktop layout.)
     const isOpenClass = usePortal ? css.isOpenInPortal : css.isOpenInPlace;
     const modalClass = isOpen ? isOpenClass : isClosedClassName;
-    const classes = classNames(modalClass, className);
+    const classes = classNames(
+      modalClass,
+      className,
+      this.props.isMobileMenuModal ? css.mobileMenuModal : null,
+      this.props.isAvailabilityPanel ? css.availabilityPanelModal : null,
+      this.props.isProfileSettingsModal ? css.profileSettingsModal : null,
+      this.props.isChangePassword ? css.changePasswordModal : null,
+      isAvailabilityPanel && css.isAvailabilityPanel
+    );
     const scrollLayerClasses = scrollLayerClassName || css.scrollLayer;
     const containerClasses = containerClassName || css.container;
     const portalRoot = this.state.portalRoot;
@@ -169,7 +180,7 @@ export class ModalComponent extends Component {
       <div className={classes}>
         <div className={scrollLayerClasses}>
           <div className={containerClasses}>
-            {closeBtn}
+            {/* {closeBtn} */}
             <div className={classNames(contentClassName || css.content)}>{children}</div>
           </div>
         </div>
@@ -183,7 +194,10 @@ export class ModalComponent extends Component {
               ref={this.refDiv}
               tabIndex="-1"
             >
-              {closeBtn}
+              <div className={css.modalHeading}>
+                <div className={css.modalTitle}>{TitleName}</div>
+                {closeBtn}
+              </div>
               <div className={classNames(contentClassName || css.content)}>{children}</div>
             </div>
           </div>

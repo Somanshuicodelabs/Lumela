@@ -1,4 +1,4 @@
-@import '../../styles/customMediaQueries.css';
+@import '../../styles/propertySets.css';
 
 /* Content is visible as modal layer */
 .isOpen {
@@ -7,12 +7,11 @@
 
   /* scrollLayer is the .root for the Modal */
   & .scrollLayer {
-    flex-grow: 1;
-    display: flex;
+    @apply --marketplaceModalRootStyles;
 
     /* Add default background color to avoid bouncing scroll showing the
    page contents from behind the modal. */
-    background-color: var(--colorWhite);
+    background-color: var(--matterColorLight);
 
     /* Additional styles for the modal window, dimming the background and positioning the modal */
     min-height: 100vh;
@@ -20,8 +19,6 @@
     -webkit-overflow-scrolling: touch;
 
     @media (--viewportMedium) {
-      justify-content: center;
-      align-items: flex-start;
       padding: 0;
       background-color: rgba(0, 0, 0, 0.4);
       background-image: none;
@@ -29,33 +26,14 @@
   }
 
   & .container {
-    flex-grow: 1;
-
-    /* Create context so the close button can be positioned within it */
-    position: relative;
-
-    /* Display and dimensions */
-    display: flex;
-    flex-direction: column;
-    padding: var(--modalPadding);
-
-    background-color: var(--colorWhite);
-    border-radius: var(--borderRadius);
-    border-bottom: none;
-
+    @apply --marketplaceModalBaseStyles;
     min-height: 100vh;
     height: 100%;
 
     @media (--viewportMedium) {
       flex-basis: 576px;
-      flex-grow: 0;
       min-height: auto;
       height: auto;
-
-      padding: var(--modalPaddingMedium);
-      margin-top: 12.5vh;
-      margin-bottom: 12.5vh;
-      border-bottom: 8px solid var(--marketplaceColor);
     }
   }
 }
@@ -99,29 +77,156 @@
 }
 
 .close {
-  composes: marketplaceModalCloseStyles from global;
+  @apply --marketplaceModalCloseStyles;
+  width: fit-content;
 }
 
 .closeText {
-  composes: marketplaceModalCloseText from global;
+  @apply --marketplaceModalCloseText;
 }
 
 .closeIcon {
-  composes: marketplaceModalCloseIcon from global;
+  @apply --marketplaceModalCloseIcon;
 }
 
 .closeLight {
-  color: var(--colorGrey300);
+  color: var(--matterColorAnti);
   transition: var(--transitionStyleButton);
 
   &:enabled:hover,
   &:enabled:active {
-    color: var(--colorWhite);
+    color: var(--matterColorLight);
   }
 }
 
+/* .modalTitle{
+  &:after{
+    content: "";
+    position: absolute;
+    height: 1px;
+    width: 100%;
+    background: #D9D9D9;
+    left: 0;
+    top: 87px;
+  }
+} */
 .focusedDiv {
   &:focus {
     outline: none;
+  }
+}
+
+.mobileMenuModal {
+  & .modalHeading {
+    display: none;
+  }
+  & .container {
+    @apply --marketplaceModalBaseStyles;
+    padding: 0px;
+    margin: 0;
+    min-height: 100vh;
+    height: auto;
+    flex-basis: 100%;
+
+    & .close {
+      padding: 2rem 1.75rem;
+    }
+
+    & .content {
+      padding-top: 0em;
+    }
+  }
+}
+
+.profileSettingsModal {
+  & .container {
+    padding: 5rem 3rem 3rem 3rem;
+    margin: 0rem auto;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  & .close {
+    display: none;
+  }
+}
+
+.changePasswordModal {
+  & .container {
+    padding: 0rem;
+    margin: 0rem auto;
+    top: 50%;
+    transform: translateY(-50%);
+
+    & .modalHeading {
+      padding: 1.5rem;
+      border-bottom: solid 1px var(--landingPagesTabUnderLine);
+
+      & .modalTitle {
+        text-align: center;
+        margin-top: 0;
+        font-weight: var(--fontWeightBold);
+        font-size: 1.5rem;
+        line-height: 1.813rem;
+        color: var(--matterColorDark);
+      }
+    }
+
+    & .content {
+      padding: 1rem 3rem 3rem;
+    }
+  }
+}
+
+.modalTitle {
+  margin-top: -20px;
+  font-size: 18px;
+  line-height: 22px;
+  font-weight: var(--fontWeightBold);
+  color: #2d2c2c;
+}
+.isAvailabilityPanel {
+  & .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+  }
+  & .scrollLayer {
+    background-color: rgba(0, 0, 0, 0.4);
+    @media (max-width: 767px) {
+      align-items: center;
+      justify-content: center;
+    }
+  }
+  & .close {
+    padding: 23px 20px;
+    @media (max-width: 767px) {
+      padding: 16px;
+      right: 0px;
+      position: absolute;
+      top: 0px;
+    }
+  }
+  & .focusedDiv {
+    margin: auto;
+    padding: 0;
+    border: none;
+    margin-top: 16.5vh;
+    width: 90%;
+    max-width: 672px;
+    @media (max-width: 767px) {
+      padding: 0;
+      min-height: auto;
+      height: 469px;
+      max-width: 100%;
+      /* margin-top: auto; */
+    }
+  }
+  & .closeIcon {
+    color: #fd4e50;
+  }
+  & .close {
+    display: none;
   }
 }

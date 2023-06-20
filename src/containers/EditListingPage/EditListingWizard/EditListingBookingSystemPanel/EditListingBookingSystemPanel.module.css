@@ -1,0 +1,108 @@
+.root {
+  flex-grow: 1;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+}
+
+.form {
+  flex-grow: 1;
+}
+
+.title {
+  text-transform: none;
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+  color: #7C7C7C;
+  text-align: center;
+  margin: 65px 0 18px;
+  @media (max-width: 767px) {
+    margin: 48px 0 16px;
+  }
+}
+
+
+.editListingContainer {
+  padding: 0;
+
+  & .sectionHeader {
+    background-color: var(--bannerLightPinkColor);
+    text-align: center;
+    padding: 1rem;
+
+    & .processWrap {
+      font-weight: var(--fontWeightBold);
+      font-size: 1rem;
+      line-height: 1.25rem;
+      color: var(--matterColorDark);
+      margin: 0;
+    }
+
+    & .progressDiv {
+      background-color: var(--matterColorLight);
+      width: 100%;
+      height: 1rem;
+      max-width: 37.5rem;
+      margin: 0.5rem auto 0;
+      position: relative;
+
+      & .progress {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 30%;
+        background-color: var(--marketplaceSecondaryColor);
+        height: 100%;
+      }
+    }
+  }
+
+  & .editListingContent {
+    &>h2 {
+      font-family: 'Montserrat';
+      font-style: normal;
+      font-weight: 700;
+      font-size: 48px;
+      line-height: 59px;
+      text-align: center;      
+      color: #000000;
+      margin: 0 0 12px;
+      @media (max-width: 1400px) {
+        font-size: 36px;
+      line-height: 38px;
+      }
+      @media (max-width: 767px) {
+        font-size: 24px;
+      line-height: 28px;
+      margin: 0 0 8px;
+      }
+    }
+
+    &>p {
+      margin-top: 0;
+      margin-bottom: 79px;
+      font-family: 'Montserrat';
+      font-style: normal;
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 24px;
+      color: #000000;
+      text-align: center;
+      @media (max-width: 1400px) {
+        margin-bottom: 48px;
+        font-size: 18px;
+        line-height: 22px;
+      }
+      @media (max-width: 767px) {
+        margin-bottom: 32px;
+        font-size: 16px;
+        line-height: 20px;
+      }
+    }
+  }
+}

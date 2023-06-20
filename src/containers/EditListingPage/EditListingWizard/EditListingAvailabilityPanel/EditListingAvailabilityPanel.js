@@ -17,6 +17,9 @@ import EditListingAvailabilityExceptionForm from './EditListingAvailabilityExcep
 import WeeklyCalendar from './WeeklyCalendar/WeeklyCalendar';
 
 import css from './EditListingAvailabilityPanel.module.css';
+import { ensureOwnListing } from '../../../../util/data';
+import moment from 'moment';
+import IconCollection from '../../../../components/IconCollection/IconCollection';
 
 // This is the order of days as JavaScript understands them
 // The number returned by "new Date().getDay()" refers to day of week starting from sunday.
@@ -28,8 +31,78 @@ const rotateDays = (days, startOfWeek) => {
   return startOfWeek === 0 ? days : days.slice(startOfWeek).concat(days.slice(0, startOfWeek));
 };
 
+const findEntry = (availabilityPlan, dayOfWeek) =>
+  availabilityPlan.entries.find(d => d.dayOfWeek === dayOfWeek);
+
+const getEntries = (availabilityPlan, dayOfWeek) =>
+  availabilityPlan.entries.filter(d => d.dayOfWeek === dayOfWeek);
+
 const defaultTimeZone = () =>
   typeof window !== 'undefined' ? getDefaultTimeZoneOnBrowser() : 'Etc/UTC';
+
+
+
+const Weekday = props => {
+  const { availabilityPlan, dayOfWeek, openEditModal, currentListing, i } = props;
+  const { publicData } = (currentListing && currentListing.attributes) || {};
+  const { weekStatus } = publicData || {};
+  const hasEntry = findEntry(availabilityPlan, dayOfWeek);
+
+  return (
+    <div
+      className={classNames(css.weekDay, { [css.blockedWeekDay]: !hasEntry })}
+      onClick={() => openEditModal(true)}
+      role="button"
+    >
+      <div className={css.dayOfWeek}>
+        <FormattedMessage id={`EditListingAvailabilityPanel.dayOfWeek.${dayOfWeek}`} />
+      </div>
+      <div className={css.entries}>
+        {availabilityPlan && hasEntry ? (
+          getEntries(availabilityPlan, dayOfWeek).map(e => {
+            return (
+              <div>
+                <span className={css.entry} key={`${e.dayOfWeek}${e.startTime}`}>{`${e.endTime === '00:00' ? '' : moment(`${e.startTime}`, ['HH.mm']).format('hh:mm a')
+                  } ${e.endTime === '00:00' ? '' : '-'} ${e.endTime === '00:00'
+                    ? 'Open 24 hours'
+                    : moment(`${e.endTime}`, ['HH.mm']).format('hh:mm a')
+                  }`}</span>
+                <IconCollection name="EDIT_ICON_PENCIL" />
+              </div>
+            );
+          })
+        ) : Array.isArray(weekStatus) &&
+          weekStatus.map(e => e?.map(f => f?.split('_')[0]).filter(r => r == dayOfWeek)) ? (
+          <>
+            {Array.isArray(weekStatus) &&
+              weekStatus.map(
+                (e, id) =>
+                  e &&
+                  e.map(f => {
+                    return (
+                      <div>
+                        {i == id ? (
+                          <>
+                            <p>
+                              {f.split('_')[1] == 'open'
+                                ? 'Open 24 hours'
+                                : f.split('_')[1] == 'close'
+                                  ? 'Closed'
+                                  : null}
+                            </p>
+                            <IconCollection name="EDIT_ICON_PENCIL" />
+                          </>
+                        ) : null}
+                      </div>
+                    );
+                  })
+              )}
+          </>
+        ) : null}
+      </div>
+    </div>
+  );
+};
 
 ///////////////////////////////////////////////////
 // EditListingAvailabilityExceptionPanel - utils //
@@ -60,11 +133,18 @@ const createEntryDayGroups = (entries = {}) => {
 };
 
 // Create initial values
-const createInitialValues = availabilityPlan => {
+const createInitialValues = (availabilityPlan, weekStatus) => {
   const { timezone, entries } = availabilityPlan || {};
   const tz = timezone || defaultTimeZone();
   return {
     timezone: tz,
+    monStatus: weekStatus?.[0] || null,
+    tueStatus: weekStatus?.[1] || null,
+    wedStatus: weekStatus?.[2] || null,
+    thuStatus: weekStatus?.[3] || null,
+    friStatus: weekStatus?.[4] || null,
+    satStatus: weekStatus?.[5] || null,
+    sunStatus: weekStatus?.[6] || null,
     ...createEntryDayGroups(entries),
   };
 };
@@ -78,11 +158,11 @@ const createEntriesFromSubmitValues = values =>
       // Note: This template doesn't support seats yet.
       return startTime && endTime
         ? {
-            dayOfWeek,
-            seats: 1,
-            startTime,
-            endTime: endTime === '24:00' ? '00:00' : endTime,
-          }
+          dayOfWeek,
+          seats: 1,
+          startTime: startTime ? startTime : '12:00',
+          endTime: endTime === '24:00' ? '00:00' : endTime ? endTime : '00:00',
+        }
         : null;
     });
 
@@ -95,6 +175,11 @@ const createAvailabilityPlan = values => ({
     type: 'availability-plan/time',
     timezone: values.timezone,
     entries: createEntriesFromSubmitValues(values),
+  },
+  publicData: {
+    weekStatus: WEEKDAYS.map(dayOfWeek =>
+      values[`${dayOfWeek}Status`] ? values[`${dayOfWeek}Status`] : null
+    ),
   },
 });
 
@@ -125,8 +210,13 @@ const EditListingAvailabilityPanel = props => {
     config,
     routeConfiguration,
     history,
+    onPrevious
   } = props;
   // Hooks
+  const currentListing = ensureOwnListing(listing);
+  const { publicData } = (currentListing && currentListing.attributes) || {};
+  const { weekStatus } = publicData || {};
+  const isNextButtonDisabled = !currentListing.attributes.availabilityPlan;
   const [isEditPlanModalOpen, setIsEditPlanModalOpen] = useState(false);
   const [isEditExceptionsModalOpen, setIsEditExceptionsModalOpen] = useState(false);
   const [valuesFromLastSubmit, setValuesFromLastSubmit] = useState(null);
@@ -137,7 +227,7 @@ const EditListingAvailabilityPanel = props => {
   const unitType = listingAttributes?.publicData?.unitType;
   const useFullDays = isFullDay(unitType);
   const hasAvailabilityPlan = !!listingAttributes?.availabilityPlan;
-  const isPublished = listing?.id && listingAttributes?.state !== LISTING_STATE_DRAFT;
+  const isPublished = currentListing?.id && currentListing.attributes?.state !== LISTING_STATE_DRAFT;
   const defaultAvailabilityPlan = {
     type: 'availability-plan/time',
     timezone: defaultTimeZone(),
@@ -154,7 +244,7 @@ const EditListingAvailabilityPanel = props => {
   const availabilityPlan = listingAttributes?.availabilityPlan || defaultAvailabilityPlan;
   const initialValues = valuesFromLastSubmit
     ? valuesFromLastSubmit
-    : createInitialValues(availabilityPlan);
+    : createInitialValues(availabilityPlan, weekStatus);
 
   const handleSubmit = values => {
     setValuesFromLastSubmit(values);
@@ -182,13 +272,13 @@ const EditListingAvailabilityPanel = props => {
     // separate time fields.
     const range = useFullDays
       ? {
-          start: exceptionRange?.startDate,
-          end: exceptionRange?.endDate,
-        }
+        start: exceptionRange?.startDate,
+        end: exceptionRange?.endDate,
+      }
       : {
-          start: timestampToDate(exceptionStartTime),
-          end: timestampToDate(exceptionEndTime),
-        };
+        start: timestampToDate(exceptionStartTime),
+        end: timestampToDate(exceptionEndTime),
+      };
 
     const params = {
       listingId: listing.id,
@@ -207,7 +297,7 @@ const EditListingAvailabilityPanel = props => {
 
   return (
     <main className={classes}>
-      <H3 as="h1">
+      {/* <H3 as="h1">
         {isPublished ? (
           <FormattedMessage
             id="EditListingAvailabilityPanel.title"
@@ -219,9 +309,12 @@ const EditListingAvailabilityPanel = props => {
             values={{ lineBreak: <br /> }}
           />
         )}
-      </H3>
+      </H3> */}
+      <p className={css.title}>
+        <FormattedMessage id="EditListingFeaturesPanel.createListingTitle" />
+      </p>
 
-      <div className={css.planInfo}>
+      {/* <div className={css.planInfo}>
         {!hasAvailabilityPlan ? (
           <p>
             <FormattedMessage id="EditListingAvailabilityPanel.availabilityPlanInfo" />
@@ -238,9 +331,28 @@ const EditListingAvailabilityPanel = props => {
             <FormattedMessage id="EditListingAvailabilityPanel.setAvailabilityPlan" />
           )}
         </InlineTextButton>
-      </div>
+      </div> */}
+      <div className={css.editListingContent}>
+        <h2>Add your business hours</h2>
+        <div className={css.week}>
+          {WEEKDAYS.map((w, i) => (
+            <Weekday
+              dayOfWeek={w}
+              key={w}
+              i={i}
+              availabilityPlan={availabilityPlan}
+              currentListing={currentListing}
+              openEditModal={setIsEditPlanModalOpen}
+            />
+          ))}
+        </div>
+        {errors.showListingsError ? (
+          <p className={css.error}>
+            <FormattedMessage id="EditListingAvailabilityPanel.showListingFailed" />
+          </p>
+        ) : null}
 
-      {hasAvailabilityPlan ? (
+        {/* {hasAvailabilityPlan ? (
         <>
           <WeeklyCalendar
             className={css.section}
@@ -277,9 +389,9 @@ const EditListingAvailabilityPanel = props => {
         <p className={css.error}>
           <FormattedMessage id="EditListingAvailabilityPanel.showListingFailed" />
         </p>
-      ) : null}
+      ) : null} */}
 
-      {!isPublished ? (
+        {/* {!isPublished ? (
         <Button
           className={css.goToNextTabButton}
           onClick={onNextTab}
@@ -287,32 +399,84 @@ const EditListingAvailabilityPanel = props => {
         >
           {submitButtonText}
         </Button>
-      ) : null}
+      ) : null} */}
 
-      {onManageDisableScrolling && isEditPlanModalOpen ? (
-        <Modal
-          id="EditAvailabilityPlan"
-          isOpen={isEditPlanModalOpen}
-          onClose={() => setIsEditPlanModalOpen(false)}
-          onManageDisableScrolling={onManageDisableScrolling}
-          containerClassName={css.modalContainer}
-          usePortal
-        >
-          <EditListingAvailabilityPlanForm
-            formId="EditListingAvailabilityPlanForm"
-            listingTitle={listingAttributes?.title}
-            availabilityPlan={availabilityPlan}
-            weekdays={rotateDays(WEEKDAYS, firstDayOfWeek)}
-            useFullDays={useFullDays}
-            onSubmit={handleSubmit}
-            initialValues={initialValues}
-            inProgress={updateInProgress}
-            fetchErrors={errors}
-          />
-        </Modal>
-      ) : null}
+        <div className={css.fixedBottomFooter}>
+          <div className={css.fixedWidthContainer}>
+            <Button className={css.cancelButton} type="button">
+              Cancel
+            </Button>
+            <span className={css.stepNumber}>Step 6 of 7</span>
+            <div className={css.rightButtons}>
+              <Button className={css.borderButton} type="button" onClick={onPrevious}>
+                Previous
+              </Button>
 
-      {onManageDisableScrolling && isEditExceptionsModalOpen ? (
+              {!isPublished ? (
+                <Button
+                  className={classNames(css.submitButton, 'disableButton')}
+                  // onClick={() => {
+                  //   const isAllWeekDaysEntered = publicData.weekStatus.findIndex(e => e === null)
+                  //   isAllWeekDaysEntered === -1 && onNextTab()
+                  // }}
+                  onClick={onNextTab}
+                  disabled={isNextButtonDisabled}
+                >
+                  {submitButtonText}
+                </Button>
+              ) : null}
+            </div>
+          </div>
+        </div>
+
+        {onManageDisableScrolling && isEditPlanModalOpen ? (
+          <Modal
+            id="EditAvailabilityPlan"
+            isOpen={isEditPlanModalOpen}
+            onClose={() => setIsEditPlanModalOpen(false)}
+            onManageDisableScrolling={onManageDisableScrolling}
+            containerClassName={css.modalContainer}
+            usePortal
+            isAvailabilityPanel={true}
+          >
+            <EditListingAvailabilityPlanForm
+              formId="EditListingAvailabilityPlanForm"
+              listingTitle={currentListing?.attributes?.title}
+              availabilityPlan={availabilityPlan}
+              weekdays={WEEKDAYS}
+              onCancel={() => setIsEditPlanModalOpen(false)}
+              useFullDays={useFullDays}
+              onSubmit={handleSubmit}
+              initialValues={initialValues}
+              inProgress={updateInProgress}
+              fetchErrors={errors}
+              onPrevious={onPrevious}
+            />
+          </Modal>
+        ) : null}
+
+        <div className={css.editButtons}>
+          <InlineTextButton
+            className={css.editPlanButton}
+            onClick={() => setIsEditPlanModalOpen(true)}
+          >
+            <FormattedMessage id="EditListingAvailabilityPanel.editAllHours" />
+          </InlineTextButton>{' '}
+          <InlineTextButton
+            className={css.editPlanButton}
+            onClick={() => setIsEditPlanModalOpen(true)}
+          >
+            <FormattedMessage id="EditListingAvailabilityPanel.editWeekdays" />
+          </InlineTextButton>{' '}
+          <InlineTextButton
+            className={css.editPlanButton}
+            onClick={() => setIsEditPlanModalOpen(true)}
+          >
+            <FormattedMessage id="EditListingAvailabilityPanel.editWeekends" />
+          </InlineTextButton>
+        </div>
+
+        {/* {onManageDisableScrolling && isEditExceptionsModalOpen ? (
         <Modal
           id="EditAvailabilityExceptions"
           isOpen={isEditExceptionsModalOpen}
@@ -335,7 +499,8 @@ const EditListingAvailabilityPanel = props => {
             useFullDays={useFullDays}
           />
         </Modal>
-      ) : null}
+      ) : null} */}
+      </div>
     </main>
   );
 };

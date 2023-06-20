@@ -43,10 +43,17 @@ const FieldCheckboxComponent = props => {
     id,
     label,
     useSuccessColor,
+    onChecked,
+    isAvailability,
+    isEditListingCando,
     ...rest
   } = props;
 
-  const classes = classNames(rootClassName || css.root, className);
+  const classes = classNames(
+    rootClassName || css.root,
+    className,
+    isEditListingCando ? css.editListingCando : null
+  );
 
   // This is a workaround for a bug in Firefox & React Final Form.
   // https://github.com/final-form/react-final-form/issues/134
@@ -54,6 +61,7 @@ const FieldCheckboxComponent = props => {
     const { onBlur, onChange } = input;
     onChange(event);
     onBlur(event);
+    isAvailability ? onChecked(event) : null;
 
     // If onChange has been passed as a props to FieldCheckbox
     if (rest.onChange) {
@@ -91,6 +99,7 @@ const FieldCheckboxComponent = props => {
         }}
       </Field>
       <label htmlFor={id} className={css.label}>
+      {isEditListingCando && <span className={css.delete}>&times;</span>}
         <span className={css.checkboxWrapper}>
           <IconCheckbox
             className={svgClassName}
