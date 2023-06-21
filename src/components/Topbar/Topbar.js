@@ -200,9 +200,9 @@ class TopbarComponent extends Component {
       return {
         location: locationFieldsPresent
           ? {
-              search: address,
-              selectedPlace: { address, origin, bounds },
-            }
+            search: address,
+            selectedPlace: { address, origin, bounds },
+          }
           : null,
       };
     };

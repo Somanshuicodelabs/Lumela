@@ -593,6 +593,8 @@ export const DATE_TYPE_DATE = 'date';
 export const DATE_TYPE_TIME = 'time';
 export const DATE_TYPE_DATETIME = 'datetime';
 
+export const SEARCH_PAGE = 'searchPage'
+
 propTypes.dateType = oneOf([DATE_TYPE_DATE, DATE_TYPE_TIME, DATE_TYPE_DATETIME]);
 
 export { propTypes };

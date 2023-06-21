@@ -50,3 +50,7 @@
   font-weight: var(--fontWeightRegular);
   padding: 8px 8px 8px 0;
 }
+
+.categoryBlock {
+  width: 300px;
+}

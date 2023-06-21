@@ -64,7 +64,7 @@ export const listingFields = [
     scope: 'public',
     schemaType: 'multi-enum',
     enumOptions: [
-      { option: 'mobileCalls', label: 'Mobile Calls' },
+      { option: 'destinationCalls', label: 'Mobile Calls' },
       { option: 'houseCalls', label: 'House Calls' },
 
     ],
@@ -91,7 +91,7 @@ export const listingFields = [
     scope: 'public',
     schemaType: 'enum',
     enumOptions: [
-      { option: 'color1', label: 'color1' },
+      { option: 'color1', label: 'color1', icon: color1 },
       { option: 'color2', label: 'color2' },
       { option: 'color3', label: 'color3' },
       { option: 'color4', label: 'color4' },

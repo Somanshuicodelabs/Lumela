@@ -375,7 +375,7 @@ export const fetchTransactionLineItems = ({ orderData, listingId, isOwnListing }
 
 export const loadData = (params, search, config) => dispatch => {
   const listingId = new UUID(params.id);
-  alert('hi')
+
   // Clear old line-items
   dispatch(setInitialValues({ lineItems: null }));
 

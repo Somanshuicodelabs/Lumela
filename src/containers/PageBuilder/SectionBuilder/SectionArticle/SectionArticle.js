@@ -7,6 +7,14 @@ import BlockBuilder from '../../BlockBuilder';
 
 import SectionContainer from '../SectionContainer';
 import css from './SectionArticle.module.css';
+import TopbarSearchForm from '../../../../components/Topbar/TopbarSearchForm/TopbarSearchForm';
+import { parse } from '../../../../util/urlHelpers'
+import {
+  isAnyFilterActive,
+  isMainSearchTypeKeywords,
+  isOriginInUse,
+  getQueryParamNames,
+} from '../../../../util/search';
 
 // Section component that's able to show article content
 // The article content is mainly supposed to be inside a block
@@ -14,6 +22,7 @@ const SectionArticle = props => {
   const {
     sectionId,
     className,
+
     rootClassName,
     defaultClasses,
     title,
@@ -23,6 +32,8 @@ const SectionArticle = props => {
     blocks,
     isInsideContainer,
     options,
+    config,
+
   } = props;
 
   // If external mapping has been included for fields
@@ -32,6 +43,73 @@ const SectionArticle = props => {
 
   const hasHeaderFields = hasDataInFields([title, description, callToAction], fieldOptions);
   const hasBlocks = blocks?.length > 0;
+
+  const handleSubmit = (values) => {
+    const { currentSearchParams } = this.props;
+    const { history, config, routeConfiguration } = this.props;
+
+    const topbarSearchParams = () => {
+      // topbar search defaults to 'location' search
+      const { search, selectedPlace } = values?.location;
+      const { origin, bounds } = selectedPlace;
+      const originMaybe = isOriginInUse(config) ? { origin } : {};
+
+      return {
+        ...originMaybe,
+        address: search,
+        bounds,
+      };
+    };
+    const searchParams = {
+      ...currentSearchParams,
+      ...topbarSearchParams(),
+    };
+    history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, searchParams));
+  }
+  const handleSubmit1 = (values) => {
+    const { currentSearchParams } = this.props;
+    const { history, config, routeConfiguration } = this.props;
+
+    const topbarSearchParams = () => {
+      if (isMainSearchTypeKeywords(config)) {
+        return { keywords: values?.keywords };
+      }
+
+
+
+      // topbar search defaults to 'location' search
+
+
+
+    };
+    const searchParams = {
+      ...currentSearchParams,
+      ...topbarSearchParams(),
+    };
+    history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, searchParams));
+  }
+  const topbarSearcInitialValues = () => {
+
+    const { mobilemenu, mobilesearch, keywords, address, origin, bounds } = parse(location.search, {
+      latlng: ['origin'],
+      latlngBounds: ['bounds'],
+    });
+
+    // Only render current search if full place object is available in the URL params
+    const locationFieldsPresent = isOriginInUse(config)
+      ? address && origin && bounds
+      : address && bounds;
+    return {
+      location: locationFieldsPresent
+        ? {
+          search: address,
+          selectedPlace: { address, origin, bounds },
+        }
+        : null,
+    };
+  };
+
+  const initialSearchFormValues = topbarSearcInitialValues();
 
   return (
     <SectionContainer
@@ -58,6 +136,27 @@ const SectionArticle = props => {
             blocks={blocks}
             ctaButtonClass={defaultClasses.ctaButton}
             options={options}
+          />
+
+          \
+          <TopbarSearchForm
+            isKeywordsSearch
+            className={css.searchLink}
+            desktopInputRoot={css.topbarSearchWithLeftPadding}
+            onSubmit={handleSubmit1}
+            initialValues={initialSearchFormValues}
+
+
+          />
+
+
+          <TopbarSearchForm
+            className={css.searchLink}
+            desktopInputRoot={css.topbarSearchWithLeftPadding}
+            onSubmit={handleSubmit}
+            initialValues={initialSearchFormValues}
+
+
           />
         </div>
       ) : null}

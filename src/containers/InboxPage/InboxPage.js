@@ -88,8 +88,8 @@ const BookingTimeInfoMaybe = props => {
   const hasLineItems = transaction?.attributes?.lineItems?.length > 0;
   const unitLineItem = hasLineItems
     ? transaction.attributes?.lineItems?.find(
-        item => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal
-      )
+      item => LISTING_UNIT_TYPES.includes(item.code) && !item.reversal
+    )
     : null;
 
   const lineItemUnitType = unitLineItem ? unitLineItem.code : null;

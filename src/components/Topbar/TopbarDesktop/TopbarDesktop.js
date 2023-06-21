@@ -49,6 +49,7 @@ const TopbarDesktop = props => {
 
   const search = (
     <TopbarSearchForm
+      isKeywordsSearch
       className={css.searchLink}
       desktopInputRoot={css.topbarSearchWithLeftPadding}
       onSubmit={onSearchSubmit}

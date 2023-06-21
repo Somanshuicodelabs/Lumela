@@ -21,8 +21,8 @@ const getKeywordQueryParam = queryParamNames => {
   return Array.isArray(queryParamNames)
     ? queryParamNames[0]
     : typeof queryParamNames === 'string'
-    ? queryParamNames
-    : 'keywords';
+      ? queryParamNames
+      : 'keywords';
 };
 
 class KeywordFilter extends Component {
@@ -87,9 +87,9 @@ class KeywordFilter extends Component {
       !!initialValues && !!initialValues[urlParam] && initialValues[urlParam].length > 0;
     const labelForPopup = hasInitialValues
       ? intl.formatMessage(
-          { id: 'KeywordFilter.labelSelected' },
-          { labelText: initialValues[urlParam] }
-        )
+        { id: 'KeywordFilter.labelSelected' },
+        { labelText: initialValues[urlParam] }
+      )
       : label;
 
     const labelClass = hasInitialValues ? css.labelPlainSelected : css.labelPlain;
@@ -188,10 +188,18 @@ class KeywordFilter extends Component {
           <FieldTextInput
             name={name}
             id={`${id}-input`}
-            className={css.fieldPlainInput}
+            isUncontrolled
             inputRef={this.mobileInputRef}
             type="text"
-            placeholder={placeholder}
+            placeholder={
+              pageName === 'LandingPage'
+                ? isMobileLayout
+                  ? landingSearchMobilePlaceholder
+                  : landingSearchPlaceholder
+                : pageName === 'SearchPage'
+                  ? searchFilterPlaceholder
+                  : placeholder
+            }
             autoComplete="off"
           />
         </fieldset>

@@ -11,8 +11,10 @@
 // Main search used in Topbar.
 // This can be either 'keywords' or 'location'.
 export const mainSearch = {
-  searchType: 'location',
+  searchType: 'keywords',
 };
+
+
 
 /**
  * Configuration for default filters.
@@ -20,7 +22,11 @@ export const mainSearch = {
  * Common properties: key, schemaType, and label.
  * Note: the order of default filters is defined in util/configHelpers.js
  */
+export const filters = [
+  {
 
+  }
+]
 export const dateRangeFilter = {
   schemaType: 'dates',
   // Should the entire date range be available, or just part of it
@@ -65,14 +71,14 @@ export const sortConfig = {
   conflictingFilters: [],
 
   options: [
-    { key: 'createdAt', label: 'Closest' },
-    { key: '-createdAt', label: 'Deals available' },
-    { key: '-price', label: 'Top Rated' },
-    { key: 'price', label: 'Relevance(Keyword search' },
+    { key: 'closest', label: 'Closest' },
+    { key: '-dealsAvailable', label: 'Deals available' },
+    { key: '-topRated', label: 'Top Rated' },
+
 
     // The relevance is only used for keyword search, but the
     // parameter isn't sent to the Marketplace API. The key is purely
     // for handling the internal state of the sorting dropdown.
-    { key: 'relevance', label: 'Relevance', longLabel: 'Relevance (Keyword search)' },
+    { key: 'relevance', label: 'Most Relavent' },
   ],
 };

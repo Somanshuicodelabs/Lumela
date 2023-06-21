@@ -14,17 +14,21 @@ const SectionContainer = props => {
   const classes = classNames(rootClassName || css.root, className);
 
   return (
-    <Tag className={classes} id={id} {...otherProps}>
-      {appearance?.fieldType === 'customAppearance' ? (
-        <Field
-          data={{ alt: `Background image for ${id}`, ...appearance }}
-          className={className}
-          options={options}
-        />
-      ) : null}
+    <>
+      <Tag className={classes} id={id} {...otherProps}>
+        {appearance?.fieldType === 'customAppearance' ? (
+          <Field
+            data={{ alt: `Background image for ${id}`, ...appearance }}
+            className={className}
+            options={options}
+          />
+        ) : null}
 
-      <div className={css.sectionContent}>{children}</div>
-    </Tag>
+        <div className={css.sectionContent}>{children}</div>
+      </Tag>
+
+
+    </>
   );
 };
 

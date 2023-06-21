@@ -44,7 +44,7 @@ const KeywordSearchField = props => {
   );
 };
 
-const LocationSearchField = props => {
+export const LocationSearchField = props => {
   const { desktopInputRootClass, intl, isMobile, inputRef, onLocationChange } = props;
   return (
     <Field
@@ -97,8 +97,8 @@ class TopbarSearchFormComponent extends Component {
   }
 
   onChange(location) {
-    const { appConfig, onSubmit } = this.props;
-    if (!isMainSearchTypeKeywords(appConfig) && location.selectedPlace) {
+    const { isKeywordsSearch, onSubmit } = this.props;
+    if (!isKeywordsSearch && location.selectedPlace) {
       // Note that we use `onSubmit` instead of the conventional
       // `handleSubmit` prop for submitting. We want to autosubmit
       // when a place is selected, and don't require any extra
@@ -110,8 +110,8 @@ class TopbarSearchFormComponent extends Component {
   }
 
   onSubmit(values) {
-    const { appConfig, onSubmit } = this.props;
-    if (isMainSearchTypeKeywords(appConfig)) {
+    const { isKeywordsSearch, onSubmit } = this.props;
+    if (isKeywordsSearch) {
       onSubmit({ keywords: values.keywords });
       // blur search input to hide software keyboard
       this.searchInput?.blur();
@@ -119,8 +119,8 @@ class TopbarSearchFormComponent extends Component {
   }
 
   render() {
-    const { onSubmit, appConfig, ...restOfProps } = this.props;
-    const isKeywordsSearch = isMainSearchTypeKeywords(appConfig);
+    const { onSubmit, appConfig, isKeywordsSearch, ...restOfProps } = this.props;
+    // const isKeywordsSearch = isMainSearchTypeKeywords(appConfig);
     const submit = isKeywordsSearch ? this.onSubmit : onSubmit;
     return (
       <FinalForm

@@ -238,8 +238,8 @@ export class SearchPageComponent extends Component {
       searchParamsAreInSync && hasPaginationInfo
         ? pagination.totalItems
         : pagination?.paginationUnsupported
-        ? listings.length
-        : 0;
+          ? listings.length
+          : 0;
     const listingsAreLoaded =
       !searchInProgress &&
       searchParamsAreInSync &&
@@ -271,6 +271,8 @@ export class SearchPageComponent extends Component {
         totalItems={totalItems}
         location={location}
         resetAll={this.resetAll}
+
+
       />
     );
 
@@ -307,20 +309,24 @@ export class SearchPageComponent extends Component {
             <div className={css.filterColumnContent}>
               {availableFilters.map(config => {
                 return (
-                  <FilterComponent
-                    key={`SearchFiltersMobile.${config.key}`}
-                    idPrefix="SearchFiltersMobile"
-                    className={css.filter}
-                    config={config}
-                    marketplaceCurrency={marketplaceCurrency}
-                    urlQueryParams={urlQueryParams}
-                    initialValues={initialValues(this.props, this.state.currentQueryParams)}
-                    getHandleChangedValueFn={this.getHandleChangedValueFn}
-                    intl={intl}
-                    liveEdit
-                    showAsPopup={false}
-                    isDesktop
-                  />
+                  <>
+
+
+                    <FilterComponent
+                      key={`SearchFiltersMobile.${config.key}`}
+                      idPrefix="SearchFiltersMobile"
+                      className={css.filter}
+                      config={config}
+                      marketplaceCurrency={marketplaceCurrency}
+                      urlQueryParams={urlQueryParams}
+                      initialValues={initialValues(this.props, this.state.currentQueryParams)}
+                      getHandleChangedValueFn={this.getHandleChangedValueFn}
+                      intl={intl}
+                      liveEdit
+                      showAsPopup={false}
+                      isDesktop
+                    />
+                  </>
                 );
               })}
               <button className={css.resetAllButton} onClick={e => this.handleResetAll(e)}>

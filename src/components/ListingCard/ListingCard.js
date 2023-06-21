@@ -74,9 +74,9 @@ export const ListingCardComponent = props => {
 
   const setActivePropsMaybe = setActiveListing
     ? {
-        onMouseEnter: () => setActiveListing(currentListing.id),
-        onMouseLeave: () => setActiveListing(null),
-      }
+      onMouseEnter: () => setActiveListing(currentListing.id),
+      onMouseLeave: () => setActiveListing(null),
+    }
     : null;
 
   return (

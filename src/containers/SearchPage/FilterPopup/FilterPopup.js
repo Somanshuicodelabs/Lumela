@@ -108,6 +108,7 @@ class FilterPopup extends Component {
       popupClassName,
       id,
       label,
+      sortByComponent,
       labelMaxWidth,
       isSelected,
       children,
@@ -136,6 +137,7 @@ class FilterPopup extends Component {
             toggleOpen={this.toggleOpen}
           >
             {label}
+
           </PopupOpenerButton>
           <div
             id={id}
@@ -158,6 +160,7 @@ class FilterPopup extends Component {
                 onClear={this.handleClear}
               >
                 {children}
+
               </FilterForm>
             ) : null}
           </div>
