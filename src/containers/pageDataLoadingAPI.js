@@ -8,7 +8,7 @@
  import { setInitialValues as CheckoutPageInitialValues } from './CheckoutPage/CheckoutPage.duck';
  import { loadData as CMSPageLoader } from './CMSPage/CMSPage.duck';
  import { loadData as ContactDetailsPageLoader } from './ContactDetailsPage/ContactDetailsPage.duck';
-//  import { loadData as DashboardPageLoader } from './DashboardPage/DashboardPage.duck.js';
+ import { loadData as DashboardPageLoader } from './DashboardPage/DashboardPage.duck.js';
  import { loadData as EditListingPageLoader } from './EditListingPage/EditListingPage.duck';
  import { loadData as EmailVerificationPageLoader } from './EmailVerificationPage/EmailVerificationPage.duck';
  import { loadData as InboxPageLoader } from './InboxPage/InboxPage.duck';
@@ -17,7 +17,7 @@
  import { loadData as PaymentMethodsPageLoader } from './PaymentMethodsPage/PaymentMethodsPage.duck';
  import { loadData as ProfilePageLoader } from './ProfilePage/ProfilePage.duck';
  import { loadData as PrivacyPolicyPageLoader } from './PrivacyPolicyPage/PrivacyPolicyPage.duck';
-//  import { loadData as OrderPageLoader } from './OrderPage/OrderPage.duck.js';
+ import { loadData as OrderPageLoader } from './OrderPage/OrderPage.duck.js';
  import { loadData as SearchPageLoader } from './SearchPage/SearchPage.duck';
  import { loadData as StripePayoutPageLoader } from './StripePayoutPage/StripePayoutPage.duck';
  import { loadData as TermsOfServicePageLoader } from './TermsOfServicePage/TermsOfServicePage.duck';
@@ -61,6 +61,12 @@
      ListingPage: {
        loadData: ListingPageLoader,
      },
+     DashboardPage: {
+      loadData: DashboardPageLoader,
+    },
+    OrderPage: {
+      loadData: OrderPageLoader,
+    },
      ManageListingsPage: {
        loadData: ManageListingsPageLoader,
      },

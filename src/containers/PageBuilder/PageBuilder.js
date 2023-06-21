@@ -106,7 +106,6 @@ const PageBuilder = props => {
     return fallbackPage;
   }
   const landingPageHeaderStyle = isLandingPage;
-  console.log('submitLogin :>> ', submitLogin);
   // Page asset contains UI info and metadata related to it.
   // - "sections" (data that goes inside <body>)
   // - "meta" (which is data that goes inside <head>)

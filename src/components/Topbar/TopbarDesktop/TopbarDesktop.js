@@ -320,11 +320,12 @@ const TopbarDesktop = props => {
           </div>
         </div>
         <div key="StoreManager">
-          {currentUserListingPresent ? (
-            <NamedLink className={css.dropdownLink} name="BusinessLandingPage">
+          {/* {currentUserListingPresent ? ( */}
+            <NamedLink className={css.dropdownLink} name="ProfileSettingsPage">
               Store Manager
             </NamedLink>
-          ) : null}
+          {/* )  */}
+          {/* : null} */}
         </div>
         <div key="">
           <NamedLink className={css.dropdownLink} name="BusinessLandingPage">

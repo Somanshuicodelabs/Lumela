@@ -1,0 +1,388 @@
+@import '../../styles/customMediaQueries.css';
+@import '../../styles/propertySets.css';
+
+.topbarHeader {
+  background-color: #fff;
+  box-shadow: 0px 0px 3px rgb(0 0 0 / 29%);
+
+  &.stickyNavbar {
+    background-color: #fff !important;
+    box-shadow: 0px 0px 3px rgb(0 0 0 / 29%) !important;
+  }
+
+  &.landingPageHeader {
+    background-color: transparent;
+    box-shadow: none;
+
+    &.stickyNavbar {
+      background-color: #fff !important;
+      box-shadow: 0px 0px 3px rgb(0 0 0 / 29%) !important;
+    }
+  }
+}
+
+
+.content {
+  & .head {
+    border-bottom: solid 1px var(--landingPagesTabUnderLine);
+    padding: 1.25rem 1.5rem;
+
+    &>h1 {
+      font-weight: var(--fontWeightBold);
+      font-size: 1.25rem;
+      line-height: 1.813rem;
+      color: var(--matterColorDark);
+      text-transform: none;
+      margin: 0;
+    }
+  }
+
+  & .innerContent {
+    padding: 1.5rem;
+    width: 100%;
+
+    & .dashboardTabs {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+
+      & .tab {
+        width: calc(100% / 2 - 1.5rem);
+        margin-right: 3rem;
+        background-color: var(--matterColorLight);
+        box-shadow: inset 0 0.125rem 0.625rem rgba(0, 0, 0, 0.12);
+        border-radius: 0.625rem;
+        padding: 1.5rem;
+        cursor: pointer;
+
+        &:last-child {
+          margin-right: 0;
+        }
+
+        &.active {
+          background-color: var(--marketplaceSecondaryColor);
+
+          & .tabContent {
+            & .tabIcon {
+              background-color: var(--marketplaceSecondaryColor);
+              border-color: var(--matterColorLight);
+
+              & .orderIcon {
+                &>path {
+                  fill: var(--matterColorLight);
+                }
+              }
+
+              & .bellIcon {
+                &>path {
+                  stroke: var(--matterColorLight);
+                }
+              }
+            }
+
+            & .tabInfo {
+              &>h2 {
+                color: var(--matterColorLight);
+              }
+
+              &>p {
+                color: var(--matterColorLight);
+              }
+            }
+          }
+        }
+
+        & .tabContent {
+          display: flex;
+          align-items: center;
+
+          & .tabIcon {
+            width: 3.75rem;
+            height: 3.75rem;
+            border-radius: 6.25rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bannerLightPinkColor);
+            border: solid 2px var(--bannerLightPinkColor);
+
+            &>svg {
+              fill: none;
+            }
+          }
+
+          & .tabInfo {
+            width: calc(100% - 3.75rem);
+            padding-left: 3rem;
+
+            &>h2 {
+              font-weight: var(--fontWeightBold);
+              font-size: 1.5rem;
+              line-height: 1.813rem;
+              color: var(--matterColor);
+              margin: 0 0 0.688rem 0;
+            }
+
+            &>p {
+              font-weight: var(--fontWeightBold);
+              font-size: 1.75rem;
+              line-height: 2.125rem;
+              color: var(--matterColorDark);
+              margin: 0;
+            }
+          }
+        }
+      }
+    }
+
+    & .orderStaus {
+      box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.12);
+      background-color: var(--matterColorLight);
+      margin-bottom: 3rem;
+
+      & .head {
+        font-weight: var(--fontWeightBold);
+        font-size: 1.5rem;
+        line-height: 1.813rem;
+        color: var(--marketplaceSecondaryColor);
+        display: flex;
+        align-items: center;
+        border: none;
+
+        &>svg {
+          margin-right: 1rem;
+
+          &>path {
+            fill: var(--matterColor);
+          }
+        }
+      }
+
+      & .ordersDetails {
+        display: flex;
+        justify-content: space-between;
+        padding: 1.5rem;
+
+        & .orderBlock {
+          width: calc(100% / 4);
+          border-right: solid 1px var(--landingPagesTabUnderLine);
+          text-align: center;
+          padding: 0 1.5rem;
+
+          & .orderCount {
+            font-weight: var(--fontWeightBold);
+            font-size: 1.75rem;
+            line-height: 2.125rem;
+            margin: 0 0 0.5rem 0;
+
+            &.pending {
+              color: var(--marketplaceSecondaryColor);
+            }
+
+            &.confirmed {
+              color: var(--marketplaceColor);
+            }
+
+            &.cancel {
+              color: var(--failColor);
+            }
+
+            &.completed {
+              color: var(--matterColorSuccess);
+            }
+          }
+
+          & .orderName {
+            font-weight: var(--fontWeightBold);
+            font-size: 1.125rem;
+            line-height: 1.375rem;
+            color: var(--matterColor);
+            margin: 0;
+          }
+        }
+      }
+    }
+  }
+}
+
+.upcomingBooking {
+  padding: 0.875rem;
+  display: flex;
+  align-items: stretch;
+  background-color: var(--matterColorLight);
+  box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.12);
+  margin-bottom: 3rem;
+
+  & .bookingImg {
+    width: 19rem;
+
+    &>img {
+      object-fit: cover;
+      height: 100%;
+      width: 100%;
+      max-width: 100%;
+    }
+  }
+
+  & .bookingInfo {
+    padding-left: 1rem;
+    width: calc(100% - 19rem);
+
+    & .bookingInfoTop {
+
+      & .bookingInfoHead {
+        display: flex;
+        align-self: flex-start;
+        justify-content: space-between;
+        margin: 0 0 0.75rem 0;
+
+        & .title {
+          font-weight: var(--fontWeightBold);
+          font-size: 24px;
+          line-height: 29px;
+          color: var(--matterColorDark);
+          margin: 0;
+        }
+
+        & .bookingStatus {
+          font-weight: var(--fontWeightMedium);
+          font-size: 1rem;
+          line-height: 1.25rem;
+          letter-spacing: -0.05em;
+          padding: 0.25rem 0.45rem;
+
+          &.upcoming {
+            background-color: rgba(185, 185, 185, 0.26);
+            color: var(--matterColor);
+          }
+
+          &.pending {
+            background-color: #FFEBE4;
+            color: #F1950B;
+          }
+
+          &.confirm {
+            background-color: #14B474;
+            color: #fff;
+          }
+
+          &.complete {
+            background-color: transparent;
+            color: #14B474;
+          }
+
+          &.cancel {
+            background-color: #f8d9d1;
+            color: rgb(241, 30, 30);
+          }
+        }
+      }
+
+      & .description {
+        font-weight: var(--fontWeightMedium);
+        font-size: 1rem;
+        line-height: 1.25rem;
+        text-transform: capitalize;
+        color: var(--matterColorDark);
+        margin: 0 0 1.5rem 0;
+      }
+
+      & .location {
+        font-weight: var(--fontWeightMedium);
+        font-size: 0.875rem;
+        line-height: 1.063rem;
+        color: var(--matterColor);
+        margin: 0 0 0.75rem 0;
+
+        &>svg {
+          margin-right: 0.5rem;
+          width: 14px;
+
+          &>path {
+            stroke: var(--matterColorDark);
+          }
+        }
+      }
+
+      & .contacts {
+        display: flex;
+        align-items: center;
+
+        &>a {
+          font-weight: var(--fontWeightMedium);
+          font-size: 0.875rem;
+          line-height: 1.063rem;
+          color: var(--matterColor);
+          margin: 0 1rem 0 0;
+          text-decoration: none;
+
+          &:hover {
+            color: var(--marketplaceSecondaryColor);
+          }
+
+          &:last-child {
+            margin-right: 0;
+          }
+
+
+          &>svg {
+            margin-right: 0.5rem;
+            width: 14px;
+          }
+        }
+      }
+    }
+
+    & .bookingInfoBottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 1rem;
+      border-top: solid 1px #DFDFDF;
+      margin-top: 1rem;
+
+      & .bookingInfoBottomLeft {
+        width: 60%;
+
+        & .keywords {
+          background-color: var(--bannerLightPinkColor);
+          font-weight: var(--fontWeightMedium);
+          font-size: 1rem;
+          line-height: 1.25rem;
+          color: var(--matterColorDark);
+          margin-right: 1rem;
+          margin-bottom: 1rem;
+          padding: 0.375rem;
+          display: inline-block;
+          cursor: pointer;
+
+          &:last-child {
+            margin-right: 0;
+          }
+        }
+      }
+
+      & .bookingInfoBottomRight {
+        text-align: center;
+        width: 40%;
+
+        & .serviceTime {
+          font-weight: var(--fontWeightMedium);
+          font-size: 1rem;
+          line-height: 1.25rem;
+          margin: 0 0 0.375rem 0;
+          color: var(--matterColorDark);
+        }
+
+        & .serviceDate {
+          font-weight: var(--fontWeightBold);
+          font-size: 1rem;
+          line-height: 1.25rem;
+          margin: 0;
+          color: var(--matterColorDark);
+        }
+      }
+    }
+  }
+}

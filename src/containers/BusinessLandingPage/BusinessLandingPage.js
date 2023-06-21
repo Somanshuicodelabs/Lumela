@@ -77,7 +77,6 @@ const BusinessLandingPageComponent = props => {
     listings,
     history,
     isAuthenticated,} = props;
-    console.log(submitLogin,"props1");
     
     return (
     <PageBuilder

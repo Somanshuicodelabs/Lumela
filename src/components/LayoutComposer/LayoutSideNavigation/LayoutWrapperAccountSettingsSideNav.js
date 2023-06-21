@@ -12,6 +12,12 @@ import { withViewport } from '../../../util/uiHelpers';
 import { TabNav } from '../../../components';
 
 import { createGlobalState } from './hookGlobalState';
+import IconDashboard from '../../IconDashboard/IconDashboard';
+// import IconUser from '../IconUser/IconUser';
+import IconOrder from '../../IconOrder/IconOrder';
+import IconPayment from '../../IconPayment/IconPayment';
+import IconLogout from '../../IconLogout/IconLogout';
+import IconProfile from '../../IconProfile/IconProfile';
 
 import css from './LayoutSideNavigation.module.css';
 
@@ -22,8 +28,8 @@ const initialScrollState = { scrollLeft: 0 };
 const { useGlobalState } = createGlobalState(initialScrollState);
 
 // Horizontal scroll animation using element.scrollTo()
-const scrollToTab = (currentPage, scrollLeft, setScrollLeft) => {
-  const el = document.querySelector(`#${currentPage}Tab`);
+const scrollToTab = (currentTab,scrollLeft, setScrollLeft) => {
+  const el = document.querySelector(`#${currentTab}Tab`);
 
   if (el) {
     // el.scrollIntoView doesn't work with Safari and it considers vertical positioning too.
@@ -61,7 +67,7 @@ const scrollToTab = (currentPage, scrollLeft, setScrollLeft) => {
 const LayoutWrapperAccountSettingsSideNavComponent = props => {
   const [scrollLeft, setScrollLeft] = useGlobalState('scrollLeft');
   useEffect(() => {
-    const { currentPage, viewport } = props;
+    const { currentTab, viewport } = props;
     let scrollTimeout = null;
 
     const { width } = viewport;
@@ -71,13 +77,13 @@ const LayoutWrapperAccountSettingsSideNavComponent = props => {
     // Check if scrollToTab call is needed (tab is not visible on mobile)
     if (hasHorizontalTabLayout) {
       scrollTimeout = window.setTimeout(() => {
-        scrollToTab(currentPage, scrollLeft, setScrollLeft);
+        scrollToTab(currentTab, scrollLeft, setScrollLeft);
       }, 300);
     }
 
     return () => {
       // Update scroll position when unmounting
-      const el = document.querySelector(`#${currentPage}Tab`);
+      const el = document.querySelector(`#${currentTab}Tab`);
       setScrollLeft(el.parentElement.scrollLeft);
       if (scrollTimeout) {
         clearTimeout(scrollTimeout);
@@ -85,20 +91,49 @@ const LayoutWrapperAccountSettingsSideNavComponent = props => {
     };
   });
 
-  const { currentPage } = props;
+  const { currentTab } = props;
 
   const tabs = [
     {
+      text: <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.dashboardTabTitle" />,
+      selected: currentTab === 'DashboardPage',
+      icon: <IconDashboard />,
+      id: 'DashboardPageTab',
+      linkProps: {
+        name: 'DashboardPage',
+      },
+    },
+    {
       text: <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.contactDetailsTabTitle" />,
-      selected: currentPage === 'ContactDetailsPage',
+      selected: currentTab === 'ContactDetailsPage',
+      icon: <IconProfile />,
       id: 'ContactDetailsPageTab',
       linkProps: {
         name: 'ContactDetailsPage',
       },
     },
     {
+      text: <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.myProfileTabTitle" />,
+      selected: currentTab === 'ProfileSettingsPage',
+      icon: <IconProfile />,
+      id: 'ProfileSettingsPageTab',
+      linkProps: {
+        name: 'ProfileSettingsPage',
+      },
+    },
+    {
+      text: <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.orderTabTitle" />,
+      selected: currentTab === 'OrderPage',
+      icon: <IconProfile />,
+      id: 'OrderPageTab',
+      linkProps: {
+        name: 'OrderPage',
+      },
+    },
+    {
       text: <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.passwordTabTitle" />,
-      selected: currentPage === 'PasswordChangePage',
+      selected: currentTab === 'PasswordChangePage',
+      icon: <IconOrder />,
       id: 'PasswordChangePageTab',
       linkProps: {
         name: 'PasswordChangePage',
@@ -106,7 +141,8 @@ const LayoutWrapperAccountSettingsSideNavComponent = props => {
     },
     {
       text: <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.paymentsTabTitle" />,
-      selected: currentPage === 'StripePayoutPage',
+      selected: currentTab === 'StripePayoutPage',
+      icon: <IconPayment />,
       id: 'StripePayoutPageTab',
       linkProps: {
         name: 'StripePayoutPage',
@@ -114,7 +150,8 @@ const LayoutWrapperAccountSettingsSideNavComponent = props => {
     },
     {
       text: <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.paymentMethodsTabTitle" />,
-      selected: currentPage === 'PaymentMethodsPage',
+      selected: currentTab === 'PaymentMethodsPage',
+      icon: <IconLogout />,
       id: 'PaymentMethodsPageTab',
       linkProps: {
         name: 'PaymentMethodsPage',
