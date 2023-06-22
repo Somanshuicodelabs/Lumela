@@ -26,7 +26,7 @@ import {
   MenuItem,
 } from '../../components';
 import IconBag from '../IconBag/IconBag';
-import IconBin from '../IconBin/IconBin'; 
+import IconBin from '../IconBin/IconBin';
 import IconCollection from '../IconCollection/IconCollection';
 import MenuIcon from './MenuIcon';
 import SearchIcon from './SearchIcon';
@@ -197,6 +197,10 @@ class TopbarComponent extends Component {
       submitLogin,
       submitSignup,
     } = this.props;
+    console.log(isHeaderSticky, '&&&  &&& => isHeaderSticky');
+    
+    
+
 
     const { mobilemenu, mobilesearch, keywords, address, origin, bounds } = parse(location?.search, {
       latlng: ['origin'],
@@ -240,9 +244,9 @@ class TopbarComponent extends Component {
       return {
         location: locationFieldsPresent
           ? {
-              search: address,
-              selectedPlace: { address, origin, bounds },
-            }
+            search: address,
+            selectedPlace: { address, origin, bounds },
+          }
           : null,
       };
     };
@@ -554,7 +558,7 @@ class TopbarComponent extends Component {
           isOpen={isMobileMenuOpen}
           onClose={this.handleMobileMenuClose}
           usePortal
-          onManageDisableScrolling={ () => {}}
+          onManageDisableScrolling={() => { }}
           isMobileMenuModal={true}
         >
           {authInProgress ? null : mobileMenu}
@@ -565,7 +569,7 @@ class TopbarComponent extends Component {
           isOpen={isMobileSearchOpen}
           onClose={this.handleMobileSearchClose}
           usePortal
-          onManageDisableScrolling={ () => {}}
+          onManageDisableScrolling={() => { }}
         >
           <div className={css.searchContainer}>
             <TopbarSearchForm

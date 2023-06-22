@@ -6,13 +6,24 @@
 }
 
 .topbar {
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: var(--zIndexTopbar);
+  background-color: transparent;
+  transition: var(--transitionStyle);
 }
 
 .main {
   display: flex;
   flex-direction: column;
   background: #ffffff;
+}
+
+.stickyTop {
+  position: sticky;
+  top: 0;
+  z-index: var(--zIndexTopbar);
+
+  &>div {
+    background-color: #fff;
+  }
 }

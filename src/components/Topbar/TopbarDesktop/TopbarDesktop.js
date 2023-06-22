@@ -106,7 +106,7 @@ const AuthenticationForms = props => {
   const loginOrSignupError = isLogin
     ? errorMessage(loginError, loginErrorMessage)
     : errorMessage(signupError, signupErrorMessage);
-    
+
   return (
     <div className={css.content}>
       <div className={css.authHeader}>
@@ -321,9 +321,9 @@ const TopbarDesktop = props => {
         </div>
         <div key="StoreManager">
           {/* {currentUserListingPresent ? ( */}
-            <NamedLink className={css.dropdownLink} name="ProfileSettingsPage">
-              Store Manager
-            </NamedLink>
+          <NamedLink className={css.dropdownLink} name="ProfileSettingsPage">
+            Store Manager
+          </NamedLink>
           {/* )  */}
           {/* : null} */}
         </div>
@@ -844,7 +844,10 @@ const TopbarDesktop = props => {
         </div>
 
         {/* mega menu */}
-        <OutsideClickHandler onOutsideClick={() => setActiveId(0)} customStyle={customStyle}>
+        <OutsideClickHandler
+          onOutsideClick={() => setActiveId(0)}
+          customStyle={customStyle}
+          className={css.outSideClick}>
           <div
             className={classNames(
               css.megaMenuContainer,

@@ -28,8 +28,10 @@ export const TopbarContainerComponent = props => {
     sendVerificationEmailInProgress,
     sendVerificationEmailError,
     onResendVerificationEmail,
+    isHeaderSticky,
     ...rest
   } = props;
+
 
   return (
     <Topbar
@@ -50,7 +52,8 @@ export const TopbarContainerComponent = props => {
       sendVerificationEmailInProgress={sendVerificationEmailInProgress}
       sendVerificationEmailError={sendVerificationEmailError}
       showGenericError={hasGenericError}
-      submitLogin={() => {}}
+      submitLogin={() => { }}
+      isHeaderSticky={isHeaderSticky}
       {...rest}
     />
   );

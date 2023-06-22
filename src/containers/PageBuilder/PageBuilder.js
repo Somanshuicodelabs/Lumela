@@ -90,6 +90,10 @@ const PageBuilder = props => {
     isAuthenticated,
     ...pageProps
   } = props;
+
+
+
+
   const {
     isDrawerOpen,
     history,
@@ -123,28 +127,30 @@ const PageBuilder = props => {
           const { Main, Footer } = props;
           return (
             <>
-              <Topbar
-                as="header"
-                className={css.topbar}
-                isDrawerOpen={isDrawerOpen}
-                history={history}
-                authStep={authStep}
-                onLogout={onLogout}
-                submitLogin={submitLogin}
-                submitSignup={submitSignup}
-                loginError={loginError}
-                signupError={signupError}
-                authInProgress={authInProgress}
-                isHeaderStick={isHeaderSticky}
-                isAuthenticated={isAuthenticated}
-                isLandingPage={landingPageHeaderStyle}
-                onManageToggleDrawer={onManageToggleDrawer}
-                >
-                <TopbarContainer
-                  isHeaderSticky={isHeaderSticky}
+              <header className={isHeaderSticky ? css.stickyTop : null}>
+                <Topbar
+                  as="header"
+                  className={css.topbar}
+                  isDrawerOpen={isDrawerOpen}
+                  history={history}
+                  authStep={authStep}
+                  onLogout={onLogout}
+                  submitLogin={submitLogin}
+                  submitSignup={submitSignup}
+                  loginError={loginError}
+                  signupError={signupError}
+                  authInProgress={authInProgress}
+                  isHeaderStick={isHeaderSticky}
+                  isAuthenticated={isAuthenticated}
                   isLandingPage={landingPageHeaderStyle}
+                  onManageToggleDrawer={onManageToggleDrawer}
+                >
+                  <TopbarContainer
+                    isHeaderSticky={isHeaderSticky}
+                    isLandingPage={landingPageHeaderStyle}
                   />
-              </Topbar>
+                </Topbar>
+              </header>
               <Main as="main" className={css.main}>
                 <SectionBuilder
                   sections={sections}

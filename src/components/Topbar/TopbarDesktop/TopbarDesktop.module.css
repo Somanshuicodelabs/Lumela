@@ -17,10 +17,16 @@
   text-decoration: none;
   font-weight: var(--fontWeightBold);
   color: var(--matterColorDark);
+
   /* margin-left: 4%; */
   &:hover {
     text-decoration: none;
   }
+}
+
+.outSideClick {
+  width: 100%;
+  display: initial;
 }
 
 .logo {
@@ -68,15 +74,17 @@
   color: #000000;
   text-decoration: none;
   padding: 19px 16px;
+
   @media (max-width: 1360px) {
     font-size: 14px;
     line-height: 18px;
     padding: 19px 10px;
   }
+
   &.active {
     position: relative;
 
-    & > span {
+    &>span {
       z-index: 1;
       position: relative;
     }
@@ -149,7 +157,7 @@
     background-color: var(--bannerLightPinkColor);
     text-align: center;
 
-    & > h2 {
+    &>h2 {
       color: var(--matterColor);
       font-weight: var(--fontWeightBold);
       font-size: 1.125rem;
@@ -160,7 +168,7 @@
     }
   }
 
-  & > ul {
+  &>ul {
     padding-bottom: 70px;
     max-height: 500px;
     overflow-y: scroll;
@@ -171,7 +179,7 @@
       display: none;
     }
 
-    & > li {
+    &>li {
       padding: 12px;
 
       &:first-child {
@@ -206,7 +214,7 @@
           align-items: center;
           padding-right: 12px;
 
-          & > h2 {
+          &>h2 {
             font-weight: var(--fontWeightBold);
             font-size: 24px;
             line-height: 29px;
@@ -225,7 +233,7 @@
             display: inline-block;
             min-height: auto;
 
-            & > svg {
+            &>svg {
               margin-left: 0.875rem;
             }
 
@@ -251,18 +259,23 @@
   height: 100vh;
   overflow: auto;
   padding-top: 72px;
+
   @media (min-width: 992px) {
     padding-top: 0;
   }
+
   & .currentUserDetails {
     text-align: right;
+
     & svg {
       fill: transparent;
       margin: 0 60px;
+
       @media (max-width: 767px) {
         margin: 0 20px;
       }
     }
+
     & p {
       margin: 13px 25px 0;
       font-family: 'Montserrat';
@@ -272,11 +285,13 @@
       line-height: 18px;
       text-align: left;
       color: #000000;
+
       @media (max-width: 767px) {
         margin: 13px 0px 13px;
       }
     }
-    & > h2 {
+
+    &>h2 {
       color: var(--matterColor);
       font-weight: var(--fontWeightBold);
       font-size: 1.125rem;
@@ -287,14 +302,17 @@
     }
   }
 }
+
 .leftContent {
   display: flex;
   align-items: center;
   gap: 64px;
+
   @media (max-width: 1360px) {
     gap: 20px;
   }
 }
+
 /* Authentication */
 .signupLink {
   flex-shrink: 0;
@@ -323,6 +341,7 @@
   font-size: 13.2071px;
   line-height: 16px;
   text-transform: uppercase;
+
   &:hover {
     color: var(--marketplaceColor);
     text-decoration: none;
@@ -415,13 +434,15 @@
   padding: 24px 60px 0;
   transition: var(--transitionStyleButton);
   justify-content: flex-end;
+
   @media (max-width: 767px) {
     padding: 24px 20px 0;
     font-weight: 700;
     font-size: 18px;
     line-height: 28px;
   }
-  & > svg {
+
+  &>svg {
     margin-right: 1rem;
     width: 1.125rem;
   }
@@ -459,17 +480,19 @@
   display: flex;
   align-items: center;
   grid-gap: 1.25rem;
+
   & :global(.EZDrawer__container) {
     max-width: 480px !important;
     background: #fafafa !important;
   }
+
   & .divider {
     height: 100%;
     width: 1px;
     background-color: #000000;
   }
 
-  & > a {
+  &>a {
     padding: 0;
   }
 
@@ -479,11 +502,12 @@
 
   & .messages {
     position: relative;
+
     /* margin: 25px 0px 23px;
     @media (max-width: 1360px) {
       margin: 20px 0px;
     } */
-    & > svg {
+    &>svg {
       /* width: 22px;
       height: 22px; */
       margin-top: 6px;
@@ -522,7 +546,7 @@
     &:hover {
       cursor: pointer;
 
-      & > path {
+      &>path {
         fill: var(--marketplaceColor);
       }
     }
@@ -550,6 +574,7 @@
     /* padding: 0px 1.5rem; */
   }
 }
+
 .fixedWidthContainer {
   width: 100%;
   max-width: var(--contentFixedWidth);
@@ -572,9 +597,11 @@
     max-height: 66px;
   }
 }
+
 .headerBorder {
   border-bottom: 2px solid #dbdbdb75;
 }
+
 /*Mega menu style*/
 
 .megaMenuContainer {
@@ -589,9 +616,11 @@
     display: flex;
     width: 100%;
     padding: 3rem 3.4rem;
+
     & .megaMenuLinks {
       width: 50%;
-      & > h2 {
+
+      &>h2 {
         font-size: 18px;
         line-height: 22px;
         font-weight: 700;
@@ -600,6 +629,7 @@
         margin: 0 0 13px 0;
       }
     }
+
     & .megaMenuLeft {
       width: 50%;
       display: flex;
@@ -607,7 +637,7 @@
       & .menuLinks {
         list-style-type: none;
 
-        & > li {
+        &>li {
           margin: 0 0 0.75rem 0;
           display: inline-block;
           width: 100%;
@@ -645,7 +675,7 @@
         & .exploreWrapper {
           width: calc(100% / 2 - 2rem);
 
-          & > h2 {
+          &>h2 {
             font-size: 1.5rem;
             line-height: 1.75rem;
             font-weight: var(--fontWeightMedium);
@@ -690,7 +720,7 @@
                 position: relative;
                 margin: 0.125rem;
 
-                & > img {
+                &>img {
                   position: absolute;
                   top: 0;
                   left: 0;
@@ -703,7 +733,7 @@
             }
 
             & .exploreInfo {
-              & > p {
+              &>p {
                 line-height: 1.25rem;
                 font-size: 1rem;
                 font-weight: var(--fontWeightMedium);
@@ -753,17 +783,18 @@
         color: var(--marketplaceSecondaryColor);
         transition: all ease 0.5s;
 
-        & > svg {
-          & > path {
+        &>svg {
+          &>path {
             fill: var(--marketplaceSecondaryColor);
           }
         }
       }
 
-      & > svg {
+      &>svg {
         margin-left: 1rem;
         display: none;
-        & > path {
+
+        &>path {
           fill: var(--marketplaceColor);
         }
       }
@@ -781,7 +812,7 @@
   & .cartItemImg {
     width: 130px;
 
-    & > img {
+    &>img {
       max-width: 100%;
       object-fit: cover;
       width: 100%;
@@ -803,7 +834,7 @@
       margin-bottom: 26px;
 
       & .serviceTime {
-        & > h2 {
+        &>h2 {
           font-weight: var(--fontWeightBold);
           font-size: 16px;
           line-height: 20px;
@@ -811,7 +842,7 @@
           margin: 0 0 6px 0;
         }
 
-        & > p {
+        &>p {
           font-weight: var(--fontWeightMedium);
           color: var(--matterColorDark);
           font-size: 16px;
@@ -843,7 +874,7 @@
       justify-content: space-between;
 
       & .serviceAddressLeft {
-        & > h2 {
+        &>h2 {
           font-weight: var(--fontWeightBold);
           font-size: 16px;
           line-height: 20px;
@@ -851,7 +882,7 @@
           margin: 0 0 6px 0;
         }
 
-        & > p {
+        &>p {
           font-weight: var(--fontWeightMedium);
           color: var(--matterColor);
           font-size: 16px;
@@ -869,9 +900,9 @@
       }
 
       & .serviceAddressRight {
-        & > svg {
+        &>svg {
           &:hover {
-            & > path {
+            &>path {
               fill: var(--marketplaceColor);
             }
           }
@@ -880,6 +911,7 @@
     }
   }
 }
+
 .topSearch {
   background: rgba(241, 241, 241, 0.65);
   border-radius: 3px;
@@ -892,9 +924,11 @@
   width: 100%;
   max-height: 39px;
   margin: 0px 16px;
+
   @media (max-width: 1360px) {
     margin: 0px 10px;
   }
+
   & .searchIcon {
     display: inline-flex;
     align-items: center;
@@ -913,10 +947,12 @@
     color: #787878;
     width: calc(100% - 15px);
     padding-left: 4px;
+
     &::placeholder {
       font-style: italic;
       font-weight: 700;
       opacity: 1;
+
       @media (min-width: 1360px) {
         font-size: 17px;
         line-height: 21px;
@@ -929,8 +965,9 @@
     }
   }
 }
-.menuDropdown {
-}
+
+.menuDropdown {}
+
 .megaMenuRight {
   width: 50%;
 
@@ -942,7 +979,7 @@
     & .exploreWrapper {
       width: calc(100% / 2 - 2rem);
 
-      & > h2 {
+      &>h2 {
         font-size: 1.5rem;
         line-height: 1.75rem;
         font-weight: var(--fontWeightMedium);
@@ -986,7 +1023,7 @@
             padding-bottom: 80%;
             position: relative;
 
-            & > img {
+            &>img {
               position: absolute;
               top: 0;
               left: 0;
@@ -996,7 +1033,7 @@
               object-fit: cover;
             }
 
-            & > a {
+            &>a {
               font-weight: 700;
               font-size: 16px;
               line-height: 20px;
@@ -1014,7 +1051,7 @@
         }
 
         & .exploreInfo {
-          & > p {
+          &>p {
             line-height: 1.25rem;
             font-size: 1rem;
             font-weight: var(--fontWeightMedium);
@@ -1043,6 +1080,7 @@
     }
   }
 }
+
 .authHeader {
   display: flex;
   align-items: center;
@@ -1051,11 +1089,13 @@
   background: #fafafa;
   padding: 67px 25px 14px 25px;
   border-bottom: 1px solid #d9d9d9;
+
   @media (max-width: 767px) {
     padding: 24px 0px 14px 0px;
     background: #ffffff;
   }
-  & > h1 {
+
+  &>h1 {
     font-family: 'Montserrat';
     font-style: normal;
     font-weight: 700;
@@ -1067,11 +1107,13 @@
     display: flex;
     align-items: center;
     gap: 23px;
+
     @media (max-width: 767px) {
       font-size: 18px;
       line-height: 27px;
       gap: 12px;
     }
+
     & svg {
       height: 35px;
       width: 35px;
@@ -1086,26 +1128,32 @@
     font-size: 32px;
     line-height: 1.25rem;
     cursor: pointer;
+
     @media (min-width: 992px) {
       display: none;
     }
-    & > span {
+
+    &>span {
       font-size: 2rem;
       margin-left: 0.34rem;
       font-weight: var(--fontWeightRegular);
     }
   }
 }
+
 .startWithUs {
   margin-bottom: 54px;
-  & > a > svg {
+
+  &>a>svg {
     margin: 24px auto;
     display: block;
+
     @media (max-width: 767px) {
       width: 90%;
     }
   }
 }
+
 .mobileMenuHead {
   display: flex;
   align-items: center;
@@ -1122,6 +1170,7 @@
   @media (min-width: 480px) {
     padding: 27px 32px 3px;
   }
+
   & .closeIcon {
     display: inline-flex;
     align-items: center;
@@ -1131,27 +1180,32 @@
     line-height: 1.25rem;
     cursor: pointer;
     color: #6b6b6b;
+
     @media (min-width: 992px) {
       display: none;
     }
-    & > span {
+
+    &>span {
       font-size: 2rem;
       margin-left: 0.34rem;
       font-weight: var(--fontWeightRegular);
     }
   }
+
   & .userProfile {
     width: 45px;
     height: 45px;
     border-radius: 100px;
     overflow: hidden;
-    & > img {
+
+    &>img {
       max-width: 100%;
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
-    & > svg {
+
+    &>svg {
       width: 100%;
       height: 100%;
     }
@@ -1182,13 +1236,15 @@
     &:focus {
       background-color: var(--marketplaceOrangeColor);
       color: var(--matterColorLight);
-      & > svg {
+
+      &>svg {
         & path {
           fill: var(--matterColorLight);
         }
       }
     }
   }
+
   & .startWithUs {
     padding-left: 5%;
   }

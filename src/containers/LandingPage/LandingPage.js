@@ -103,6 +103,7 @@ const LandingPageComponent = props => {
   }, []);
 
   const isHeaderSticky = scroll ? css.sticky : '';
+
   return (
     <PageBuilder
       pageAssetsData={pageAssetsData?.[camelize(ASSET_NAME)]?.data}
@@ -145,8 +146,8 @@ const mapStateToProps = state => {
   const { isDrawerOpen, authStep, redirectRoute } = state.ui;
   const { isAuthenticated, loginError, signupError } = state.auth;
 
-  const { currentPageResultIds ,landing_page_data_request,
-    landing_page_data  } = state.landingPageReducer;
+  const { currentPageResultIds, landing_page_data_request,
+    landing_page_data } = state.landingPageReducer;
   const pageListings = getListingsById(state, currentPageResultIds);
   const { pageAssetsData, inProgress, error } = state.hostedAssets || {};
 

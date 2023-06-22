@@ -425,6 +425,7 @@
   background-color: var(--matterColorLight);
   box-shadow: var(--boxShadowLight);
   transition: var(--transitionStyle);
+  position: fixed;
 }
 .businessContainer {
   margin: 0 !important;
