@@ -201,14 +201,15 @@ export const MainContent = props => {
 const ProfilePageComponent = props => {
   const config = useConfiguration();
   const { scrollingDisabled, currentUser, userShowError, user, intl, ...rest } = props;
+  console.log('intl :>> ', intl);
   const ensuredCurrentUser = ensureCurrentUser(currentUser);
   const profileUser = ensureUser(user);
   const isCurrentUser =
     ensuredCurrentUser.id && profileUser.id && ensuredCurrentUser.id.uuid === profileUser.id.uuid;
   const { bio, displayName } = profileUser?.attributes?.profile || {};
 
-  const schemaTitleVars = { name: displayName, marketplaceName: config.marketplaceName };
-  const schemaTitle = intl.formatMessage({ id: 'ProfilePage.schemaTitle' }, schemaTitleVars);
+  const schemaTitleVars = { name: displayName, siteTitle: config.marketplaceName };
+  const schemaTitle = intl?.formatMessage({ id: "ProfilePage.schemaTitle" }, schemaTitleVars);
 
   if (userShowError && userShowError.status === 404) {
     return <NotFoundPage />;

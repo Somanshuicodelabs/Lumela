@@ -84,7 +84,7 @@ const LayoutWrapperAccountSettingsSideNavComponent = props => {
     return () => {
       // Update scroll position when unmounting
       const el = document.querySelector(`#${currentTab}Tab`);
-      setScrollLeft(el.parentElement.scrollLeft);
+      setScrollLeft(el?.parentElement?.scrollLeft);
       if (scrollTimeout) {
         clearTimeout(scrollTimeout);
       }
@@ -155,6 +155,15 @@ const LayoutWrapperAccountSettingsSideNavComponent = props => {
       id: 'PaymentMethodsPageTab',
       linkProps: {
         name: 'PaymentMethodsPage',
+      },
+    },
+    {
+      text: <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.productListingTabTitle" />,
+      selected: currentTab === 'ProductListingPage',
+      icon: <IconLogout />,
+      id: 'ProductListingPageTab',
+      linkProps: {
+        name: 'ProductListingPage',
       },
     },
   ];

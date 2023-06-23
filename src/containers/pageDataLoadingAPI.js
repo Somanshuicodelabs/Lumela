@@ -79,12 +79,16 @@
      ProfilePage: {
        loadData: ProfilePageLoader,
      },
-    //  DashboardPage: {
-    //    loadData: DashboardPageLoader,
+     DashboardPage: {
+       loadData: DashboardPageLoader,
+     },
+     OrderPage: {
+       loadData: OrderPageLoader,
+     },
+    //  ProductListingPage: {
+    //    loadData: ProductListingPageLoader,
     //  },
-    //  OrderPage: {
-    //    loadData: OrderPageLoader,
-    //  },
+
      SearchPage: {
        loadData: SearchPageLoader,
      },

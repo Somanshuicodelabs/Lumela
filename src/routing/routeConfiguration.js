@@ -32,6 +32,7 @@ const PasswordRecoveryPage = loadable(() => import(/* webpackChunkName: "Passwor
 const PasswordResetPage = loadable(() => import(/* webpackChunkName: "PasswordResetPage" */ '../containers/PasswordResetPage/PasswordResetPage'));
 const PaymentMethodsPage = loadable(() => import(/* webpackChunkName: "PaymentMethodsPage" */ '../containers/PaymentMethodsPage/PaymentMethodsPage'));
 const PrivacyPolicyPage = loadable(() => import(/* webpackChunkName: "PrivacyPolicyPage" */ '../containers/PrivacyPolicyPage/PrivacyPolicyPage'));
+const ProductListingPage= loadable(() => import('../containers/ProductListingPage/ProductListingPage'));
 const ProfilePage = loadable(() => import(/* webpackChunkName: "ProfilePage" */ '../containers/ProfilePage/ProfilePage'));
 const ProfileSettingsPage = loadable(() => import(/* webpackChunkName: "ProfileSettingsPage" */ '../containers/ProfileSettingsPage/ProfileSettingsPage'));
 const OrderPage = loadable(() => import(/* webpackChunkName: "OrderPage" */ '../containers/OrderPage/OrderPage'));
@@ -191,6 +192,14 @@ const routeConfiguration = (layoutConfig) => {
       auth: true,
       authPage: 'LoginPage',
       component: ProfileSettingsPage,
+    },
+    {
+      path: '/product-listing',
+      name: 'ProductListingPage',
+      auth: true,
+      authPage: 'LoginPage',
+      component: ProductListingPage,
+      // loadData: pageDataLoadingAPI.ProductListingPage.loadData,
     },
     {
       path: '/about',
