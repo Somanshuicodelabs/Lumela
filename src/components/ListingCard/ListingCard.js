@@ -12,7 +12,8 @@ import { ensureListing, ensureUser } from '../../util/data';
 import { richText } from '../../util/richText';
 import { createSlug } from '../../util/urlHelpers';
 import { isBookingProcessAlias } from '../../transactions/transaction';
-
+import IconFavorite from '../IconFavorite/IconFavorite';
+import IconReviewStar from '../IconReviewStar/IconReviewStar';
 import { AspectRatioWrapper, NamedLink, ResponsiveImage } from '../../components';
 
 import css from './ListingCard.module.css';
@@ -50,9 +51,12 @@ export const ListingCardComponent = props => {
     renderSizes,
     setActiveListing,
     showAuthorInfo,
+    searchPageListingCard,
+    isLandingPageListingCard,
   } = props;
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureListing(listing);
+  console.log('currentListing :>> ', currentListing);
   const id = currentListing.id.uuid;
   const { title = '', price, publicData } = currentListing.attributes;
   const slug = createSlug(title);
@@ -60,6 +64,7 @@ export const ListingCardComponent = props => {
   const authorName = author.attributes.profile.displayName;
   const firstImage =
     currentListing.images && currentListing.images.length > 0 ? currentListing.images[0] : null;
+  console.log('firstImage :>> ', firstImage);
 
   const {
     aspectWidth = 1,
@@ -69,6 +74,7 @@ export const ListingCardComponent = props => {
   const variants = firstImage
     ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
     : [];
+  console.log('variants :>> ', variants);
 
   const { formattedPrice, priceTitle } = priceData(price, config.currency, intl);
 
@@ -81,49 +87,94 @@ export const ListingCardComponent = props => {
 
   return (
     <NamedLink className={classes} name="ListingPage" params={{ id, slug }}>
-      <AspectRatioWrapper
-        className={css.aspectRatioWrapper}
-        width={aspectWidth}
-        height={aspectHeight}
-        {...setActivePropsMaybe}
-      >
-        <LazyImage
-          rootClassName={css.rootForImage}
-          alt={title}
-          image={firstImage}
-          variants={variants}
-          sizes={renderSizes}
-        />
-      </AspectRatioWrapper>
-      <div className={css.info}>
-        <div className={css.price}>
-          <div className={css.priceValue} title={priceTitle}>
-            {formattedPrice}
+    <div className={css.category}>
+      <div className={css.categoryImg}>
+        <span className={css.favorite}>
+          <IconFavorite />
+        </span>
+        <div
+          className={css.threeToTwoWrapper}
+          onMouseEnter={() => setActiveListing(currentListing.id)}
+          onMouseLeave={() => setActiveListing(null)}
+        >
+          <div className={css.aspectWrapper}>
+            <LazyImage
+              rootClassName={css.rootForImage}
+              alt={title}
+              image={firstImage}
+              variants={variants}
+              sizes={renderSizes}
+            />
           </div>
-          {isBookingProcessAlias(publicData?.transactionProcessAlias) ? (
-            <div className={css.perUnit}>
-              <FormattedMessage
-                id="ListingCard.perUnit"
-                values={{ unitType: publicData?.unitType }}
-              />
-            </div>
-          ) : null}
-        </div>
-        <div className={css.mainInfo}>
-          <div className={css.title}>
-            {richText(title, {
-              longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
-              longWordClass: css.longWord,
-            })}
-          </div>
-          {showAuthorInfo ? (
-            <div className={css.authorInfo}>
-              <FormattedMessage id="ListingCard.author" values={{ authorName }} />
-            </div>
-          ) : null}
         </div>
       </div>
-    </NamedLink>
+      <div className={css.categoryInfo}>
+        <div className={css.categoryHead}>
+          <h2>{publicData?.businessName} </h2>
+          <span className={css.rating}>
+            4.7 <IconReviewStar />
+          </span>
+        </div>
+        {publicData?.description?.description && (
+          <p
+            className={classNames(
+              css.descripton,
+              isLandingPageListingCard && css.hideOnLandingCard
+            )}
+          >
+            {publicData?.description?.description}
+          </p>
+        )}
+        <div className={css.cardContact}>
+          <p className={css.location}>
+            {!isLandingPageListingCard && <IconLocationPin />}
+            <span>{publicData?.location?.address}</span>
+          </p>
+          {/* <p
+            className={classNames(
+              css.location,
+              isLandingPageListingCard && css.hideOnLandingCard
+            )}
+          >
+            <IconCall />
+            <span>02 9489 9480</span>
+          </p>
+          <p
+            className={classNames(
+              css.location,
+              isLandingPageListingCard && css.hideOnLandingCard
+            )}
+          >
+            <IconAt />
+            <span>{publicData?.email}</span>
+          </p> */}
+        </div>
+      </div>
+    </div>
+    {/* <div className={css.info}> */}
+    {/* <div className={css.mainInfo}>
+        <div className={css.title}>
+          {richText(title, {
+            longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
+            longWordClass: css.longWord,
+          })}
+        </div>
+        <div className={css.certificateInfo}>
+          {certificate && !certificate.hideFromListingInfo ? (
+            <span>{certificate.label}</span>
+          ) : null}
+        </div>
+      </div> */}
+    {/* <div className={css.price}>
+        <div className={css.priceValue} title={priceTitle}>
+          {formattedPrice}
+        </div>
+        <div className={css.perUnit}>
+          <FormattedMessage id={unitTranslationKey} />
+        </div>
+      </div> */}
+    {/* </div> */}
+  </NamedLink>
   );
 };
 
