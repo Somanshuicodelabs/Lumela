@@ -38,6 +38,7 @@ const ProfileSettingsPage = loadable(() => import(/* webpackChunkName: "ProfileS
 const OrderPage = loadable(() => import(/* webpackChunkName: "OrderPage" */ '../containers/OrderPage/OrderPage'));
 const SearchPageWithMap = loadable(() => import(/* webpackChunkName: "SearchPageWithMap" */ /* webpackPrefetch: true */  '../containers/SearchPage/SearchPageWithMap'));
 const SearchPageWithGrid = loadable(() => import(/* webpackChunkName: "SearchPageWithGrid" */ /* webpackPrefetch: true */  '../containers/SearchPage/SearchPageWithGrid'));
+const ServiceListingPage= loadable(() => import('../containers/ServiceListingPage/ServiceListingPage.js'));
 const StripePayoutPage = loadable(() => import(/* webpackChunkName: "StripePayoutPage" */ '../containers/StripePayoutPage/StripePayoutPage'));
 const TermsOfServicePage = loadable(() => import(/* webpackChunkName: "TermsOfServicePage" */ '../containers/TermsOfServicePage/TermsOfServicePage'));
 const TransactionPage = loadable(() => import(/* webpackChunkName: "TransactionPage" */ '../containers/TransactionPage/TransactionPage'));
@@ -199,6 +200,14 @@ const routeConfiguration = (layoutConfig) => {
       auth: true,
       authPage: 'LoginPage',
       component: ProductListingPage,
+      // loadData: pageDataLoadingAPI.ProductListingPage.loadData,
+    },
+    {
+      path: '/service-listing',
+      name: 'ServiceListingPage',
+      auth: true,
+      authPage: 'LoginPage',
+      component: ServiceListingPage,
       // loadData: pageDataLoadingAPI.ProductListingPage.loadData,
     },
     {

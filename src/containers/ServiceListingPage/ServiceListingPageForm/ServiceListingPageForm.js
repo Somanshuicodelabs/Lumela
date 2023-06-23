@@ -8,14 +8,14 @@ import { propTypes } from '../../../util/types';
 import { maxLength, required, composeValidators } from '../../../util/validators';
 import * as validators from '../../../util/validators';
 import { Form, Button, FieldTextInput, NamedLink, AddImages, ValidationError } from '../../../components';
-import css from './ProductListingPageForm.module.css';
+import css from './ServiceListingPageForm.module.css';
 import IconCollection from '../../../components/IconCollection/IconCollection';
 import IconCamera from '../../../components/IconCamera/IconCamera';
 
 const TITLE_MAX_LENGTH = 60;
 const ACCEPT_IMAGES = 'image/*';
 
-const EditListingProductFormComponent = props => (
+const EditListingServiceFormComponent = props => (
     <FinalForm
         {...props}
         render={formRenderProps => {
@@ -209,100 +209,6 @@ const EditListingProductFormComponent = props => (
                             type="text"
                             label="Tags"
                         />
-                        <div className={css.gallaryContainer}>
-                            <label htmlFor="images">Gallery Photos</label>
-                            <div className={css.imagesGallaryGrid}>
-                                <AddImages
-                                    // className={classNames(
-                                    //   css.imagesField,
-                                    //   images.length == 1 && css.imagesField1,
-                                    //   images.length == 2 && css.imagesField2,
-                                    //   images.length == 3 && css.imagesField3,
-                                    //   images.length > 3 && css.imagesFieldBig
-                                    // )}
-                                    images={images}
-                                    thumbnailClassName={css.thumbnail}
-                                    savedImageAltText={intl.formatMessage({
-                                        id: 'EditListingPhotosForm.savedImageAltText',
-                                    })}
-                                    onRemoveImage={onRemoveImage}
-                                >
-                                    <Field
-                                        id="addImage"
-                                        name="addImage"
-                                        accept={ACCEPT_IMAGES}
-                                        form={null}
-                                        label={chooseImageText}
-                                        type="file"
-                                        disabled={imageUploadRequested}
-                                    >
-                                        {fieldprops => {
-                                            const { accept, input, label, disabled: fieldDisabled } = fieldprops;
-                                            const { name, type } = input;
-                                            const onChange = e => {
-                                                const file = e.target.files[0];
-                                                form.change(`addImage`, file);
-                                                form.blur(`addImage`);
-                                                onImageUploadHandler(file);
-                                            };
-                                            const inputProps = { accept, id: name, name, onChange, type };
-                                            return (
-                                                <div className={css.addImageWrapper}>
-                                                    <div className={css.aspectRatioWrapper}>
-                                                        {fieldDisabled ? null : (
-                                                            <input {...inputProps} multiple className={css.addImageInput} />
-                                                        )}
-                                                        <label htmlFor={name} className={css.addImage}>
-                                                            {label}
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            );
-                                        }}
-                                    </Field>
-                                    <Field
-                                        component={props => {
-                                            const { input, meta } = props;
-                                            return (
-                                                <div className={css.imageRequiredWrapper}>
-                                                    <input {...input} />
-                                                    <ValidationError fieldMeta={meta} />
-                                                </div>
-                                            );
-                                        }}
-                                        name="images"
-                                        type="hidden"
-                                        validate={composeValidators(validators.nonEmptyArray(imageRequiredMessage))}
-                                    />
-                                </AddImages>
-                                {images?.length == 0 ? (
-                                    <>
-                                        <div className={css.imageBox}>
-                                            <IconCollection name="ADD_IMAGE_ICON" />
-                                        </div>
-                                        <div className={css.imageBox}>
-                                            <IconCollection name="ADD_IMAGE_ICON" />
-                                        </div>
-                                        <div className={css.imageBox}>
-                                            <IconCollection name="ADD_IMAGE_ICON" />
-                                        </div>
-                                    </>
-                                ) : images?.length == 1 ? (
-                                    <>
-                                        <div className={css.imageBox}>
-                                            <IconCollection name="ADD_IMAGE_ICON" />
-                                        </div>
-                                        <div className={css.imageBox}>
-                                            <IconCollection name="ADD_IMAGE_ICON" />
-                                        </div>
-                                    </>
-                                ) : images?.length == 2 ? (
-                                    <div className={css.imageBox}>
-                                        <IconCollection name="ADD_IMAGE_ICON" />
-                                    </div>
-                                ) : null}
-                            </div>
-                        </div>
                     </div>
                     <div>
                         <FieldTextInput
@@ -326,9 +232,9 @@ const EditListingProductFormComponent = props => (
     />
 );
 
-EditListingProductFormComponent.defaultProps = { className: null, fetchErrors: null };
+EditListingServiceFormComponent.defaultProps = { className: null, fetchErrors: null };
 
-EditListingProductFormComponent.propTypes = {
+EditListingServiceFormComponent.propTypes = {
     className: string,
     intl: intlShape.isRequired,
     onSubmit: func.isRequired,
@@ -344,4 +250,4 @@ EditListingProductFormComponent.propTypes = {
     }),
 };
 
-export default compose(injectIntl)(EditListingProductFormComponent);
+export default compose(injectIntl)(EditListingServiceFormComponent);
