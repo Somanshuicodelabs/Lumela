@@ -30,7 +30,7 @@ export const SEARCH_MAP_LISTINGS_ERROR = 'app/SearchPage/SEARCH_MAP_LISTINGS_ERR
 
 export const SEARCH_MAP_SET_ACTIVE_LISTING = 'app/SearchPage/SEARCH_MAP_SET_ACTIVE_LISTING';
 
-// ================ Reducer ================ //
+// ================ Reducer ================ /////
 
 const initialState = {
   pagination: null,
@@ -38,6 +38,8 @@ const initialState = {
   searchInProgress: false,
   searchListingsError: null,
   currentPageResultIds: [],
+  searchMapListingIds: [],     // change
+  searchMapListingsError: null,
 };
 
 const resultIds = data => data.data.map(l => l.id);
@@ -64,6 +66,29 @@ const listingPageReducer = (state = initialState, action = {}) => {
       // eslint-disable-next-line no-console
       console.error(payload);
       return { ...state, searchInProgress: false, searchListingsError: payload };
+    // change
+    case SEARCH_MAP_LISTINGS_REQUEST:
+      return {
+        ...state,
+        searchMapListingsError: null,
+      };
+
+
+    case SEARCH_MAP_LISTINGS_SUCCESS: {
+      const searchMapListingIds = unionWith(
+        state.searchMapListingIds,
+        resultIds(payload.data),
+        (id1, id2) => id1.uuid === id2.uuid
+      );
+      return {
+        ...state,
+        searchMapListingIds,
+      };
+    };
+
+    case SEARCH_MAP_LISTINGS_ERROR:
+      return { ...state, searchMapListingsError: payload };
+
 
     case SEARCH_MAP_SET_ACTIVE_LISTING:
       return {
@@ -95,6 +120,18 @@ export const searchListingsError = e => ({
   payload: e,
 });
 
+export const searchMapListingsRequest = () => ({ type: SEARCH_MAP_LISTINGS_REQUEST });
+
+export const searchMapListingsSuccess = response => ({
+  type: SEARCH_MAP_LISTINGS_SUCCESS,
+  payload: { data: response.data },
+});
+
+export const searchMapListingsError = e => ({
+  type: SEARCH_MAP_LISTINGS_ERROR,
+  error: true,
+  payload: e,
+});
 export const searchListings = (searchParams, config) => (dispatch, getState, sdk) => {
   dispatch(searchListingsRequest(searchParams));
 
@@ -107,23 +144,30 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
   //       ...and then turned enforceValidListingType config to true in configListing.js
   // Read More:
   // https://www.sharetribe.com/docs/how-to/manage-search-schemas-with-flex-cli/#adding-listing-search-schemas
+
+
+
   const searchValidListingTypes = listingTypes => {
     return config.listing.enforceValidListingType
       ? {
-          pub_listingType: listingTypes.map(l => l.listingType),
-          // pub_transactionProcessAlias: listingTypes.map(l => l.transactionType.alias),
-          // pub_unitType: listingTypes.map(l => l.transactionType.unitType),
-        }
+        pub_listingType: listingTypes.map(l => l.listingType),
+        // pub_transactionProcessAlias: listingTypes.map(l => l.transactionType.alias),
+        // pub_unitType: listingTypes.map(l => l.transactionType.unitType),
+
+      }
       : {};
+
   };
+
+
 
   const priceSearchParams = priceParam => {
     const inSubunits = value => convertUnitToSubUnit(value, unitDivisor(config.currency));
     const values = priceParam ? priceParam.split(',') : [];
     return priceParam && values.length === 2
       ? {
-          price: [inSubunits(values[0]), inSubunits(values[1]) + 1].join(','),
-        }
+        price: [inSubunits(values[0]), inSubunits(values[1]) + 1].join(','),
+      }
       : {};
   };
 
@@ -154,8 +198,8 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
       hasValues && isNightlyMode
         ? endRaw
         : hasValues
-        ? getExclusiveEndDate(endRaw, searchTZ)
-        : null;
+          ? getExclusiveEndDate(endRaw, searchTZ)
+          : null;
 
     const today = getStartOf(new Date(), 'day', searchTZ);
     const possibleStartDate = subtractTime(today, 14, 'hours', searchTZ);
@@ -175,14 +219,14 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
     const minDuration = isEntireRangeAvailable ? dayCount * day - hour : hour;
     return hasValidDates
       ? {
-          start: getProlongedStart(startDate),
-          end: getProlongedEnd(endDate),
-          // Availability can be time-full or time-partial.
-          // However, due to prolonged time window, we need to use time-partial.
-          availability: 'time-partial',
-          // minDuration uses minutes
-          minDuration,
-        }
+        start: getProlongedStart(startDate),
+        end: getProlongedEnd(endDate),
+        // Availability can be time-full or time-partial.
+        // However, due to prolonged time window, we need to use time-partial.
+        availability: 'time-partial',
+        // minDuration uses minutes
+        minDuration,
+      }
       : {};
   };
 
@@ -232,16 +276,18 @@ export const loadData = (params, search, config) => {
   const minStockMaybe = isStockInUse(config) ? { minStock: 1 } : {};
   const { page = 1, address, origin, ...rest } = queryParams;
   const originMaybe = isOriginInUse(config) && origin ? { origin } : {};
-
   const {
     aspectWidth = 1,
     aspectHeight = 1,
     variantPrefix = 'listing-card',
   } = config.layout.listingImage;
   const aspectRatio = aspectHeight / aspectWidth;
-
   return searchListings(
+
     {
+
+
+
       ...minStockMaybe,
       ...rest,
       ...originMaybe,

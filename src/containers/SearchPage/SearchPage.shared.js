@@ -80,9 +80,9 @@ export const validURLParamForExtendedData = (
 
       return validValues.length > 0
         ? {
-            [queryParamName]:
-              isSchemaTypeMultiEnum && searchMode ? `${searchMode}:${validValues}` : validValues,
-          }
+          [queryParamName]:
+            isSchemaTypeMultiEnum && searchMode ? `${searchMode}:${validValues}` : validValues,
+        }
         : {};
     } else {
       // Generic filter - remove empty params
@@ -124,17 +124,17 @@ export const validFilterParams = (
 
     return filterParamNames.includes(paramName)
       ? {
-          ...validParams,
-          ...validURLParamForExtendedData(
-            paramName,
-            paramValue,
-            listingFieldFiltersConfig,
-            defaultFiltersConfig
-          ),
-        }
+        ...validParams,
+        ...validURLParamForExtendedData(
+          paramName,
+          paramValue,
+          listingFieldFiltersConfig,
+          defaultFiltersConfig
+        ),
+      }
       : dropNonFilterParams
-      ? { ...validParams }
-      : { ...validParams, [paramName]: paramValue };
+        ? { ...validParams }
+        : { ...validParams, [paramName]: paramValue };
   }, {});
 };
 
@@ -157,6 +157,8 @@ export const validUrlQueryParamsFromProps = props => {
   // urlQueryParams doesn't contain page specific url params
   // like mapSearch, page or origin (origin depends on config.maps.search.sortSearchByDistance)
   return validFilterParams(searchInURL, listingFieldsConfig, defaultFiltersConfig, false);
+
+
 };
 
 /**
@@ -184,8 +186,8 @@ export const initialValues = (props, currentQueryParams) => (queryParamNames, is
   const isArray = Array.isArray(queryParamNames);
   return isArray
     ? queryParamNames.reduce((acc, paramName) => {
-        return { ...acc, [paramName]: getInitialValue(paramName) };
-      }, {})
+      return { ...acc, [paramName]: getInitialValue(paramName) };
+    }, {})
     : {};
 };
 
@@ -328,8 +330,8 @@ export const groupListingFieldConfigs = (configs, activeListingTypes) =>
       return isActiveListingTypes && isIndexed && isPrimary
         ? [[...primary, config], secondary]
         : isActiveListingTypes && isIndexed
-        ? [primary, [...secondary, config]]
-        : grouped;
+          ? [primary, [...secondary, config]]
+          : grouped;
     },
     [[], []]
   );

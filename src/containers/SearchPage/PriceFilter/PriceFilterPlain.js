@@ -16,8 +16,8 @@ const getPriceQueryParamName = queryParamNames => {
   return Array.isArray(queryParamNames)
     ? queryParamNames[0]
     : typeof queryParamNames === 'string'
-    ? queryParamNames
-    : 'price';
+      ? queryParamNames
+      : 'price';
 };
 
 // Parse value, which should look like "0,1000"
@@ -88,12 +88,12 @@ class PriceFilterPlainComponent extends Component {
 
     const labelSelection = hasInitialValues
       ? intl.formatMessage(
-          { id: 'PriceFilter.labelSelectedPlain' },
-          {
-            minPrice: formatCurrencyMajorUnit(intl, marketplaceCurrency, minPrice),
-            maxPrice: formatCurrencyMajorUnit(intl, marketplaceCurrency, maxPrice),
-          }
-        )
+        { id: 'PriceFilter.labelSelectedPlain' },
+        {
+          minPrice: formatCurrencyMajorUnit(intl, marketplaceCurrency, minPrice),
+          maxPrice: formatCurrencyMajorUnit(intl, marketplaceCurrency, maxPrice),
+        }
+      )
       : null;
     return (
       <div className={classes}>

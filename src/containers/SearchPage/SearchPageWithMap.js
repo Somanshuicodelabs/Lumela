@@ -19,12 +19,13 @@ import {
   getQueryParamNames,
 } from '../../util/search';
 import { parse } from '../../util/urlHelpers';
-import { propTypes } from '../../util/types';
+import { SEARCH_PAGE, propTypes } from '../../util/types';
 import { getListingsById } from '../../ducks/marketplaceData.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
 
 import { H3, H5, ModalInMobile, Page } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
+import TopbarSearchForm, { LocationSearchField } from '../../components/Topbar/TopbarSearchForm/TopbarSearchForm'
 
 import { setActiveListing } from './SearchPage.duck';
 import {
@@ -48,6 +49,10 @@ import SearchResultsPanel from './SearchResultsPanel/SearchResultsPanel';
 import NoSearchResultsMaybe from './NoSearchResultsMaybe/NoSearchResultsMaybe';
 
 import css from './SearchPage.module.css';
+import { KeywordFilter, LocationAutocompleteInput } from '../../examples';
+import { KeywordFilterPlainExample, KeywordFilterPopupExample } from './KeywordFilter/KeywordFilter.example';
+import { Form } from 'react-final-form';
+
 
 const MODAL_BREAKPOINT = 768; // Search is in modal on mobile layout
 const SEARCH_WITH_MAP_DEBOUNCE = 300; // Little bit of debounce before search is initiated.
@@ -231,6 +236,20 @@ export class SearchPageComponent extends Component {
     history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, queryParams));
   }
 
+  onChange(location) {
+    const { appConfig, onSubmit } = this.props;
+    if (!isMainSearchTypeKeywords(appConfig) && location.selectedPlace) {
+      // Note that we use `onSubmit` instead of the conventional
+      // `handleSubmit` prop for submitting. We want to autosubmit
+      // when a place is selected, and don't require any extra
+      // validations for the form.
+
+      // blur search input to hide software keyboard
+      this.searchInput?.blur();
+    }
+  }
+
+
   render() {
     const {
       intl,
@@ -318,12 +337,12 @@ export class SearchPageComponent extends Component {
     const isSecondaryFiltersOpen = !!hasSecondaryFilters && this.state.isSecondaryFiltersOpen;
     const propsForSecondaryFiltersToggle = hasSecondaryFilters
       ? {
-          isSecondaryFiltersOpen: this.state.isSecondaryFiltersOpen,
-          toggleSecondaryFiltersOpen: isOpen => {
-            this.setState({ isSecondaryFiltersOpen: isOpen, currentQueryParams: {} });
-          },
-          selectedSecondaryFiltersCount,
-        }
+        isSecondaryFiltersOpen: this.state.isSecondaryFiltersOpen,
+        toggleSecondaryFiltersOpen: isOpen => {
+          this.setState({ isSecondaryFiltersOpen: isOpen, currentQueryParams: {} });
+        },
+        selectedSecondaryFiltersCount,
+      }
       : {};
 
     const hasPaginationInfo = !!pagination && pagination.totalItems != null;
@@ -331,8 +350,8 @@ export class SearchPageComponent extends Component {
       searchParamsAreInSync && hasPaginationInfo
         ? pagination.totalItems
         : pagination?.paginationUnsupported
-        ? listings.length
-        : 0;
+          ? listings.length
+          : 0;
     const listingsAreLoaded =
       !searchInProgress &&
       searchParamsAreInSync &&
@@ -366,6 +385,70 @@ export class SearchPageComponent extends Component {
         resetAll={this.resetAll}
       />
     );
+
+    const handleSubmit1 = (values) => {
+      const { currentSearchParams } = this.props;
+      const { history, config, routeConfiguration } = this.props;
+
+      const topbarSearchParams = () => {
+        if (isMainSearchTypeKeywords(config)) {
+          return { keywords: values?.keywords };
+        }
+        // topbar search defaults to 'location' search
+
+
+
+      };
+      const searchParams = {
+        ...currentSearchParams,
+        ...topbarSearchParams(),
+      };
+      history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, searchParams));
+    }
+
+    const handleSubmit = (values) => {
+      const { currentSearchParams } = this.props;
+      const { history, config, routeConfiguration } = this.props;
+
+      const topbarSearchParams = () => {
+        // topbar search defaults to 'location' search
+        const { search, selectedPlace } = values?.location;
+        const { origin, bounds } = selectedPlace;
+        const originMaybe = isOriginInUse(config) ? { origin } : {};
+
+        return {
+          ...originMaybe,
+          address: search,
+          bounds,
+        };
+      };
+      const searchParams = {
+        ...currentSearchParams,
+        ...topbarSearchParams(),
+      };
+      history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, searchParams));
+    }
+    const topbarSearcInitialValues = () => {
+
+      const { mobilemenu, mobilesearch, keywords, address, origin, bounds } = parse(location.search, {
+        latlng: ['origin'],
+        latlngBounds: ['bounds'],
+      });
+
+      // Only render current search if full place object is available in the URL params
+      const locationFieldsPresent = isOriginInUse(config)
+        ? address && origin && bounds
+        : address && bounds;
+      return {
+        location: locationFieldsPresent
+          ? {
+            search: address,
+            selectedPlace: { address, origin, bounds },
+          }
+          : null,
+      };
+    };
+    const initialSearchFormValues = topbarSearcInitialValues();
 
     const { bounds, origin } = searchParamsInURL || {};
     const { title, description, schema } = createSearchResultSchema(
@@ -428,7 +511,7 @@ export class SearchPageComponent extends Component {
                     getHandleChangedValueFn={this.getHandleChangedValueFn}
                     intl={intl}
                     liveEdit
-                    showAsPopup={false}
+                    showAsPopup={true}
                   />
                 );
               })}
@@ -443,6 +526,22 @@ export class SearchPageComponent extends Component {
               searchListingsError={searchListingsError}
               noResultsInfo={noResultsInfo}
             >
+              <TopbarSearchForm
+                className={css.searchLink}
+                desktopInputRoot={css.topbarSearchWithLeftPadding}
+                onSubmit={handleSubmit}
+                initialValues={initialSearchFormValues}
+                currentPage={SEARCH_PAGE}
+              />
+              <TopbarSearchForm
+                isKeywordsSearch
+                className={css.searchLink}
+                desktopInputRoot={css.topbarSearchWithLeftPadding}
+                onSubmit={handleSubmit1}
+                initialValues={initialSearchFormValues}
+                currentPage={SEARCH_PAGE}
+              />
+
               <SearchFiltersPrimary {...propsForSecondaryFiltersToggle}>
                 {availablePrimaryFilters.map(config => {
                   return (
@@ -464,6 +563,9 @@ export class SearchPageComponent extends Component {
             </MainPanelHeader>
             {isSecondaryFiltersOpen ? (
               <div className={classNames(css.searchFiltersPanel)}>
+
+
+
                 <SearchFiltersSecondary
                   urlQueryParams={validQueryParams}
                   listingsAreLoaded={listingsAreLoaded}
@@ -471,7 +573,10 @@ export class SearchPageComponent extends Component {
                   cancelFilters={this.cancelFilters}
                   resetAll={this.resetAll}
                   onClosePanel={() => this.setState({ isSecondaryFiltersOpen: false })}
+
                 >
+
+
                   {customSecondaryFilters.map(config => {
                     return (
                       <FilterComponent

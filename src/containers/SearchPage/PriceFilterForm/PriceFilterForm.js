@@ -128,11 +128,11 @@ const PriceFilterFormComponent = props => {
             <div className={css.contentWrapper}>
               {showAsPopup ? (
                 <span className={css.label}>
-                  <FormattedMessage id="PriceFilterForm.label" />
+                  {/* <FormattedMessage id="PriceFilterForm.label" /> */}
                 </span>
               ) : null}
               <div className={css.inputsWrapper}>
-                <Field
+                {/* <Field
                   className={classNames(css.minPrice, { [css.priceInSidebar]: isInSideBar })}
                   id={`${id}.minPrice`}
                   name="minPrice"
@@ -143,9 +143,9 @@ const PriceFilterFormComponent = props => {
                   max={max}
                   step={step}
                   parse={parseMin(min, maxPrice)}
-                />
-                <span className={css.priceSeparator}>-</span>
-                <Field
+                /> */}
+                {/* <span className={css.priceSeparator}></span> */}
+                {/* <Field
                   className={classNames(css.maxPrice, { [css.priceInSidebar]: isInSideBar })}
                   id={`${id}.maxPrice`}
                   name="maxPrice"
@@ -156,12 +156,12 @@ const PriceFilterFormComponent = props => {
                   max={max}
                   step={step}
                   parse={parseMax(max, minPrice)}
-                />
+                /> */}
               </div>
             </div>
 
             <div className={css.sliderWrapper}>
-              <RangeSlider
+              {/* <RangeSlider
                 min={min}
                 max={max}
                 step={step}
@@ -170,7 +170,7 @@ const PriceFilterFormComponent = props => {
                   form.change('minPrice', handles[0]);
                   form.change('maxPrice', handles[1]);
                 }}
-              />
+              /> */}
             </div>
 
             {liveEdit ? (

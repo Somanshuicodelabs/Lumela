@@ -28,13 +28,13 @@ const SortBy = props => {
   const mobileClassesMaybe =
     mode === 'mobile'
       ? {
-          rootClassName: css.sortBy,
-          menuLabelRootClassName: css.sortByMenuLabel,
-        }
+        rootClassName: css.sortBy,
+        menuLabelRootClassName: css.sortByMenuLabel,
+      }
       : {
-          className: css.sortByDesktop,
-          menuLabelRootClassName: css.sortByMenuLabel,
-        };
+        className: css.sortByDesktop,
+        menuLabelRootClassName: css.sortByMenuLabel,
+      };
 
   // Ensure that keywords is included to activeFilter list when needed
   const isMainSearchKeywords = isMainSearchTypeKeywords(config);
@@ -52,16 +52,16 @@ const SortBy = props => {
     return isRelevance && !isMainSearchKeywords
       ? selected
       : [
-          ...selected,
-          {
-            ...option,
-            disabled:
-              (isRelevance && (!isRelevanceOptionActive || isConflictingFilterSetAndActive)) ||
-              (!isRelevance && isConflictingFilterActive),
-          },
-        ];
+        ...selected,
+        {
+          ...option,
+          disabled:
+            (isRelevance && (!isRelevanceOptionActive || isConflictingFilterSetAndActive)) ||
+            (!isRelevance && isConflictingFilterActive),
+        },
+      ];
   }, []);
-  const defaultValue = 'createdAt';
+  const defaultValue = 'Most Relevent';
   const isRelevanceSortActive = isRelevanceOptionActive && !sort;
   const relevanceValue =
     isRelevanceSortActive && selectedFilters[relevanceFilter]?.length > 0 ? relevanceKey : null;

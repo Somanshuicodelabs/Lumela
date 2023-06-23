@@ -15,6 +15,7 @@ import { isBookingProcessAlias } from '../../transactions/transaction';
 import IconFavorite from '../IconFavorite/IconFavorite';
 import IconReviewStar from '../IconReviewStar/IconReviewStar';
 import { AspectRatioWrapper, NamedLink, ResponsiveImage } from '../../components';
+import IconLocationPin from '../IconLocationPin/IconLocationPin';
 
 import css from './ListingCard.module.css';
 

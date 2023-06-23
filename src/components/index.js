@@ -141,3 +141,14 @@ export { default as LayoutComposer, LayoutSingleColumn, LayoutSideNavigation } f
 export { default as ModalMissingInformation } from './ModalMissingInformation/ModalMissingInformation';
 export { default as Footer } from './Footer/Footer';
 export { default as Topbar } from './Topbar/Topbar';
+/**
+ * Independent components
+ * These components do not include any other components
+ *
+ * This order mitigates problems that might arise when trying to import components
+ * that have circular dependencies to other components.
+ * Note: import-order also affects to the generated CSS bundle file.
+ *
+ * Read more:
+ * https://medium.com/visual-development/how-to-fix-nasty-circular-dependency-issues-once-and-for-all-in-javascript-typescript-a04c987cf0de
+ */

@@ -7,6 +7,7 @@ import { FormattedMessage } from '../../../util/reactIntl';
 import PopupOpenerButton from '../PopupOpenerButton/PopupOpenerButton';
 
 import css from './SearchFiltersPrimary.module.css';
+import { Button } from '../../../components';
 
 const SearchFiltersPrimaryComponent = props => {
   const {
@@ -16,6 +17,7 @@ const SearchFiltersPrimaryComponent = props => {
     isSecondaryFiltersOpen,
     toggleSecondaryFiltersOpen,
     selectedSecondaryFiltersCount,
+    sortByComponent,
   } = props;
 
   const classes = classNames(rootClassName || css.root, className);
@@ -32,13 +34,19 @@ const SearchFiltersPrimaryComponent = props => {
         values={{ count: selectedSecondaryFiltersCount }}
       />
     </PopupOpenerButton>
+
+
   ) : null;
 
   return (
     <div className={classes}>
       <div className={css.filters}>
+        {sortByComponent}
         {children}
         {toggleSecondaryFiltersOpenButton}
+        <button>Clear All</button>
+        <button>Apply</button>
+
       </div>
     </div>
   );
@@ -50,6 +58,7 @@ SearchFiltersPrimaryComponent.defaultProps = {
   isSecondaryFiltersOpen: false,
   toggleSecondaryFiltersOpen: null,
   selectedSecondaryFiltersCount: 0,
+  sortByComponent: null,
 };
 
 SearchFiltersPrimaryComponent.propTypes = {
@@ -58,6 +67,7 @@ SearchFiltersPrimaryComponent.propTypes = {
   isSecondaryFiltersOpen: bool,
   toggleSecondaryFiltersOpen: func,
   selectedSecondaryFiltersCount: number,
+  sortByComponent: node,
 };
 
 const SearchFiltersPrimary = SearchFiltersPrimaryComponent;

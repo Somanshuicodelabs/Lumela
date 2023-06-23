@@ -24,6 +24,35 @@ const SortByIcon = props => {
     </svg>
   );
 };
+const handelSortClick = () => {
+  const { currentUser, currentSearchParams, history, resetAll } = this.props;
+
+  if (currentUser && currentUser?.currentUser?.attributes?.profile?.protectedData?.location) {
+    const { search, selectedPlace } = currentUser?.currentUser?.attributes?.profile?.protectedData?.location;
+
+    const { origin, bounds } = selectedPlace;
+    const sdkBounds = new LatLngBounds(
+      new LatLng(bounds.ne.lat, bounds.ne.lng),
+      new LatLng(bounds.sw.lat, bounds.sw.lng)
+    );
+    const originMaybe = config.sortSearchByDistance ? { origin } : {};
+    const searchParams = {
+      ...currentSearchParams,
+      ...originMaybe,
+      address: search,
+      bounds: sdkBounds,
+    };
+    this.toggleFilterDrawer()
+    history.push(
+      createResourceLocatorString('SearchPage', routeConfiguration(), {}, searchParams)
+    );
+
+    this.setState({ sortActive: true });
+  } else {
+    history.push(createResourceLocatorString('SearchPage', routeConfiguration(), resetAll, {}));
+  }
+}
+
 
 const SortByPopup = props => {
   const [isOpen, setIsOpen] = useState(false);
@@ -69,18 +98,18 @@ const SortByPopup = props => {
         <SortByIcon className={iconArrowClassName} />
       </MenuLabel>
       <MenuContent className={css.menuContent}>
-        {options.map(option => {
+        {options.map((option, i) => {
           // check if this option is selected
           const selected = initialValue === option.key;
           // menu item border class
           const menuItemBorderClass = selected ? css.menuItemBorderSelected : css.menuItemBorder;
 
           return (
-            <MenuItem key={option.key}>
+            <MenuItem key={option.key + i}>
               <button
                 className={css.menuItem}
                 disabled={option.disabled}
-                onClick={() => (selected ? null : selectOption(urlParam, option.key))}
+                onClick={() => (selected ? null : option?.key == 'location' ? handelSortClick() : selectOption(urlParam, option.key))}
               >
                 <span className={menuItemBorderClass} />
                 {option.longLabel || option.label}

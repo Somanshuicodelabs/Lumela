@@ -40,23 +40,23 @@ const FilterComponent = props => {
 
   // Default filters: price, keywords, dates
   switch (key) {
-    case 'price': {
-      const { min, max, step } = config;
-      return (
-        <PriceFilter
-          id={componentId}
-          label={intl.formatMessage({ id: 'FilterComponent.priceLabel' })}
-          queryParamNames={[key]}
-          initialValues={initialValues([key], liveEdit)}
-          onSubmit={getHandleChangedValueFn(useHistoryPush)}
-          min={min}
-          max={max}
-          step={step}
-          marketplaceCurrency={marketplaceCurrency}
-          {...rest}
-        />
-      );
-    }
+    // case 'price': {
+    //   const { min, max, step } = config;
+    //   return (
+    //     <PriceFilter
+    //       id={componentId}
+    //       label={intl.formatMessage({ id: 'FilterComponent.priceLabel' })}
+    //       queryParamNames={[key]}
+    //       initialValues={initialValues([key], liveEdit)}
+    //       onSubmit={getHandleChangedValueFn(useHistoryPush)}
+    //       min={min}
+    //       max={max}
+    //       step={step}
+    //       marketplaceCurrency={marketplaceCurrency}
+    //       {...rest}
+    //     />
+    //   );
+    // }
     case 'keywords':
       return (
         <KeywordFilter
@@ -101,19 +101,20 @@ const FilterComponent = props => {
           options={createFilterOptions(enumOptions)}
           {...rest}
         />
-      ) : (
-        <SelectMultipleFilter
-          id={componentId}
-          label={filterConfig.label}
-          name={name}
-          queryParamNames={queryParamNames}
-          initialValues={initialValues(queryParamNames, liveEdit)}
-          onSubmit={getHandleChangedValueFn(useHistoryPush)}
-          options={createFilterOptions(enumOptions)}
-          schemaType={schemaType}
-          {...rest}
-        />
-      );
+      )
+        : (
+          <SelectMultipleFilter
+            id={componentId}
+            label={filterConfig.label}
+            name={name}
+            queryParamNames={queryParamNames}
+            initialValues={initialValues(queryParamNames, liveEdit)}
+            onSubmit={getHandleChangedValueFn(useHistoryPush)}
+            options={createFilterOptions(enumOptions)}
+            schemaType={schemaType}
+            {...rest}
+          />
+        );
     }
     case SCHEMA_TYPE_MULTI_ENUM: {
       const { scope, enumOptions, filterConfig = {} } = config;

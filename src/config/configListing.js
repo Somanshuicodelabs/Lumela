@@ -46,118 +46,167 @@
  *   - isRequired (optional):         Is the field required for providers to fill
  *   - requiredMessage (optional):    Message for those fields, which are mandatory.
  */
+
+
+import color1 from '../assets/Colours1.jpg'
+import color2 from '../assets/Colours2.jpg'
+import color3 from '../assets/Colours3.jpg'
+import color4 from '../assets/Colours4.jpg'
+
+
+
+
+
+
 export const listingFields = [
   {
-    key: 'category',
+    key: 'canDo',
     scope: 'public',
-    schemaType: 'enum',
+    schemaType: 'multi-enum',
     enumOptions: [
-      { option: 'city-bikes', label: 'City bikes' },
-      { option: 'electric-bikes', label: 'Electric bikes' },
-      { option: 'mountain-bikes', label: 'Mountain bikes' },
-      { option: 'childrens-bikes', label: "Children's bikes" },
+      { option: 'destinationCalls', label: 'Mobile Calls' },
+      { option: 'houseCalls', label: 'House Calls' },
+
     ],
     filterConfig: {
       indexForSearch: true,
       filterType: 'SelectMultipleFilter',
-      label: 'Category',
+      label: 'Can Do',
       group: 'primary',
     },
     showConfig: {
-      label: 'Category',
+      label: 'Can Do',
       isDetail: true,
     },
     saveConfig: {
-      label: 'Category',
+      label: 'Can Do',
       placeholderMessage: 'Select an option…',
       isRequired: true,
       requiredMessage: 'You need to select a category.',
     },
   },
+
   {
-    key: 'tire',
+    key: 'skinTones',
     scope: 'public',
     schemaType: 'enum',
     enumOptions: [
-      { option: 29, label: '29' },
-      { option: 28, label: '28' },
-      { option: 27, label: '27' },
-      { option: 26, label: '26' },
-      { option: 24, label: '24' },
-      { option: 20, label: '20' },
-      { option: 18, label: '18' },
+      { option: 'color1', label: 'color1', icon: color1 },
+      { option: 'color2', label: 'color2' },
+      { option: 'color3', label: 'color3' },
+      { option: 'color4', label: 'color4' },
+
     ],
     filterConfig: {
       indexForSearch: true,
-      label: 'Tire size',
+      label: 'SkinTones',
       group: 'secondary',
     },
     showConfig: {
-      label: 'Tire size',
+      label: 'SkinTones',
       isDetail: true,
     },
     saveConfig: {
-      label: 'Tire size',
+      label: 'SkinTones',
       placeholderMessage: 'Select an option…',
       isRequired: true,
-      requiredMessage: 'You need to select a tire size.',
+      requiredMessage: 'You need to select a skinTones.',
     },
   },
+
   {
-    key: 'brand',
+    key: 'skinTypes',
     scope: 'public',
     schemaType: 'enum',
     enumOptions: [
-      { option: 'cube', label: 'Cube' },
-      { option: 'diamant', label: 'Diamant' },
-      { option: 'ghost', label: 'GHOST' },
-      { option: 'giant', label: 'Giant' },
-      { option: 'kalkhoff', label: 'Kalkhoff' },
-      { option: 'kona', label: 'Kona' },
-      { option: 'otler', label: 'Otler' },
-      { option: 'vermont', label: 'Vermont' },
+      { option: 'acneProne', label: 'Acne Prone' },
+      { option: 'sensitiveSkin', label: 'Sensitive Skin' },
+      { option: 'normalSkin', label: 'Normal Skin' },
+      { option: 'matureSkin', label: 'Mature Skin' },
+      { option: 'drySkin', label: 'Dry Skin' },
+      { option: 'combination', label: 'Combination' },
+
     ],
     filterConfig: {
       indexForSearch: true,
-      label: 'Brand',
+      label: 'SkinTypes',
       group: 'secondary',
     },
     showConfig: {
-      label: 'Brand',
+      label: 'SkinTypes',
       isDetail: true,
     },
     saveConfig: {
-      label: 'Brand',
+      label: 'SkinTypes',
       placeholderMessage: 'Select an option…',
       isRequired: true,
-      requiredMessage: 'You need to select a brand.',
+      requiredMessage: 'You need to select a SkinTypes.',
     },
   },
+
   {
-    key: 'accessories',
+    key: 'hairTexture',
     scope: 'public',
-    schemaType: 'multi-enum',
+    schemaType: 'enum',
     enumOptions: [
-      { option: 'bell', label: 'Bell' },
-      { option: 'lights', label: 'Lights' },
-      { option: 'lock', label: 'Lock' },
-      { option: 'mudguard', label: 'Mudguard' },
+      { option: 'protective', label: 'Protective ' },
+      { option: 'extensions', label: 'Wigs & Extensions' },
+      { option: 'coily', label: 'Coily ' },
+      { option: 'curly', label: 'Curly ' },
+      { option: 'wavy', label: 'Wavy' },
+      { option: 'straight', label: 'Straight' },
+      { option: 'baldShaved', label: 'Bald / Shaved' },
+
     ],
     filterConfig: {
       indexForSearch: true,
-      label: 'Accessories',
-      searchMode: 'has_all',
+      label: 'Hair Texture',
       group: 'secondary',
     },
     showConfig: {
-      label: 'Accessories',
+      label: 'Hair Texture',
+      isDetail: true,
     },
     saveConfig: {
-      label: 'Accessories',
+      label: 'Hair Texture',
       placeholderMessage: 'Select an option…',
-      isRequired: false,
+      isRequired: true,
+      requiredMessage: 'You need to select a hairTexture.',
     },
   },
+
+
+
+
+
+
+  // {
+  //   key: 'accessories',
+  //   scope: 'public',
+  //   schemaType: 'multi-enum',
+  //   enumOptions: [
+  //     { option: 'bell', label: 'Bell' },
+  //     { option: 'lights', label: 'Lights' },
+  //     { option: 'lock', label: 'Lock' },
+  //     { option: 'mudguard', label: 'Mudguard' },
+  //   ],
+  //   filterConfig: {
+  //     indexForSearch: true,
+  //     label: 'Accessories',
+  //     searchMode: 'has_all',
+  //     group: 'secondary',
+  //   },
+  //   showConfig: {
+  //     label: 'Accessories',
+  //   },
+  //   saveConfig: {
+  //     label: 'Accessories',
+  //     placeholderMessage: 'Select an option…',
+  //     isRequired: false,
+  //   },
+  // },
+
+
 
   // // An example of how to use transaction type specific custom fields and private data.
   // {
