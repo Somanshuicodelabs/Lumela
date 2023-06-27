@@ -57,7 +57,6 @@ export const ListingCardComponent = props => {
   } = props;
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureListing(listing);
-  console.log('currentListing :>> ', currentListing);
   const id = currentListing.id.uuid;
   const { title = '', price, publicData } = currentListing.attributes;
   const slug = createSlug(title);
@@ -65,7 +64,7 @@ export const ListingCardComponent = props => {
   const authorName = author.attributes.profile.displayName;
   const firstImage =
     currentListing.images && currentListing.images.length > 0 ? currentListing.images[0] : null;
-  console.log('firstImage :>> ', firstImage);
+
 
   const {
     aspectWidth = 1,
@@ -75,7 +74,6 @@ export const ListingCardComponent = props => {
   const variants = firstImage
     ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
     : [];
-  console.log('variants :>> ', variants);
 
   const { formattedPrice, priceTitle } = priceData(price, config.currency, intl);
 

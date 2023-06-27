@@ -108,18 +108,23 @@ export const DashboardPageComponent = props => {
   // const nav = <TabNav rootClassName={css.tabs} tabRootClassName={css.tab} tabs={tabs} />;
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
-      <LayoutSideNavigation>
-        <LayoutWrapperTopbar
-          className={classNames(scroll ? css.stickyNavbar : null, css.topbarHeader)}
-        >
-          <TopbarContainer
-            currentPage="DashboardPage"
-            // desktopClassName={css.desktopTopbar}
-            // mobileClassName={css.mobileTopbar}
-          />
-          {/* <UserNav selectedPageName="DashboardPage" listing={currentUserListing} /> */}
-        </LayoutWrapperTopbar>
-        <LayoutWrapperAccountSettingsSideNav currentTab="DashboardPage" />
+      <LayoutSideNavigation
+        mainContentBox={true}
+        topbar={
+          <>
+            <TopbarContainer
+              currentPage="DashboardPage"
+              // desktopClassName={css.desktopTopbar}
+              // mobileClassName={css.mobileTopbar}
+              className={classNames(scroll ? css.stickyNavbar : null, css.topbarHeader)}
+            />
+          </>
+        }
+        sideNav={null}
+        useAccountSettingsNav
+        currentPage="DashboardPage"
+        footer={<Footer />}
+      >
         <LayoutWrapperMain>
           <div className={css.content}>
             <div className={css.head}>

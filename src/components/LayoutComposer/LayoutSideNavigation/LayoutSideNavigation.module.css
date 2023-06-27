@@ -8,7 +8,9 @@
 }
 
 .topbar {
-  position: sticky;
+  position: fixed;
+  box-shadow: 0px 4px 10px 0px #00000014;
+  width: 100%;
   top: 0;
   z-index: var(--zIndexTopbar);
 }
@@ -18,7 +20,7 @@
   /* parent aka root is flexbox, this container takes all available space */
   flex-grow: 1;
   flex-shrink: 0;
-
+  padding: 4rem 0px;
   /* This container uses flexbox layout */
   display: flex;
   flex-direction: column;
@@ -31,6 +33,35 @@
     flex-direction: row;
     justify-content: center;
   }
+}
+
+.mainWrapper {
+  padding: 30px 25px;
+  width: 100%;
+}
+
+.tabsContainer {
+  flex-grow: 1;
+  flex-shrink: 0;
+  padding: 4rem 0px;
+  /* This container uses flexbox layout */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  /* When side nav is shown as a column, Topbar's box-shadow should be visible */
+  z-index: calc(var(--zIndexTopbar) - 1);
+
+  @media (--viewportLarge) {
+    flex-direction: row;
+    /* justify-content: center; */
+  }
+}
+
+.settingsTabs {
+  padding: 25px 20px;
+  box-shadow: 0px 2px 20px 0px #00000014;
+  background-color: #fff;
 }
 
 .main {

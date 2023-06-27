@@ -21,6 +21,7 @@ const LayoutSideNavigation = props => {
     sideNav: sideNavContent,
     useAccountSettingsNav,
     currentPage,
+    mainContentBox,
     ...rest
   } = props;
 
@@ -44,14 +45,17 @@ const LayoutSideNavigation = props => {
             <Topbar as="header" className={css.topbar}>
               {topbarContent}
             </Topbar>
-            <Main as="div" className={containerClasses}>
-              <aside className={classNames(css.sideNav, sideNavClassName)}>
+            <Main as="div" className={mainContentBox == true ? css.tabsContainer : containerClasses}>
+              <aside
+                className={mainContentBox == true ? css.settingsTabs :
+                  classNames(css.sideNav, sideNavClassName)}>
                 {useAccountSettingsNav ? (
                   <LayoutWrapperAccountSettingsSideNav currentPage={currentPage} />
                 ) : null}
                 {sideNavContent}
               </aside>
-              <main className={classNames(css.main, mainColumnClassName)}>{children}</main>
+              <main className={mainContentBox == true ? css.mainWrapper :
+                classNames(css.main, mainColumnClassName)}>{children}</main>
             </Main>
             <Footer>{footerContent}</Footer>
           </>

@@ -1,4 +1,4 @@
-@import '../../styles/customMediaQueries.css';
+@import '../../styles/propertySets.css';
 
 .root {
   width: 100%;
@@ -7,7 +7,6 @@
   z-index: var(--zIndexTopbar);
   position: relative;
 }
-
 .container {
   width: 100%;
   background-color: var(--matterColorLight);
@@ -85,8 +84,8 @@
 .menu,
 .searchMenu {
   /* Font */
-  composes: h5 from global;
-  color: var(--colorGrey700);
+  @apply --marketplaceH5FontStyles;
+  color: var(--matterColor);
 
   /* Layout */
   display: flex;
@@ -99,11 +98,13 @@
   &:enabled {
     cursor: pointer;
   }
+
   &:enabled:hover,
   &:enabled:active {
     background-color: transparent;
     box-shadow: none;
   }
+
   &:disabled {
     background-color: transparent;
     cursor: auto;
@@ -111,8 +112,11 @@
 }
 
 .menu {
-  padding: 15px 24px;
+  padding: 8px 0px 8px 18px;
   position: relative;
+}
+.logoMobileLink {
+  margin: 0 20px;
 }
 .searchMenu {
   padding: 12px 24px;
@@ -135,8 +139,8 @@
   right: 17px;
 
   /* Style: red dot with white border */
-  background-color: var(--colorFail);
-  border: 2px solid var(--colorWhite);
+  background-color: var(--failColor);
+  border: 2px solid var(--matterColorLight);
 
   animation-name: notificationPop;
   animation-duration: 0.1s;
@@ -153,6 +157,7 @@
     transform: scale(0);
     opacity: 0;
   }
+
   100% {
     transform: scale(1);
     opacity: 1;
@@ -162,17 +167,19 @@
 .desktop {
   display: none;
 
-  @media (--viewportMedium) {
+  @media (min-width: 992px) {
     display: block;
+    background: #ffffff;
   }
 }
 
 /* Icon component styles */
 .rootMenuIcon {
-  fill: var(--colorGrey700);
+  fill: var(--matterColor);
 }
+
 .rootSearchIcon {
-  stroke: var(--colorGrey700);
+  stroke: var(--matterColor);
 }
 
 .searchContainer {
@@ -182,7 +189,7 @@
 }
 
 .mobileHelp {
-  color: var(--colorGrey300);
+  color: var(--matterColorAnti);
   margin: 0 24px;
 
   /* Absolute position to avoid affecting the layout of the autocomplete
@@ -194,7 +201,7 @@
 /* ================ Modal ================ */
 
 .modalContainer {
-  composes: marketplaceModalInMobileBaseStyles from global;
+  @apply --marketplaceModalInMobileBaseStyles;
   padding: 0;
 
   @media (--viewportMedium) {
@@ -203,18 +210,18 @@
 }
 
 .missingInformationModal {
-  composes: marketplaceModalBaseStyles from global;
+  @apply --marketplaceModalBaseStyles;
   padding-top: 70px;
 }
 
 /* Title of the modal */
 .modalTitle {
-  composes: marketplaceModalTitleStyles from global;
+  @apply --marketplaceModalTitleStyles;
 }
 
 /* Paragraph for the Modal */
 .modalMessage {
-  composes: marketplaceModalParagraphStyles from global;
+  @apply --marketplaceModalParagraphStyles;
 }
 
 /* Make the email pop */
@@ -223,26 +230,30 @@
 }
 
 .helperLink {
-  composes: marketplaceModalHelperLink from global;
+  @apply --marketplaceModalHelperLink;
 }
 
 .helperText {
-  composes: marketplaceModalHelperText from global;
+  @apply --marketplaceModalHelperText;
 }
 
 .error {
-  composes: marketplaceModalPasswordMargins from global;
+  @apply --marketplaceModalErrorStyles;
 }
 
 .bottomWrapper {
-  composes: marketplaceModalBottomWrapper from global;
+  @apply --marketplaceModalBottomWrapper;
 
   /* Align the helper links to the left since there isn't a Primary Button anymore */
   text-align: left;
 }
 
 .modalIcon {
-  composes: marketplaceModalIconStyles from global;
+  @apply --marketplaceModalIconStyles;
+}
+
+.reminderModalLinkButton {
+  @apply --marketplaceButtonStylesPrimary;
 }
 
 .genericError {
@@ -263,7 +274,7 @@
   /* Bleed the bg color from the bottom */
   padding-bottom: 4px;
   background-color: var(--marketplaceColor);
-  border-radius: var(--borderRadiusMedium);
+  border-radius: 4px;
 
   /* Place on top of everything */
   z-index: var(--zIndexGenericError);
@@ -280,20 +291,22 @@
 
 .genericErrorContent {
   padding: 16px 22px;
+  border-radius: 4px;
   background-color: var(--marketplaceColorLight);
-  border-radius: var(--borderRadiusMedium);
+  border-radius: 4px;
 }
 
 .genericErrorText {
-  composes: h5 from global;
+  @apply --marketplaceH5FontStyles;
   font-weight: var(--fontWeightSemiBold);
   margin: 0;
-  color: var(--colorWhite);
+  color: var(--matterColorLight);
 
   @media (--viewportMedium) {
     margin: 0;
   }
 }
+
 .rightMenuLinks {
   display: inline-flex;
   align-items: center;
@@ -698,4 +711,3 @@
     }
   }
 }
-

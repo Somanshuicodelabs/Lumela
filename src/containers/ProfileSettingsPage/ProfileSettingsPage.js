@@ -11,7 +11,7 @@ import { ensureCurrentUser } from '../../util/data';
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 import profileImg from '../../assets/profile.png';
 
-import { H3, Page, UserNav, Footer, NamedLink, LayoutSingleColumn, Modal, LayoutSideNavigation , LayoutWrapperTopbar,LayoutWrapperAccountSettingsSideNav,LayoutWrapperMain, PrimaryButton ,LayoutWrapperFooter} from '../../components';
+import { H3, Page, UserNav, Footer, NamedLink, LayoutSingleColumn, Modal, LayoutSideNavigation, LayoutWrapperTopbar, LayoutWrapperAccountSettingsSideNav, LayoutWrapperMain, PrimaryButton, LayoutWrapperFooter } from '../../components';
 
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
@@ -109,8 +109,8 @@ export const ProfileSettingsPageComponent = props => {
           false
         )
       }
-      // contentClassName={css.modalContent}
-      // onManageDisableScrolling={onManageDisableScrolling}
+    // contentClassName={css.modalContent}
+    // onManageDisableScrolling={onManageDisableScrolling}
     >
       {isModalOpen == 'editform' ? (
         <ProfileSettingsForm
@@ -162,18 +162,22 @@ export const ProfileSettingsPageComponent = props => {
 
   return (
     <Page className={css.root} title={title} scrollingDisabled={scrollingDisabled}>
-      <LayoutSideNavigation>
-        <LayoutWrapperTopbar
-          className={classNames(scroll ? css.stickyNavbar : null, css.topbarHeader)}
-        >
-          <TopbarContainer
-            currentPage="ProfileSettingsPage"
-          // desktopClassName={css.desktopTopbar}
-          // mobileClassName={css.mobileTopbar}
-          />
-          {/* <UserNav selectedPageName="ProfileSettingsPage" listing={currentUserListing} /> */}
-        </LayoutWrapperTopbar>
-        <LayoutWrapperAccountSettingsSideNav currentTab="ProfileSettingsPage" />
+      <LayoutSideNavigation
+        topbar={
+          <>
+            <TopbarContainer
+              currentPage="ProfileSettingsPage"
+              desktopClassName={css.desktopTopbar}
+              mobileClassName={css.mobileTopbar}
+            />
+            {/* <UserNav currentPage="ProfileSettingsPage" /> */}
+          </>
+        }
+        sideNav={null}
+        useAccountSettingsNav
+        currentPage="ProfileSettingsPage"
+        footer={<Footer />}
+      >
         <LayoutWrapperMain className={css.layoutWrappermain}>
           <div className={css.content}>
             {/* <FormattedMessage id="ProfileSettingsPage.heading" /> */}
@@ -263,9 +267,6 @@ export const ProfileSettingsPageComponent = props => {
 
           {profileSettingsForm}
         </LayoutWrapperMain>
-        <LayoutWrapperFooter>
-          <Footer />
-        </LayoutWrapperFooter>
       </LayoutSideNavigation>
     </Page>
   );

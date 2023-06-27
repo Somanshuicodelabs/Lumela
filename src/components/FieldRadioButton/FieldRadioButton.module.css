@@ -1,4 +1,6 @@
 @import '../../styles/customMediaQueries.css';
+@import '../../styles/marketplaceDefaults.css';
+@import '../../styles/propertySets.css';
 
 .root {
   position: relative;
@@ -11,27 +13,27 @@
   width: 0;
 
   /* Display the "check" when checked */
-  &:checked + label .checked {
+  &:checked+label .checked {
     display: inline;
   }
 
   /* Highlight the borders if the checkbox is hovered, focused or checked */
-  &:hover + label .notChecked,
-  &:hover + label .required,
-  &:focus + label .notChecked,
-  &:focus + label .required,
-  &:checked + label .required {
+  &:hover+label .notChecked,
+  &:hover+label .required,
+  &:focus+label .notChecked,
+  &:focus+label .required,
+  &:checked+label .required {
     stroke: var(--colorBlack);
   }
 
-  &:checked + label .notChecked {
+  &:checked+label .notChecked {
     stroke: none;
   }
 
   /* Hightlight the text on checked, hover and focus */
-  &:focus + label .text,
-  &:hover + label .text,
-  &:checked + label .text {
+  &:focus+label .text,
+  &:hover+label .text,
+  &:checked+label .text {
     color: var(--colorBlack);
   }
 }
@@ -61,8 +63,14 @@
 }
 
 .checkedStyle {
-  stroke: var(--marketplaceColor);
-  fill: var(--marketplaceColor);
+
+  /* stroke: var(--marketplaceColor);
+  fill: var(--marketplaceColor); */
+  & circle {
+    &:nth-child(2) {
+      fill: #5C5C5C;
+    }
+  }
 }
 
 .checked {
@@ -70,14 +78,16 @@
 }
 
 .notChecked {
-  stroke: var(--colorGrey300);
-  &:hover {
+  stroke: #CDCDCD;
+
+  /* &:hover {
     stroke: pink;
-  }
+  } */
 }
 
 .required {
   stroke: var(--colorAttention);
+
   &:hover {
     stroke: pink;
   }

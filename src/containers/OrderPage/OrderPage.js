@@ -18,7 +18,7 @@ import {
   TabNav,
   Logo,
 } from '../../components';
-import ContactDetailsForm  from '../ContactDetailsPage/ContactDetailsForm/ContactDetailsForm';
+import ContactDetailsForm from '../ContactDetailsPage/ContactDetailsForm/ContactDetailsForm';
 import { TopbarContainer } from '../../containers';
 
 import { isScrollingDisabled } from '../../ducks/ui.duck';
@@ -91,13 +91,22 @@ export const OrderPageComponent = props => {
   const title = intl.formatMessage({ id: 'DashboardPage.title' });
   return (
     <Page title={title} scrollingDisabled={scrollingDisabled}>
-      <LayoutSideNavigation>
-        <LayoutWrapperTopbar
-          className={classNames(scroll ? css.stickyNavbar : null, css.topbarHeader)}
-        >
-          <TopbarContainer currentPage="OrderPage" />
-        </LayoutWrapperTopbar>
-        <LayoutWrapperAccountSettingsSideNav currentTab="OrderPage" />
+      <LayoutSideNavigation
+        topbar={
+          <>
+            <TopbarContainer
+              currentPage="OrderPage"
+              desktopClassName={css.desktopTopbar}
+              mobileClassName={css.mobileTopbar}
+            />
+            {/* <UserNav currentPage="OrderPage" /> */}
+          </>
+        }
+        sideNav={null}
+        useAccountSettingsNav
+        currentPage="OrderPage"
+        footer={<Footer />}
+      >
         <LayoutWrapperMain>
           <div className={css.content}>
             <div className={css.head}>
@@ -407,9 +416,6 @@ export const OrderPageComponent = props => {
             </Tabs> */}
           </div>
         </LayoutWrapperMain>
-        <LayoutWrapperFooter>
-          <Footer />
-        </LayoutWrapperFooter>
       </LayoutSideNavigation>
     </Page>
   );

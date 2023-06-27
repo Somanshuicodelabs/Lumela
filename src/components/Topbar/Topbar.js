@@ -197,7 +197,6 @@ class TopbarComponent extends Component {
       submitLogin,
       submitSignup,
     } = this.props;
-    console.log(isHeaderSticky, '&&&  &&& => isHeaderSticky');
     
     
 

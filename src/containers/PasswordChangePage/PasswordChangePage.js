@@ -59,7 +59,7 @@ export const PasswordChangePageComponent = props => {
               desktopClassName={css.desktopTopbar}
               mobileClassName={css.mobileTopbar}
             />
-            <UserNav currentPage="PasswordChangePage" />
+            {/* <UserNav currentPage="PasswordChangePage" /> */}
           </>
         }
         sideNav={null}

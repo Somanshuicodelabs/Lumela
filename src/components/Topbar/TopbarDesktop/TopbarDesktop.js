@@ -76,6 +76,7 @@ const AuthenticationForms = props => {
     onManageToggleDrawer,
   } = props;
 
+  
   const MAX_MOBILE_SCREEN_WIDTH = 768;
   const isMobileLayout = typeof window !== 'undefined' && window.innerWidth < MAX_MOBILE_SCREEN_WIDTH;
 

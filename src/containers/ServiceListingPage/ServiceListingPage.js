@@ -9,13 +9,14 @@ import { types as sdkTypes } from '../../util/sdkLoader';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 
 import { useConfiguration } from '../../context/configurationContext';
-import { H3, Page, Footer, LayoutSingleColumn, LayoutWrapperAccountSettingsSideNav, FieldTextInput } from '../../components';
+import { H3, Page, Footer, LayoutSingleColumn, LayoutWrapperAccountSettingsSideNav, FieldTextInput, LayoutSideNavigation, LayoutWrapperMain, UserNav } from '../../components';
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
 
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { propTypes } from '../../util/types';
 import ServiceListingPageForm from './ServiceListingPageForm/ServiceListingPageForm';
+import css from './ServiceListingPage.module.css';
 // import { Form } from 'react-final-form';
 
 const { UUID } = sdkTypes;
@@ -53,14 +54,12 @@ export const ServiceListingPageComponent = props => {
         // onShowListing,
         // createListingError,
     } = props;
-    
-    console.log('listing :>> ', listing);
 
-    
+
+
     const [resetForm, setResetForm] = useState(false);
     const currentListing = ensureOwnListing(listing);
     const { publicData = {} } = currentListing.attributes;
-    console.log('publicData :>> ', publicData);
     const restImages = images && images.length
         ? mainImageId
             ? images.filter(image => !image.imageType && mainImageId && image.id && (!image.id.uuid || (image.id.uuid && image.id.uuid != mainImageId)))
@@ -82,60 +81,69 @@ export const ServiceListingPageComponent = props => {
 
     return (
         <Page title={schemaTitle} scrollingDisabled={scrollingDisabled}>
-            <LayoutSingleColumn
+            <LayoutSideNavigation
                 topbar={
                     <>
-                        <TopbarContainer currentPage="CreateCouponPage" />
+                        <TopbarContainer
+                            currentPage="CreateCouponPage"
+                            desktopClassName={css.desktopTopbar}
+                            mobileClassName={css.mobileTopbar}
+                        />
+                        {/* <UserNav currentPage="CreateCouponPage" /> */}
                     </>
                 }
+                sideNav={null}
+                useAccountSettingsNav
+                currentPage="CreateCouponPage"
                 footer={<Footer />}
             >
-                <div>
-                </div>
-            </LayoutSingleColumn>
-            <LayoutWrapperAccountSettingsSideNav currentTab="ProductListingPage" />
-            <ServiceListingPageForm
-                // className={css.form}
-                images={restImages}
-                initialValues={
-                    resetForm
-                        ? {}
-                        : {
-                            // businessName: publicData?.businessName,
-                            // email: publicData?.email,
-                            // abn: publicData?.abn,
-                            // website: publicData?.website,
-                            // instagram: publicData?.instagram,
-                            // facebook: publicData?.facebook,
-                            // images
-                        }
-                }
-                saveActionMsg={submitButtonText}
-                setResetForm={() => setResetForm(true)}
-                onSubmit={values => {
-                    const { businessName, email, abn, website, instagram, facebook } = values;
+                <LayoutWrapperMain>
+                    <div>
+                        <ServiceListingPageForm
+                            // className={css.form}
+                            images={restImages}
+                            initialValues={
+                                resetForm
+                                    ? {}
+                                    : {
+                                        // businessName: publicData?.businessName,
+                                        // email: publicData?.email,
+                                        // abn: publicData?.abn,
+                                        // website: publicData?.website,
+                                        // instagram: publicData?.instagram,
+                                        // facebook: publicData?.facebook,
+                                        // images
+                                    }
+                            }
+                            saveActionMsg={submitButtonText}
+                            setResetForm={() => setResetForm(true)}
+                            onSubmit={values => {
+                                const { businessName, email, abn, website, instagram, facebook } = values;
 
-                    onSubmit({
-                        title: businessName.trim(),
-                        description: '',
-                        publicData: {
-                            businessName: businessName.trim(),
-                            email,
-                            abn,
-                            website,
-                            instagram,
-                            facebook,
-                        },
-                    });
-                }}
-                onChange={onChange}
-                disabled={disabled}
-                ready={ready}
-                updated={panelUpdated}
-                updateInProgress={updateInProgress}
-                fetchErrors={errors}
-                publicData={publicData}
-            />
+                                onSubmit({
+                                    title: businessName.trim(),
+                                    description: '',
+                                    publicData: {
+                                        businessName: businessName.trim(),
+                                        email,
+                                        abn,
+                                        website,
+                                        instagram,
+                                        facebook,
+                                    },
+                                });
+                            }}
+                            onChange={onChange}
+                            disabled={disabled}
+                            ready={ready}
+                            updated={panelUpdated}
+                            updateInProgress={updateInProgress}
+                            fetchErrors={errors}
+                            publicData={publicData}
+                        />
+                    </div>
+                </LayoutWrapperMain>
+            </LayoutSideNavigation>
         </Page>
     );
 };

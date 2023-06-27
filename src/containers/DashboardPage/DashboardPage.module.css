@@ -1,13 +1,17 @@
 @import '../../styles/customMediaQueries.css';
 @import '../../styles/propertySets.css';
 
+.sideNavigationWrapper {
+
+}
+
 .topbarHeader {
   background-color: #fff;
   box-shadow: 0px 0px 3px rgb(0 0 0 / 29%);
 
   &.stickyNavbar {
     background-color: #fff !important;
-    box-shadow: 0px 0px 3px rgb(0 0 0 / 29%) !important;
+    box-shadow: 0px 4px 10px 0px #00000014;
   }
 
   &.landingPageHeader {
