@@ -325,3 +325,30 @@
     }
   }
 }
+
+.shippingContent {
+  width: 40%;
+
+  & .shippingBox {
+    & .shippingHeading {
+      border-bottom: 1px solid #6B6B6B;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 29px;
+      letter-spacing: 0em;
+      color: #000;
+      margin-top: 0;
+      margin-bottom: 20px;
+      width: 65%;
+    }
+  }
+
+  & .dimensionRow {
+    display: flex;
+    justify-content: space-between;
+
+    & .inputBox {
+      width: calc(34% - 5px);
+    }
+  }
+}

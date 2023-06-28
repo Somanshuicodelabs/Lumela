@@ -128,6 +128,45 @@ const EditListingProductFormComponent = props => (
             const allowNotifyLabel = intl.formatMessage({
                 id: 'ProductListingPage.allowNotifyLabel',
             });
+            const bothLabel = intl.formatMessage({
+                id: 'ProductListingPage.bothLabel',
+            });
+            const shippingOnlyLabel = intl.formatMessage({
+                id: 'ProductListingPage.shippingOnlyLabel',
+            });
+            const localPickupOnlyLabel = intl.formatMessage({
+                id: 'ProductListingPage.localPickupOnlyLabel',
+            });
+            const weightLabel = intl.formatMessage({
+                id: 'ProductListingPage.weightLabel',
+            });
+            const approxWeightPlaceholder = intl.formatMessage({
+                id: 'ProductListingPage.approxWeightPlaceholder',
+            });
+            const dimensionsPlaceholder = intl.formatMessage({
+                id: 'ProductListingPage.dimensionsPlaceholder',
+            });
+            const dimensionsLabel = intl.formatMessage({
+                id: 'ProductListingPage.dimensionsLabel',
+            });
+            const WidthPlaceholder = intl.formatMessage({
+                id: 'ProductListingPage.WidthPlaceholder',
+            });
+            const widthLabel = intl.formatMessage({
+                id: 'ProductListingPage.widthLabel',
+            });
+            const heightPlaceholder = intl.formatMessage({
+                id: 'ProductListingPage.heightPlaceholder',
+            });
+            const heightLabel = intl.formatMessage({
+                id: 'ProductListingPage.heightLabel',
+            });
+            const processTimeLabel = intl.formatMessage({
+                id: 'ProductListingPage.processTimeLabel',
+            });
+
+
+            
 
             const classes = classNames(css.root, className);
             const submitReady = (updated && pristine) || ready;
@@ -453,6 +492,93 @@ const EditListingProductFormComponent = props => (
                                                 className={css.radioButton}
                                             />
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className={css.content}>
+                            <h3 className={css.formHeading}>
+                                <FormattedMessage id='ProductListingPage.Shipping' />
+                            </h3>
+                            <div className={css.shippingContent}>
+                                <div className={css.stockLeft}>
+                                    <div className={css.backOrder}>
+                                        <div className={css.radioLabelName}>
+                                            <FormattedMessage id="ProductListingPage.howCustomersGetYourProduct" />
+                                        </div>
+                                        <div className={css.radioRowInput}>
+                                            <FieldRadioButton
+                                                id="Both"
+                                                name="Both"
+                                                label={bothLabel}
+                                                value="Both"
+                                                className={css.radioButton}
+                                            />
+                                            <FieldRadioButton
+                                                id="shippingOnly"
+                                                name="shippingOnly"
+                                                label={shippingOnlyLabel}
+                                                value="shippingOnly"
+                                                className={css.radioButton}
+                                            />
+                                            <FieldRadioButton
+                                                id="localPickupOnly"
+                                                name="localPickupOnly"
+                                                label={localPickupOnlyLabel}
+                                                value="localPickupOnly"
+                                                className={css.radioButton}
+                                            />
+                                        </div>
+                                        <div className={css.shippingBox}>
+                                            <h3 className={css.shippingHeading}>
+                                                <FormattedMessage id="ProductListingPage.parcelDetails" />
+                                            </h3>
+                                        </div>
+                                        <div>
+                                            <FieldTextInput
+                                                id="weight"
+                                                name="weight"
+                                                className={css.inputBox}
+                                                type="text"
+                                                placeholder={approxWeightPlaceholder}
+                                                label={weightLabel}
+                                            />
+                                        </div>
+                                        <div className={css.dimensionRow}>
+                                            <FieldTextInput
+                                                id="dimensions"
+                                                name="dimensions"
+                                                className={css.inputBox}
+                                                type="text"
+                                                placeholder={dimensionsPlaceholder}
+                                                label={dimensionsLabel}
+                                            />
+                                            <FieldTextInput
+                                                id="width"
+                                                name="width"
+                                                className={css.inputBox}
+                                                type="text"
+                                                placeholder={WidthPlaceholder}
+                                                label={widthLabel}
+                                            />
+                                            <FieldTextInput
+                                                id="height"
+                                                name="height"
+                                                className={css.inputBox}
+                                                type="text"
+                                                placeholder={heightPlaceholder}
+                                                label={heightLabel}
+                                            />
+                                        </div>
+                                        <FieldSelect
+                                            id="category"
+                                            name="category"
+                                            className={css.inputBox}
+                                            label={processTimeLabel}
+                                        >
+                                            <option disabled value="Select">Choose a time</option>
+                                            <option value="">1 PM</option>
+                                        </FieldSelect>
                                     </div>
                                 </div>
                             </div>
