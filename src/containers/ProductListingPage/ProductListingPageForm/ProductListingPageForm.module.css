@@ -190,6 +190,34 @@
     }
   }
 
+  .addImageWrapper {
+    float: left;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 4;
+  
+    &::after {
+      content: '.';
+      visibility: hidden;
+      display: block;
+      height: 0;
+      clear: both;
+    }
+  }
+
+  .aspectRatioWrapper {
+    padding-bottom: calc(100% * (3 / 3));
+  }
+
+  .addImageInput,
+.uploadAvatarInput {
+  display: none;
+}
+
   & .addImage {
     /* Layout */
     /* Maintain aspect ratio */
@@ -352,3 +380,4 @@
     }
   }
 }
+
