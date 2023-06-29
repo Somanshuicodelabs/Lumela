@@ -79,57 +79,64 @@ export const ListingCardComponent = props => {
 
   const setActivePropsMaybe = setActiveListing
     ? {
-        onMouseEnter: () => setActiveListing(currentListing.id),
-        onMouseLeave: () => setActiveListing(null),
-      }
+      onMouseEnter: () => setActiveListing(currentListing.id),
+      onMouseLeave: () => setActiveListing(null),
+    }
     : null;
 
   return (
     <NamedLink className={classes} name="ListingPage" params={{ id, slug }}>
-    <div className={css.category}>
-      <div className={css.categoryImg}>
-        <span className={css.favorite}>
-          <IconFavorite />
-        </span>
-        <div
-          className={css.threeToTwoWrapper}
-          onMouseEnter={() => setActiveListing(currentListing.id)}
-          onMouseLeave={() => setActiveListing(null)}
-        >
-          <div className={css.aspectWrapper}>
-            <LazyImage
-              rootClassName={css.rootForImage}
-              alt={title}
-              image={firstImage}
-              variants={variants}
-              sizes={renderSizes}
-            />
+      <AspectRatioWrapper
+        className={css.aspectRatioWrapper}
+        width={aspectWidth}
+        height={aspectHeight}
+        {...setActivePropsMaybe}
+      >
+        <LazyImage
+          rootClassName={css.rootForImage}
+          alt={title}
+          image={firstImage}
+          variants={variants}
+          sizes={renderSizes}
+        />
+      </AspectRatioWrapper>
+      <div className={css.category}>
+        <div className={css.categoryImg}>
+          <span className={css.favorite}>
+            <IconFavorite />
+          </span>
+          <div
+            className={css.threeToTwoWrapper}
+            onMouseEnter={() => setActiveListing(currentListing.id)}
+            onMouseLeave={() => setActiveListing(null)}
+          >
+            <div className={css.aspectWrapper}>
+            </div>
           </div>
         </div>
-      </div>
-      <div className={css.categoryInfo}>
-        <div className={css.categoryHead}>
-          <h2>{publicData?.businessName} </h2>
-          <span className={css.rating}>
-            4.7 <IconReviewStar />
-          </span>
-        </div>
-        {publicData?.description?.description && (
-          <p
-            className={classNames(
-              css.descripton,
-              isLandingPageListingCard && css.hideOnLandingCard
-            )}
-          >
-            {publicData?.description?.description}
-          </p>
-        )}
-        <div className={css.cardContact}>
-          <p className={css.location}>
-            {!isLandingPageListingCard && <IconLocationPin />}
-            <span>{publicData?.location?.address}</span>
-          </p>
-          {/* <p
+        <div className={css.categoryInfo}>
+          <div className={css.categoryHead}>
+            <h2>{publicData?.businessName} </h2>
+            <span className={css.rating}>
+              4.7 <IconReviewStar />
+            </span>
+          </div>
+          {publicData?.description?.description && (
+            <p
+              className={classNames(
+                css.descripton,
+                isLandingPageListingCard && css.hideOnLandingCard
+              )}
+            >
+              {publicData?.description?.description}
+            </p>
+          )}
+          <div className={css.cardContact}>
+            <p className={css.location}>
+              {!isLandingPageListingCard && <IconLocationPin />}
+              <span>{publicData?.location?.address}</span>
+            </p>
+            {/* <p
             className={classNames(
               css.location,
               isLandingPageListingCard && css.hideOnLandingCard
@@ -147,11 +154,11 @@ export const ListingCardComponent = props => {
             <IconAt />
             <span>{publicData?.email}</span>
           </p> */}
+          </div>
         </div>
       </div>
-    </div>
-    {/* <div className={css.info}> */}
-    {/* <div className={css.mainInfo}>
+      {/* <div className={css.info}> */}
+      {/* <div className={css.mainInfo}>
         <div className={css.title}>
           {richText(title, {
             longWordMinLength: MIN_LENGTH_FOR_LONG_WORDS,
@@ -164,7 +171,7 @@ export const ListingCardComponent = props => {
           ) : null}
         </div>
       </div> */}
-    {/* <div className={css.price}>
+      {/* <div className={css.price}>
         <div className={css.priceValue} title={priceTitle}>
           {formattedPrice}
         </div>
@@ -172,8 +179,8 @@ export const ListingCardComponent = props => {
           <FormattedMessage id={unitTranslationKey} />
         </div>
       </div> */}
-    {/* </div> */}
-  </NamedLink>
+      {/* </div> */}
+    </NamedLink>
   );
 };
 
