@@ -315,6 +315,7 @@ input {
 textarea {
   @apply --marketplaceInputStyles;
   @apply --marketplaceInputFontStyles;
+  border: 1px solid #b9b9b9;
 
   /* Todo: All textareas are using auto-sizing extension which currently calculates required space incorrectly when box-sixing is "border-box" */
   box-sizing: content-box;

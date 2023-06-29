@@ -1,0 +1,20 @@
+.contentBox {
+    
+}
+
+.productFormWrapper {
+    margin: unset !important;
+    max-width: 100% !important;
+}
+
+
+
+.mainHeading {
+    margin-top: 0;
+    margin-bottom: 26px;
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 44px;
+    letter-spacing: 0em;
+    text-transform: capitalize;
+}

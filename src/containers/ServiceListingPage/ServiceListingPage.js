@@ -10,14 +10,15 @@ import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 
 import { useConfiguration } from '../../context/configurationContext';
 import { H3, Page, Footer, LayoutSingleColumn, LayoutWrapperAccountSettingsSideNav, FieldTextInput, LayoutSideNavigation, LayoutWrapperMain, UserNav } from '../../components';
-import TopbarContainer from '../TopbarContainer/TopbarContainer';
+import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import { isScrollingDisabled } from '../../ducks/ui.duck';
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { propTypes } from '../../util/types';
-import ServiceListingPageForm from './ServiceListingPageForm/ServiceListingPageForm';
-import css from './ServiceListingPage.module.css';
+// import ProductListingPageForm from './ProductListingPageForm/ProductListingPageForm';
 // import { Form } from 'react-final-form';
+import css from './ServiceListingPage.module.css';
+import ServiceListingPageForm from './ServiceListingPageForm/ServiceListingPageForm';
 
 const { UUID } = sdkTypes;
 
@@ -59,6 +60,7 @@ export const ServiceListingPageComponent = props => {
 
     const [resetForm, setResetForm] = useState(false);
     const currentListing = ensureOwnListing(listing);
+    const unitType = listing?.attributes?.publicData?.unitType;
     const { publicData = {} } = currentListing.attributes;
     const restImages = images && images.length
         ? mainImageId
@@ -82,25 +84,29 @@ export const ServiceListingPageComponent = props => {
     return (
         <Page title={schemaTitle} scrollingDisabled={scrollingDisabled}>
             <LayoutSideNavigation
+                mainContentBox={true}
                 topbar={
                     <>
                         <TopbarContainer
-                            currentPage="CreateCouponPage"
+                            currentPage="ProductListingPage"
                             desktopClassName={css.desktopTopbar}
                             mobileClassName={css.mobileTopbar}
                         />
-                        {/* <UserNav currentPage="CreateCouponPage" /> */}
+                        {/* <UserNavUserNav currentPage="ProductListingPage" /> */}
                     </>
                 }
                 sideNav={null}
                 useAccountSettingsNav
-                currentPage="CreateCouponPage"
+                currentPage="ProductListingPage"
                 footer={<Footer />}
             >
                 <LayoutWrapperMain>
-                    <div>
+                    <h1 className={css.mainHeading}>
+                        <FormattedMessage id="ProductListingPage.addNewServices" />
+                    </h1>
+                    <div className={css.contentBox}>
                         <ServiceListingPageForm
-                            // className={css.form}
+                            className={css.productFormWrapper}
                             images={restImages}
                             initialValues={
                                 resetForm
@@ -135,6 +141,7 @@ export const ServiceListingPageComponent = props => {
                             }}
                             onChange={onChange}
                             disabled={disabled}
+                            unitType={unitType}
                             ready={ready}
                             updated={panelUpdated}
                             updateInProgress={updateInProgress}

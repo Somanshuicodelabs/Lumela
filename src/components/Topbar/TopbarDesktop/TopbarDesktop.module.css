@@ -10,7 +10,10 @@
   display: flex;
   align-items: center;
 }
-
+.signupNow{
+  cursor: pointer;
+  margin-left: 18%;
+}
 /* logo */
 .logoLink {
   font-size: 1.75rem;

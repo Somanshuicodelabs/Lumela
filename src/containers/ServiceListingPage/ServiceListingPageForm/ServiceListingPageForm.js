@@ -7,10 +7,12 @@ import classNames from 'classnames';
 import { propTypes } from '../../../util/types';
 import { maxLength, required, composeValidators } from '../../../util/validators';
 import * as validators from '../../../util/validators';
-import { Form, Button, FieldTextInput, NamedLink, AddImages, ValidationError } from '../../../components';
+import { Form, Button, FieldTextInput, NamedLink, AddImages, ValidationError, FieldSelect, FieldRadioButton, FieldCurrencyInput } from '../../../components';
 import css from './ServiceListingPageForm.module.css';
 import IconCollection from '../../../components/IconCollection/IconCollection';
 import IconCamera from '../../../components/IconCamera/IconCamera';
+import { } from '../../../examples';
+import appSettings from '../../../config/settings';
 
 const TITLE_MAX_LENGTH = 60;
 const ACCEPT_IMAGES = 'image/*';
@@ -37,7 +39,8 @@ const EditListingServiceFormComponent = props => (
                 setResetForm,
                 images,
                 publicData,
-                onRemoveImage
+                onRemoveImage,
+                unitType,
             } = formRenderProps;
 
 
@@ -45,7 +48,19 @@ const EditListingServiceFormComponent = props => (
                 id: 'EditListingDescriptionForm.businessName',
             });
             const businessNRequiredMessage = intl.formatMessage({
-                id: 'EditListingDescriptionForm.businessnameRequired',
+                id: 'EditListingDescriptionForm.titleRequired',
+            });
+            const titlePlaceholder = intl.formatMessage({
+                id: 'ServiceListingPageForm.titlePlaceholder',
+            });
+            const tagsPlaceholder = intl.formatMessage({
+                id: 'ServiceListingPageForm.tagsPlaceholder',
+            });
+            const shortDescriptionPlaceholder = intl.formatMessage({
+                id: 'ServiceListingPageForm.shortDescriptionPlaceholder',
+            });
+            const technicalNotePlaceholder = intl.formatMessage({
+                id: 'ServiceListingPageForm.technicalNotePlaceholder',
             });
             const abnRequiredMessage = intl.formatMessage({
                 id: 'EditListingDescriptionForm.abnRequired',
@@ -97,6 +112,37 @@ const EditListingServiceFormComponent = props => (
                 </p>
             ) : null;
 
+            const allocateUniqueProduct = intl.formatMessage({
+                id: 'ProductListingPage.allocateUniqueProduct',
+            });
+            const hrsLabel = intl.formatMessage({
+                id: 'ServiceListingPage.hrsLabel',
+            });
+            const minsLabel = intl.formatMessage({
+                id: 'ServiceListingPage.minsLabel',
+            });
+            const cancelationPolicyLabel = intl.formatMessage({
+                id: 'ServiceListingPage.cancelationPolicyLabel',
+            });
+            const maxNoLabel = intl.formatMessage({
+                id: 'ProductListingPage.maxNoLabel',
+            });
+            const yesLabel = intl.formatMessage({
+                id: 'ProductListingPage.yesLabel',
+            });
+            const noLabel = intl.formatMessage({
+                id: 'ProductListingPage.noLabel',
+            });
+            const notAllowLabel = intl.formatMessage({
+                id: 'ProductListingPage.notAllowLabel',
+            });
+            const allowLabel = intl.formatMessage({
+                id: 'ProductListingPage.allowLabel',
+            });
+            const allowNotifyLabel = intl.formatMessage({
+                id: 'ProductListingPage.allowNotifyLabel',
+            });
+
             const classes = classNames(css.root, className);
             const submitReady = (updated && pristine) || ready;
             const submitInProgress = updateInProgress;
@@ -125,106 +171,325 @@ const EditListingServiceFormComponent = props => (
                     {errorMessageCreateListingDraft}
                     {errorMessageUpdateListing}
                     {errorMessageShowListing}
-                    <div>
-                        <FieldTextInput
-                            id="title"
-                            name="title"
-                            className={css.inputBox}
-                            type="text"
-                            label="title"
-                            // maxLength={TITLE_MAX_LENGTH}
-                            validate={composeValidators(required(businessNRequiredMessage), maxLength60Message)}
-                            autoFocus
-                            required
-                        />
-                        <FieldTextInput
-                            id="brand"
-                            name="brand"
-                            className={css.inputBox}
-                            label="brand"
-                            validate={required(abnRequiredMessage)}
-                        />
-                        <FieldTextInput
-                            id="color"
-                            name="color"
-                            className={css.inputBox}
-                            type="text"
-                            label="color"
-                            validate={validators.composeValidators(emailRequired, emailValid)}
-                        />
-                        <FieldTextInput
-                            id="size"
-                            name="size"
-                            className={css.inputBox}
-                            type="text"
-                            label="size"
-                            validate={validators.composeValidators(emailRequired, emailValid)}
-                        />
-                        <FieldTextInput
-                            id="category"
-                            name="category"
-                            className={css.inputBox}
-                            type="text"
-                            label="category"
-                        />
-                        <FieldTextInput
-                            id="instagram"
-                            name="instagram"
-                            className={css.inputBox}
-                            type="text"
-                            label={InstagramMessage}
-                        />
-                        <FieldTextInput
-                            id="sort description"
-                            name="sort description"
-                            className={css.inputBox}
-                            type="text"
-                            label="sort description"
-                        />
-                        <FieldTextInput
-                            id="sort"
-                            name="sort"
-                            className={css.inputBox}
-                            type="text"
-                            label="add a sellers note for this description"
-                        />
-                        <FieldTextInput
-                            id="cost"
-                            name="cost"
-                            className={css.inputBox}
-                            type="text"
-                            label="cost"
-                        />
-                        <FieldTextInput
-                            id="Photos"
-                            name="Photos"
-                            className={css.inputBox}
-                            type="text"
-                            label="Photos"
-                        />
-                        <FieldTextInput
-                            id="Tags"
-                            name="Tags"
-                            className={css.inputBox}
-                            type="text"
-                            label="Tags"
-                        />
-                    </div>
-                    <div>
-                        <FieldTextInput
-                            id="Photos"
-                            name="Photos"
-                            className={css.inputBox}
-                            type="text"
-                            label="Photos"
-                        />
-                        <FieldTextInput
-                            id="Tags"
-                            name="Tags"
-                            className={css.inputBox}
-                            type="text"
-                            label="Tags"
-                        />
+                    <div className={css.mainWrapper}>
+                        <div className={css.content}>
+                            <h3 className={css.formHeading}>
+                                <FormattedMessage id='ProductListingPage.serviceDetails' />
+                            </h3>
+                            <div className={css.productFormWrapper}>
+                                <div className={css.formLeftInput}>
+                                    <FieldTextInput
+                                        id="title"
+                                        name="title"
+                                        className={css.inputBox}
+                                        type="text"
+                                        label="title"
+                                        placeholder={titlePlaceholder}
+                                        // maxLength={TITLE_MAX_LENGTH}
+                                        validate={composeValidators(required(businessNRequiredMessage), maxLength60Message)}
+                                        required
+                                    />
+                                    <FieldCurrencyInput
+                                        id={`price`}
+                                        name="price"
+                                        className={css.inputBox}
+                                        // autoFocus={autoFocus}
+                                        label={intl.formatMessage(
+                                            { id: 'EditListingPricingForm.pricePerProduct' },
+                                            { unitType }
+                                        )}
+                                        placeholder={intl.formatMessage({ id: 'EditListingPricingForm.priceInputPlaceholder' })}
+                                        currencyConfig={appSettings.getCurrencyFormatting('AUD')}
+                                        // validate={priceValidators}
+                                    />
+                                    <FieldSelect
+                                        id="category"
+                                        name="category"
+                                        className={css.inputBox}
+                                        label="category"
+                                    >
+                                        <option value=""><FormattedMessage id="ServiceListingPageForm.categoryPlaceholder"/></option>
+                                        <option value="">category 1</option>
+                                    </FieldSelect>
+                                    <div className={css.tagsInput}>
+                                        <FieldTextInput
+                                            id="tags"
+                                            name="tags"
+                                            className={css.inputBox}
+                                            type="text"
+                                            label="Tags"
+                                            placeholder={tagsPlaceholder}
+                                            //validate={composeValidators(required(titleRequiredMessage), maxLength60Message)}
+                                            onKeyUp={event => {
+                                                event.preventDefault();
+                                                if (event.keyCode === 13 && event.target.value) {
+                                                    event.preventDefault();
+                                                    const tag = values.tag || [];
+
+                                                    tag.push(event.target.value);
+                                                    form.change('tag', tag);
+                                                    form.change('tags', '');
+                                                }
+                                            }}
+                                            onMouseOut={event => {
+                                                event.preventDefault();
+                                                event.preventDefault();
+                                                const tag = values.tag || [];
+                                                if (event.target.value && event.target.value.length > 0) {
+                                                    tag.push(event.target.value);
+                                                    form.change('tag', tag);
+                                                    form.change('tags', '');
+                                                }
+                                            }}
+                                        />
+                                        <div className={css.formRow}>
+                                            <div className={css.formFld}>
+                                                <div className={css.tagRow}>
+                                                    {values.tag && values.tag.length
+                                                        ? values.tag.map((hk, i) => (
+                                                            <div className={css.tagWrap} key={hk + i}>
+                                                                <span className={css.tagBox}>{hk}</span>
+                                                                <span
+                                                                    className={css.tagClose}
+                                                                    onClick={() => {
+                                                                        form.change('tag', values.tag.filter(h => h != hk));
+                                                                    }}
+                                                                >
+                                                                    <svg
+                                                                        width="10"
+                                                                        height="11"
+                                                                        viewBox="0 0 10 11"
+                                                                        fill="none"
+                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                    >
+                                                                        <path
+                                                                            d="M9.05541 10.0554C8.83037 10.2804 8.52516 10.4069 8.20691 10.4069C7.88866 10.4069 7.58345 10.2804 7.35841 10.0554L4.70741 7.02541L2.05641 10.0544C1.94531 10.1673 1.81296 10.2571 1.66698 10.3187C1.52101 10.3802 1.36429 10.4122 1.20589 10.4128C1.04748 10.4135 0.890512 10.3827 0.744038 10.3224C0.597565 10.2621 0.464484 10.1734 0.352472 10.0613C0.24046 9.94934 0.151734 9.81626 0.091412 9.66978C0.0310898 9.52331 0.000364857 9.36634 0.00100988 9.20793C0.0016549 9.04953 0.0336569 8.89281 0.09517 8.74684C0.156683 8.60086 0.24649 8.46851 0.35941 8.35741L3.11741 5.20741L0.35841 2.05541C0.24549 1.94431 0.155683 1.81196 0.09417 1.66598C0.0326569 1.52001 0.000654968 1.36329 9.94895e-06 1.20489C-0.00063507 1.04648 0.0300898 0.889512 0.0904121 0.743038C0.150734 0.596565 0.23946 0.463484 0.351472 0.351472C0.463484 0.23946 0.596565 0.150734 0.743038 0.0904121C0.889512 0.0300898 1.04648 -0.00063507 1.20489 9.94895e-06C1.36329 0.000654968 1.52001 0.0326569 1.66598 0.09417C1.81196 0.155683 1.94431 0.24549 2.05541 0.35841L4.70741 3.38941L7.35841 0.35841C7.46951 0.24549 7.60186 0.155683 7.74784 0.09417C7.89382 0.0326569 8.05053 0.000654968 8.20893 9.94895e-06C8.36734 -0.00063507 8.52431 0.0300898 8.67078 0.0904121C8.81726 0.150734 8.95034 0.23946 9.06235 0.351472C9.17436 0.463484 9.26309 0.596565 9.32341 0.743038C9.38373 0.889512 9.41445 1.04648 9.41381 1.20489C9.41317 1.36329 9.38116 1.52001 9.31965 1.66598C9.25814 1.81196 9.16833 1.94431 9.05541 2.05541L6.29741 5.20741L9.05541 8.35741C9.16698 8.46886 9.25549 8.6012 9.31588 8.74688C9.37627 8.89256 9.40735 9.04871 9.40735 9.20641C9.40735 9.36411 9.37627 9.52026 9.31588 9.66594C9.25549 9.81162 9.16698 9.94396 9.05541 10.0554Z"
+                                                                            fill="#353535"
+                                                                        />
+                                                                    </svg>
+                                                                </span>
+                                                            </div>
+                                                        ))
+                                                        : null}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className={css.formRightInput}>
+                                    <div className={css.formLeftInput}>
+                                    <FieldTextInput
+                                        id="shortDescription"
+                                        name="shortDescription"
+                                        className={css.inputBox}
+                                        type="textarea"
+                                        label="short description"
+                                        placeholder={shortDescriptionPlaceholder}
+                                    />
+                                    <FieldTextInput
+                                        id="technicalNotes"
+                                        name="technicalNotes"
+                                        className={css.inputBox}
+                                        type="textarea"
+                                        label="Technical notes"
+                                        placeholder={technicalNotePlaceholder}
+                                    />
+                                   
+                                    </div>
+                                    {/* <div className={css.gallaryContainer}>
+                                        <label htmlFor="images" className={css.photoLabel}>Photos</label>
+                                        <div className={css.imagesGallaryGrid}>
+                                            <AddImages
+                                                className={css.imagesField}
+                                                // className={classNames(
+                                                //   
+                                                //   images.length == 1 && css.imagesField1,
+                                                //   images.length == 2 && css.imagesField2,
+                                                //   images.length == 3 && css.imagesField3,
+                                                //   images.length > 3 && css.imagesFieldBig
+                                                // )}
+                                                images={images}
+                                                thumbnailClassName={css.thumbnail}
+                                                savedImageAltText={intl.formatMessage({
+                                                    id: 'EditListingPhotosForm.savedImageAltText',
+                                                })}
+                                                onRemoveImage={onRemoveImage}
+                                            >
+                                                <Field
+                                                    id="addImage"
+                                                    name="addImage"
+                                                    accept={ACCEPT_IMAGES}
+                                                    form={null}
+                                                    label={chooseImageText}
+                                                    type="file"
+                                                    disabled={imageUploadRequested}
+                                                >
+                                                    {fieldprops => {
+                                                        const { accept, input, label, disabled: fieldDisabled } = fieldprops;
+                                                        const { name, type } = input;
+                                                        const onChange = e => {
+                                                            const file = e.target.files[0];
+                                                            form.change(`addImage`, file);
+                                                            form.blur(`addImage`);
+                                                            onImageUploadHandler(file);
+                                                        };
+                                                        const inputProps = { accept, id: name, name, onChange, type };
+                                                        return (
+                                                            <div className={css.addImageWrapper}>
+                                                                <div className={css.aspectRatioWrapper}>
+                                                                    {fieldDisabled ? null : (
+                                                                        <input {...inputProps} multiple className={css.addImageInput} />
+                                                                    )}
+                                                                    <label htmlFor={name} className={css.addImage}>
+                                                                        {label}
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        );
+                                                    }}
+                                                </Field>
+                                                <Field
+                                                    component={props => {
+                                                        const { input, meta } = props;
+                                                        return (
+                                                            <div className={css.imageRequiredWrapper}>
+                                                                <input {...input} />
+                                                                <ValidationError fieldMeta={meta} />
+                                                            </div>
+                                                        );
+                                                    }}
+                                                    name="images"
+                                                    type="hidden"
+                                                    validate={composeValidators(validators.nonEmptyArray(imageRequiredMessage))}
+                                                />
+                                            </AddImages>
+                                            {images?.length == 0 ? (
+                                                <>
+                                                    <div className={css.imageBox}>
+                                                        <IconCollection name="ADD_IMAGE_ICON" />
+                                                    </div>
+                                                    <div className={css.imageBox}>
+                                                        <IconCollection name="ADD_IMAGE_ICON" />
+                                                    </div>
+                                                    <div className={css.imageBox}>
+                                                        <IconCollection name="ADD_IMAGE_ICON" />
+                                                    </div>
+                                                </>
+                                            ) : images?.length == 1 ? (
+                                                <>
+                                                    <div className={css.imageBox}>
+                                                        <IconCollection name="ADD_IMAGE_ICON" />
+                                                    </div>
+                                                    <div className={css.imageBox}>
+                                                        <IconCollection name="ADD_IMAGE_ICON" />
+                                                    </div>
+                                                </>
+                                            ) : images?.length == 2 ? (
+                                                <div className={css.imageBox}>
+                                                    <IconCollection name="ADD_IMAGE_ICON" />
+                                                </div>
+                                            ) : null}
+                                        </div>
+                                    </div> */}
+                                </div>
+                            </div>
+                        <p><FormattedMessage id="ServiceListingPage.bottomText"/></p>
+                        </div>
+                        <div className={css.content}>
+                            <h3 className={css.formHeading}>
+                                <FormattedMessage id='ServiceListingPage.bookingDetails' />
+                            </h3>
+                            <div className={css.stockContent}>
+                                <div className={css.stockLeft}>
+                              <div className={css.rowInput}>
+                                        <div className={css.mainRowBox}>
+                                        <p><FormattedMessage id="ServiceListingPage.bookingLength"/></p>
+                                            <div className={css.radioRow}>
+                                                <FieldTextInput
+                                                    id="hours"
+                                                    name="hours"
+                                                    type="number"
+                                                    label={hrsLabel}
+                                                    className={css.inputBox}
+                                                />
+                                                <FieldTextInput
+                                                    id="mins"
+                                                    name="mins"
+                                                    type="number"
+                                                    label={minsLabel}
+                                                    className={css.inputBox}
+                                                />
+                                            </div>
+                                            <FieldSelect
+                                                id="stockQuantity"
+                                                name="cancelationPolicy"
+                                                className={css.inputBox}
+                                                label={cancelationPolicyLabel}
+                                            >
+                                                <option value=''> When canncellation fees apply?</option>
+                                            </FieldSelect>
+                                        </div>
+                                        <div className={css.mainRowBox}>
+                                            <h3 className={css.stockHeading}>
+                                                <FormattedMessage id="ProductListingPage.orderLimits" />
+                                            </h3>
+                                            <div className={css.radioLabelName}>
+                                                <FormattedMessage id="ProductListingPage.doYouWantPut" />
+                                            </div>
+                                            <div className={css.radioRow}>
+                                                <FieldRadioButton
+                                                    id="yes"
+                                                    name="yes"
+                                                    label={hrsLabel}
+                                                    className={css.radioButton}
+                                                />
+                                                <FieldRadioButton
+                                                    id="no"
+                                                    name="no"
+                                                    label={minsLabel}
+                                                    className={css.radioButton}
+                                                />
+                                            </div>
+                                            <FieldTextInput
+                                                id="maxNo"
+                                                name="maxNo"
+                                                className={css.inputBox}
+                                                type="text"
+                                                label={maxNoLabel}
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className={css.backOrder}>
+                                        <div className={css.radioLabelName}>
+                                            <FormattedMessage id="ProductListingPage.allowBackorders" />
+                                        </div>
+                                        <div className={css.radioRowInput}>
+                                            <FieldRadioButton
+                                                id="notAllow"
+                                                name="notAllow"
+                                                label={notAllowLabel}
+                                                value="notAllow"
+                                                className={css.radioButton}
+                                            />
+                                            <FieldRadioButton
+                                                id="allow"
+                                                name="allow"
+                                                label={allowLabel}
+                                                value="allow"
+                                                className={css.radioButton}
+                                            />
+                                            <FieldRadioButton
+                                                id="allowNotify"
+                                                name="allowNotify"
+                                                label={allowNotifyLabel}
+                                                value="allowNotify"
+                                                className={css.radioButton}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </Form>
             );
