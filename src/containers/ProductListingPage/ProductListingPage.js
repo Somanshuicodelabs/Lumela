@@ -39,37 +39,20 @@ export const ProductListingPageComponent = props => {
     const {
         intl,
         params,
-        image: savedImage,
         onImageUpload,
-        uploadImageError,
-        getOwnListing,
         scrollingDisabled,
-        uploadInProgress,
-        createListingInProgress,
-        onRequestCreateCoupon,
-        onRequestUpdateListing,
-        couponTemplateAfterImageUpload,
-        currentUserListing,
-        onGetAllMerchant,
-        handleSubmit,
         onCreateListing,
         onCreateListingDraft,
-        onUpdateListing,
         user,
         currentUser,
         listing,
-        // submitButtonText,
         disabled,
         ready,
-        onSubmit,
         onChange,
         panelUpdated,
         updateInProgress,
         errors,
-        image,
         page
-        // onShowListing,
-        // createListingError,
     } = props;
 
     const currentListing = ensureOwnListing(listing);
@@ -256,13 +239,6 @@ ProductListingPageComponent.propTypes = {
 const mapStateToProps = state => {
     const page = state.EditListingPage;
     const { currentUser, currentUserListing } = state.user;
-    // const {
-    //   uploadInProgress,
-    //   updateInProgress
-    //   createListingError,
-    //   createListingInProgress,
-    //   couponTemplateAfterImageUpload,
-    // } = state.CreateCouponPage;
 
     const getOwnListing = id => {
         const listings = getMarketplaceEntities(state, [{ id, type: 'ownListing' }]);
@@ -273,24 +249,12 @@ const mapStateToProps = state => {
         currentUser,
         currentUserListing,
         page,
-        //   image,
         getOwnListing,
-        scrollingDisabled: isScrollingDisabled(state),
-        //   updateInProgress,
-        //   uploadImageError,
-        //   uploadInProgress,
-        //   createListingError,
-        //   createListingInProgress,
-        //   couponTemplateAfterImageUpload
+        scrollingDisabled: isScrollingDisabled(state)
     };
 };
 
 const mapDispatchToProps = dispatch => ({
-    // onImageUpload: (data, config, templateType) => dispatch(uploadImage(data, config, templateType)),
-    // onRequestCreateCoupon: (values, config) => dispatch(requestCreateCoupon(values, config)),
-    // onShowListing: (id, config) => dispatch(showListing(id, config)),
-    // onRequestUpdateListing: (values, config) => dispatch(requestUpdateListing(values, config)),
-    // onGetAllMerchant: () => dispatch(getAllMerchats()),
     onUpdateListing: (tab, values, config) => dispatch(requestUpdateListing(tab, values, config)),
     onCreateListingDraft: (values, config) => dispatch(requestCreateListingDraft(values, config)),
     onCreateListing: (values, config) => dispatch(requestCreateListing(values, config)),
