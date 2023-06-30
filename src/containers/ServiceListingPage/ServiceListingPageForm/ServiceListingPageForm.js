@@ -41,6 +41,8 @@ const EditListingServiceFormComponent = props => (
                 publicData,
                 onRemoveImage,
                 unitType,
+                onCreateDraftServiceListing,
+                config
             } = formRenderProps;
 
 
@@ -115,6 +117,9 @@ const EditListingServiceFormComponent = props => (
             const allocateUniqueProduct = intl.formatMessage({
                 id: 'ProductListingPage.allocateUniqueProduct',
             });
+            const noOfBookingLabel = intl.formatMessage({
+                id: 'ServiceListingPage.noOfBookingLabel',
+            });
             const hrsLabel = intl.formatMessage({
                 id: 'ServiceListingPage.hrsLabel',
             });
@@ -124,11 +129,11 @@ const EditListingServiceFormComponent = props => (
             const cancelationPolicyLabel = intl.formatMessage({
                 id: 'ServiceListingPage.cancelationPolicyLabel',
             });
-            const maxNoLabel = intl.formatMessage({
-                id: 'ProductListingPage.maxNoLabel',
+            const monthsLabel = intl.formatMessage({
+                id: 'ServiceListingPage.monthsLabel',
             });
-            const yesLabel = intl.formatMessage({
-                id: 'ProductListingPage.yesLabel',
+            const daysLabel = intl.formatMessage({
+                id: "ServiceListingPage.daysLabel",
             });
             const noLabel = intl.formatMessage({
                 id: 'ProductListingPage.noLabel',
@@ -403,7 +408,7 @@ const EditListingServiceFormComponent = props => (
                                 <div className={css.stockLeft}>
                               <div className={css.rowInput}>
                                         <div className={css.mainRowBox}>
-                                        <p><FormattedMessage id="ServiceListingPage.bookingLength"/></p>
+                                            <p><FormattedMessage id="ServiceListingPage.bookingLength" /></p>
                                             <div className={css.radioRow}>
                                                 <FieldTextInput
                                                     id="hours"
@@ -421,75 +426,103 @@ const EditListingServiceFormComponent = props => (
                                                 />
                                             </div>
                                             <FieldSelect
-                                                id="stockQuantity"
+                                                id="cancelationPolicy"
                                                 name="cancelationPolicy"
                                                 className={css.inputBox}
                                                 label={cancelationPolicyLabel}
                                             >
                                                 <option value=''> When canncellation fees apply?</option>
                                             </FieldSelect>
+
+                                            <FieldTextInput
+                                                id="noOfBooking"
+                                                name="noOfBooking"
+                                                type="number"
+                                                label={noOfBookingLabel}
+                                                className={css.inputBox}
+                                            />
                                         </div>
                                         <div className={css.mainRowBox}>
-                                            <h3 className={css.stockHeading}>
-                                                <FormattedMessage id="ProductListingPage.orderLimits" />
-                                            </h3>
-                                            <div className={css.radioLabelName}>
-                                                <FormattedMessage id="ProductListingPage.doYouWantPut" />
-                                            </div>
+                                        <p><FormattedMessage id="ServiceListingPage.bookable"/></p>
                                             <div className={css.radioRow}>
-                                                <FieldRadioButton
-                                                    id="yes"
-                                                    name="yes"
-                                                    label={hrsLabel}
-                                                    className={css.radioButton}
+                                                <FieldTextInput
+                                                    id="months"
+                                                    name="months"
+                                                    type="number"
+                                                    label={monthsLabel}
+                                                    className={css.inputBox}
                                                 />
-                                                <FieldRadioButton
-                                                    id="no"
-                                                    name="no"
-                                                    label={minsLabel}
-                                                    className={css.radioButton}
+                                                <FieldTextInput
+                                                    id="days"
+                                                    name="days"
+                                                    type="number"
+                                                    label={daysLabel}
+                                                    className={css.inputBox}
                                                 />
                                             </div>
-                                            <FieldTextInput
-                                                id="maxNo"
-                                                name="maxNo"
-                                                className={css.inputBox}
-                                                type="text"
-                                                label={maxNoLabel}
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className={css.backOrder}>
-                                        <div className={css.radioLabelName}>
-                                            <FormattedMessage id="ProductListingPage.allowBackorders" />
-                                        </div>
-                                        <div className={css.radioRowInput}>
-                                            <FieldRadioButton
-                                                id="notAllow"
-                                                name="notAllow"
-                                                label={notAllowLabel}
-                                                value="notAllow"
-                                                className={css.radioButton}
-                                            />
-                                            <FieldRadioButton
-                                                id="allow"
-                                                name="allow"
-                                                label={allowLabel}
-                                                value="allow"
-                                                className={css.radioButton}
-                                            />
-                                            <FieldRadioButton
-                                                id="allowNotify"
-                                                name="allowNotify"
-                                                label={allowNotifyLabel}
-                                                value="allowNotify"
-                                                className={css.radioButton}
-                                            />
+                                            <p><FormattedMessage id="ServiceListingPage.bookableAdvance"/></p>
+                                            <div className={css.radioRow}>
+                                                <FieldTextInput
+                                                    id="advanceMonths"
+                                                    name="advanceMonths"
+                                                    type="number"
+                                                    label={monthsLabel}
+                                                    className={css.inputBox}
+                                                />
+                                                <FieldTextInput
+                                                    id="advanceDays"
+                                                    name="advanceDays"
+                                                    type="number"
+                                                    label={daysLabel}
+                                                    className={css.inputBox}
+                                                />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <Button type="button" onClick={()=>{
+                            const {
+                                title,
+                                price,
+                                category,
+                                shortDescription,
+                                technicalNotes,
+                                hours,
+                                mins,
+                                cancelationPolicy,
+                                noOfBooking,
+                                months,
+                                days,
+                                advanceMonths,
+                                advanceDays,
+                                tag
+                            } = values;
+
+                            const updatedValues = {
+                                title: title,
+                                price,
+                                description: '',
+                                publicData: {
+                                    category,
+                                    shortDescription,
+                                    technicalNotes,
+                                    hours,
+                                    mins,
+                                    cancelationPolicy,
+                                    noOfBooking,
+                                    months,
+                                    days,
+                                    advanceMonths,
+                                    advanceDays,
+                                    listingType: 'service',
+                                    tag
+                                },
+                            }
+                            onCreateDraftServiceListing(updatedValues,config);
+                        }}><FormattedMessage id="ServiceListingPage.saveDraftButton"/></Button>
+                        <Button type="submit"><FormattedMessage id="ServiceListingPage.addButton"/></Button>
                     </div>
                 </Form>
             );

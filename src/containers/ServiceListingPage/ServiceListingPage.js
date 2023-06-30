@@ -19,6 +19,8 @@ import { propTypes } from '../../util/types';
 // import { Form } from 'react-final-form';
 import css from './ServiceListingPage.module.css';
 import ServiceListingPageForm from './ServiceListingPageForm/ServiceListingPageForm';
+import { createExpertListing } from './ServiceListingPage.duck';
+import { requestCreateListingDraft, requestUpdateListing } from '../EditListingPage/EditListingPage.duck';
 
 const { UUID } = sdkTypes;
 
@@ -51,9 +53,10 @@ export const ServiceListingPageComponent = props => {
         panelUpdated,
         updateInProgress,
         errors,
-        images
-        // onShowListing,
-        // createListingError,
+        images,
+        onCreateServiceListing,
+        onCreateDraftServiceListing,
+        onUpdateUserListing
     } = props;
 
 
@@ -108,36 +111,53 @@ export const ServiceListingPageComponent = props => {
                         <ServiceListingPageForm
                             className={css.productFormWrapper}
                             images={restImages}
-                            initialValues={
-                                resetForm
-                                    ? {}
-                                    : {
-                                        // businessName: publicData?.businessName,
-                                        // email: publicData?.email,
-                                        // abn: publicData?.abn,
-                                        // website: publicData?.website,
-                                        // instagram: publicData?.instagram,
-                                        // facebook: publicData?.facebook,
-                                        // images
-                                    }
+                            onCreateDraftServiceListing={onCreateDraftServiceListing}
+                            config={config}
+                            initialValues={{}
                             }
                             saveActionMsg={submitButtonText}
                             setResetForm={() => setResetForm(true)}
                             onSubmit={values => {
-                                const { businessName, email, abn, website, instagram, facebook } = values;
+                                const {
+                                    title,
+                                    price,
+                                    category,
+                                    shortDescription,
+                                    technicalNotes,
+                                    hours,
+                                    mins,
+                                    cancelationPolicy,
+                                    noOfBooking,
+                                    months,
+                                    days,
+                                    advanceMonths,
+                                    advanceDays,
+                                    tag
+                                } = values;
 
-                                onSubmit({
-                                    title: businessName.trim(),
+                                const updatedValues = {
+                                    title: title,
+                                    price,
                                     description: '',
                                     publicData: {
-                                        businessName: businessName.trim(),
-                                        email,
-                                        abn,
-                                        website,
-                                        instagram,
-                                        facebook,
+                                        category,
+                                        shortDescription,
+                                        technicalNotes,
+                                        hours,
+                                        mins,
+                                        cancelationPolicy,
+                                        noOfBooking,
+                                        months,
+                                        days,
+                                        advanceMonths,
+                                        advanceDays,
+                                        listingType: 'service',
+                                        tag
                                     },
-                                });
+                                }
+                                onCreateServiceListing(updatedValues, config).then(() => {
+                                    // onUpdateUserListing(null config)
+                                })
                             }}
                             onChange={onChange}
                             disabled={disabled}
@@ -184,13 +204,6 @@ ServiceListingPageComponent.propTypes = {
 
 const mapStateToProps = state => {
     const { currentUser } = state.user;
-    // const {
-    //   uploadInProgress,
-    //   updateInProgress,
-    //   createListingError,
-    //   createListingInProgress,
-    //   couponTemplateAfterImageUpload,
-    // } = state.CreateCouponPage;
 
     const getOwnListing = id => {
         const listings = getMarketplaceEntities(state, [{ id, type: 'ownListing' }]);
@@ -199,24 +212,16 @@ const mapStateToProps = state => {
 
     return {
         currentUser,
-        //   image,
         getOwnListing,
         scrollingDisabled: isScrollingDisabled(state),
-        //   updateInProgress,
-        //   uploadImageError,
-        //   uploadInProgress,
-        //   createListingError,
-        //   createListingInProgress,
-        //   couponTemplateAfterImageUpload
     };
 };
 
 const mapDispatchToProps = dispatch => ({
     onImageUpload: (data, config, templateType) => dispatch(uploadImage(data, config, templateType)),
-    onRequestCreateCoupon: (values, config) => dispatch(requestCreateCoupon(values, config)),
-    onShowListing: (id, config) => dispatch(showListing(id, config)),
-    onRequestUpdateListing: (values, config) => dispatch(requestUpdateListing(values, config)),
-    onGetAllMerchant: () => dispatch(getAllMerchats())
+    onCreateServiceListing: (updatedValues, config) => dispatch(createExpertListing(updatedValues, config)),
+    onCreateDraftServiceListing: (updatedValues, config) => dispatch(requestCreateListingDraft(updatedValues, config)),
+    onUpdateUserListing: (tab, data, config) => dispatch(requestUpdateListing(tab, data, config))
 });
 
 const ServiceListingPage = compose(
