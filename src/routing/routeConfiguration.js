@@ -208,7 +208,7 @@ const routeConfiguration = (layoutConfig) => {
       auth: true,
       authPage: 'LoginPage',
       component: ServiceListingPage,
-      // loadData: pageDataLoadingAPI.ProductListingPage.loadData,
+      loadData: pageDataLoadingAPI.ServiceListingPage.loadData,
     },
     {
       path: '/about',

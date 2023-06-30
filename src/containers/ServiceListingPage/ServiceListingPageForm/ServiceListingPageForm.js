@@ -41,6 +41,8 @@ const EditListingServiceFormComponent = props => (
                 publicData,
                 onRemoveImage,
                 unitType,
+                onCreateDraftServiceListing,
+                config
             } = formRenderProps;
 
 
@@ -480,7 +482,44 @@ const EditListingServiceFormComponent = props => (
                                 </div>
                             </div>
                         </div>
-                        <Button type="submit"><FormattedMessage id="ServiceListingPage.saveDraftButton"/></Button>
+                        <Button type="button" onClick={()=>{
+                            const {
+                                title,
+                                price,
+                                category,
+                                shortDescription,
+                                technicalNotes,
+                                hours,
+                                mins,
+                                cancelationPolicy,
+                                noOfBooking,
+                                months,
+                                days,
+                                advanceMonths,
+                                advanceDays,
+                            } = values;
+
+                            const updatedValues = {
+                                title: title,
+                                price,
+                                description: '',
+                                publicData: {
+                                    category,
+                                    shortDescription,
+                                    technicalNotes,
+                                    hours,
+                                    mins,
+                                    cancelationPolicy,
+                                    noOfBooking,
+                                    months,
+                                    days,
+                                    advanceMonths,
+                                    advanceDays,
+                                    listingType: 'service',
+                                },
+                            }
+                            onCreateDraftServiceListing(updatedValues,config);
+                        }}><FormattedMessage id="ServiceListingPage.saveDraftButton"/></Button>
                         <Button type="submit"><FormattedMessage id="ServiceListingPage.addButton"/></Button>
                     </div>
                 </Form>
