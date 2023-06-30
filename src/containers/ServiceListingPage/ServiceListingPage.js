@@ -132,9 +132,7 @@ export const ServiceListingPageComponent = props => {
                                     days,
                                     advanceMonths,
                                     advanceDays,
-                                    listingType,
-                                    transactionProcessAlias,
-                                    unitType
+                                    tag
                                 } = values;
 
                                 const updatedValues = {
@@ -154,6 +152,7 @@ export const ServiceListingPageComponent = props => {
                                         advanceMonths,
                                         advanceDays,
                                         listingType: 'service',
+                                        tag
                                     },
                                 }
                                 onCreateServiceListing(updatedValues, config).then(() => {

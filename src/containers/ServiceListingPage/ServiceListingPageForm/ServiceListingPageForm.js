@@ -497,6 +497,7 @@ const EditListingServiceFormComponent = props => (
                                 days,
                                 advanceMonths,
                                 advanceDays,
+                                tag
                             } = values;
 
                             const updatedValues = {
@@ -516,6 +517,7 @@ const EditListingServiceFormComponent = props => (
                                     advanceMonths,
                                     advanceDays,
                                     listingType: 'service',
+                                    tag
                                 },
                             }
                             onCreateDraftServiceListing(updatedValues,config);
