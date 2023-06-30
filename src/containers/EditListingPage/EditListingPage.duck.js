@@ -65,7 +65,7 @@ const updateUploadedImagesState = (state, payload) => {
 };
 
 const getImageVariantInfo = listingImageConfig => {
-  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = listingImageConfig;
+  const { aspectWidth = 1, aspectHeight = 1, variantPrefix = 'listing-card' } = listingImageConfig || {};
   const aspectRatio = aspectHeight / aspectWidth;
   const fieldsImage = [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`];
 
@@ -591,6 +591,7 @@ const updateStockOfListingMaybe = (listingId, stockTotals, dispatch) => {
 // this means that there needs to be a sequence of calls:
 // create, set stock, show listing (to get updated currentStock entity)
 export function requestCreateListingDraft(data, config) {
+  console.log('data :>> ', data);
   return (dispatch, getState, sdk) => {
     dispatch(createListingDraftRequest(data));
     const { stockUpdate, images, ...rest } = data;
@@ -612,6 +613,7 @@ export function requestCreateListingDraft(data, config) {
     return sdk.ownListings
       .createDraft(ownListingValues, queryParams)
       .then(response => {
+        console.log('response :>> ', response);
         createDraftResponse = response;
         
         const listingId = response.data.data.id;
