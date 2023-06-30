@@ -1,8 +1,6 @@
-import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
-import { fetchCurrentUser } from '../../ducks/user.duck';
 import { createImageVariantConfig, types as sdkTypes } from '../../util/sdkLoader';
-import { denormalisedResponseEntities } from '../../util/data';
 import { storableError } from '../../util/errors';
+import { compareAndSetStock, updateStockOfListingMaybe } from '../EditListingPage/EditListingPage.duck';
 const { UUID } = sdkTypes;
 
 // ================ Action types ================ //
@@ -67,7 +65,7 @@ const getImageVariantInfo = listingImageConfig => {
 };
 
 
-export function requestCreateListing(data, config) {
+export function requestCreateListing(data, config,stockUpdateMaybe) {
     return (dispatch, getState, sdk) => {
         dispatch(createListingRequest(data));
         const { stockUpdate, images, ...rest } = data;
@@ -87,14 +85,12 @@ export function requestCreateListing(data, config) {
 
         let createListingResponse = null;
         return sdk.ownListings
-            .create(ownListingValues)
-            .then(response => {
-                console.log('response :>> ', response);
+        .create(ownListingValues)
+        .then(response => {
                 createListingResponse = response;
 
                 const listingId = response.data.data.id;
-                // If stockUpdate info is passed through, update stock
-                return updateStockOfListingMaybe(listingId, stockUpdate, dispatch);
+                dispatch(updateStockOfListingMaybe(listingId, stockUpdate, dispatch))
             })
             .then(() => {
                 // Modify store to understand that we have created listing and can redirect away

@@ -57,7 +57,7 @@ class CurrencyInputComponent extends Component {
     const { currencyConfig, defaultValue, input, intl } = props;
     const initialValueIsMoney = input.value instanceof Money;
 
-    if (initialValueIsMoney && input.value.currency !== currencyConfig.currency) {
+    if (initialValueIsMoney && input.value.currency !== currencyConfig?.currency) {
       const e = new Error('Value currency different from marketplace currency');
       log.error(e, 'currency-input-invalid-currency', { currencyConfig, inputValue: input.value });
       throw e;
@@ -77,7 +77,7 @@ class CurrencyInputComponent extends Component {
       const unformattedValue = hasInitialValue
         ? truncateToSubUnitPrecision(
             ensureSeparator(initialValue.toString(), usesComma),
-            unitDivisor(currencyConfig.currency),
+            unitDivisor(currencyConfig?.currency),
             usesComma
           )
         : '';
@@ -171,7 +171,7 @@ class CurrencyInputComponent extends Component {
       // truncate decimals to subunit precision: 10000.999 => 10000.99
       const truncatedValueString = truncateToSubUnitPrecision(
         valueOrZero,
-        unitDivisor(currencyConfig.currency),
+        unitDivisor(currencyConfig?.currency),
         this.state.usesComma
       );
       const unformattedValue = !isEmptyString ? truncatedValueString : '';
@@ -187,7 +187,6 @@ class CurrencyInputComponent extends Component {
 
       return { formattedValue, value: unformattedValue, unformattedValue };
     } catch (e) {
-      // eslint-disable-next-line no-console
       console.error(e);
 
       // If an error occurs while filling input field, use previous values

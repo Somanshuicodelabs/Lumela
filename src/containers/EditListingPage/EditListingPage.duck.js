@@ -564,6 +564,7 @@ export function compareAndSetStock(listingId, oldTotal, newTotal) {
       .then(response => {
         // NOTE: compareAndSet returns the stock resource of the listing.
         // We update client app's internal state with these updated API entities.
+        console.log(response, '&& >>>>>>> && => response');
         dispatch(addMarketplaceEntities(response));
         dispatch(setStockSuccess(response));
       })
@@ -575,7 +576,7 @@ export function compareAndSetStock(listingId, oldTotal, newTotal) {
 }
 
 // Helper function to make compareAndSetStock call if stock update is needed.
-const updateStockOfListingMaybe = (listingId, stockTotals, dispatch) => {
+ export const updateStockOfListingMaybe = (listingId, stockTotals, dispatch) => {
   const { oldTotal, newTotal } = stockTotals || {};
   // Note: newTotal and oldTotal must be given, but oldTotal can be null
   const hasStockTotals = newTotal >= 0 && typeof oldTotal !== 'undefined';

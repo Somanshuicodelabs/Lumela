@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { arrayOf, bool, func, shape, string } from 'prop-types';
+import { arrayOf, bool, func, number, shape, string } from 'prop-types';
 import { compose } from 'redux';
 import { Field, Form as FinalForm } from 'react-final-form';
 import { intlShape, injectIntl, FormattedMessage } from '../../../util/reactIntl';
@@ -7,17 +7,45 @@ import classNames from 'classnames';
 import { propTypes } from '../../../util/types';
 import { maxLength, required, composeValidators } from '../../../util/validators';
 import * as validators from '../../../util/validators';
-import { Form, Button, FieldTextInput, NamedLink, AddImages, ValidationError, FieldSelect, FieldRadioButton } from '../../../components';
+import { Form, Button, FieldTextInput, NamedLink, AddImages, ValidationError, FieldSelect, FieldRadioButton, FieldCurrencyInput } from '../../../components';
 import css from './ProductListingPageForm.module.css';
 import IconCollection from '../../../components/IconCollection/IconCollection';
 import IconCamera from '../../../components/IconCamera/IconCamera';
 import { } from '../../../examples';
+import { types as sdkTypes } from '../../../util/sdkLoader';
+import { formatMoney } from '../../../util/currency';
+import appSettings from '../../../config/settings';
+import { useConfiguration } from '../../../context/configurationContext';
 
 const TITLE_MAX_LENGTH = 60;
 const ACCEPT_IMAGES = 'image/*';
 
-const EditListingProductFormComponent = props => (
+const ORDERLIMITYES = "yes" 
+const ORDERLIMITNO = "no" 
 
+const { Money } = sdkTypes;
+
+const getPriceValidators = (listingMinimumPriceSubUnits, marketplaceCurrency, intl) => {
+  const priceRequiredMsgId = { id: 'EditListingPricingAndStockForm.priceRequired' };
+  const priceRequiredMsg = intl.formatMessage(priceRequiredMsgId);
+  const priceRequired = validators.required(priceRequiredMsg);
+
+  const minPriceRaw = new Money(listingMinimumPriceSubUnits, marketplaceCurrency);
+  const minPrice = formatMoney(intl, minPriceRaw);
+  const priceTooLowMsgId = { id: 'EditListingPricingAndStockForm.priceTooLow' };
+  const priceTooLowMsg = intl.formatMessage(priceTooLowMsgId, { minPrice });
+  const minPriceRequired = validators.moneySubUnitAmountAtLeast(
+    priceTooLowMsg,
+    listingMinimumPriceSubUnits
+  );
+
+  return listingMinimumPriceSubUnits
+    ? validators.composeValidators(priceRequired, minPriceRequired)
+    : priceRequired;
+};
+
+
+const EditListingProductFormComponent = props => (
     <FinalForm
         {...props}
         render={formRenderProps => {
@@ -38,9 +66,13 @@ const EditListingProductFormComponent = props => (
                 updateInProgress,
                 fetchErrors,
                 images,
-                onRemoveImage
+                autoFocus,
+                unitType,
+                onRemoveImage,
+                formId,
+                listingMinimumPriceSubUnits,
+                marketplaceCurrency
             } = formRenderProps;
-
 
             const businessNameMessage = intl.formatMessage({
                 id: 'EditListingDescriptionForm.businessName',
@@ -165,6 +197,9 @@ const EditListingProductFormComponent = props => (
                 id: 'ProductListingPage.processTimeLabel',
             });
 
+            //setState for radio button
+            const [orderLimit, setOrderLimit] = useState(ORDERLIMITYES)
+
 
 
 
@@ -214,6 +249,17 @@ const EditListingProductFormComponent = props => (
                         });
                 }
             };
+
+            const priceValidators = getPriceValidators(
+                listingMinimumPriceSubUnits,
+                marketplaceCurrency,
+                intl
+              );
+
+              const stockValidator = validators.numberAtLeast(
+                intl.formatMessage({ id: 'EditListingPricingAndStockForm.stockIsRequired' }),
+                0
+              );
 
 
             return (
@@ -291,12 +337,20 @@ const EditListingProductFormComponent = props => (
                                 </div>
                                 <div className={css.formRightInput}>
                                     <div className={css.costBox}>
-                                        <FieldTextInput
-                                            id="cost"
-                                            name="cost"
-                                            className={css.inputBox}
-                                            type="text"
-                                            label="Cost (AUD)"
+                                        <FieldCurrencyInput
+                                            id={`${formId}price`}
+                                            name="price"
+                                            className={css.input}
+                                            autoFocus={autoFocus}
+                                            label={intl.formatMessage(
+                                                { id: 'EditListingPricingAndStockForm.pricePerProduct' },
+                                                { unitType }
+                                            )}
+                                            placeholder={intl.formatMessage({
+                                                id: 'EditListingPricingAndStockForm.priceInputPlaceholder',
+                                            })}
+                                            currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
+                                            validate={priceValidators}
                                         />
                                     </div>
                                     <div className={css.gallaryContainer}>
@@ -475,10 +529,10 @@ const EditListingProductFormComponent = props => (
                                     />
                                     <div className={css.rowInput}>
                                         <div className={css.mainRowBox}>
-                                            <h3 className={css.stockHeading}>
+                                           <h3 className={css.stockHeading}>
                                                 <FormattedMessage id="ProductListingPage.lumelaStockManager" />
                                             </h3>
-                                            <div className={css.radioLabelName}>
+                                            {/* <div className={css.radioLabelName}>
                                                 <FormattedMessage id="ProductListingPage.wantHelpManageProduct" />
                                             </div>
                                             <div className={css.radioRow}>
@@ -496,13 +550,18 @@ const EditListingProductFormComponent = props => (
                                                     value="no"
                                                     className={css.radioButton}
                                                 />
-                                            </div>
+                                            </div> */}
                                             <FieldTextInput
-                                                id="stockQuantity"
-                                                name="stockQuantity"
-                                                className={css.inputBox}
-                                                type="text"
-                                                label={stockQuantityLabel}
+                                                className={css.input}
+                                                id="stock"
+                                                name="stock"
+                                                label={intl.formatMessage({ id: 'EditListingPricingAndStockForm.stockLabel' })}
+                                                placeholder={intl.formatMessage({
+                                                    id: 'EditListingPricingAndStockForm.stockPlaceholder',
+                                                })}
+                                                type="number"
+                                                min={0}
+                                                validate={stockValidator}
                                             />
                                         </div>
                                         <div className={css.mainRowBox}>
@@ -515,29 +574,31 @@ const EditListingProductFormComponent = props => (
                                             <div className={css.radioRow}>
                                                 <FieldRadioButton
                                                     id="yes"
-                                                    name="yes"
+                                                    name="orderLimit"
                                                     label={yesLabel}
-                                                    value="yes"
+                                                    value='yes'
                                                     className={css.radioButton}
                                                 />
                                                 <FieldRadioButton
                                                     id="no"
-                                                    name="no"
+                                                    name="orderLimit"
                                                     label={noLabel}
                                                     value="no"
                                                     className={css.radioButton}
                                                 />
                                             </div>
+                                            {values.orderLimit && values.orderLimit == "yes"?
                                             <FieldTextInput
                                                 id="maxNo"
                                                 name="maxNo"
                                                 className={css.inputBox}
                                                 type="text"
                                                 label={maxNoLabel}
-                                            />
+
+                                            /> : null}
                                         </div>
                                     </div>
-                                    <div className={css.backOrder}>
+                                    {/* <div className={css.backOrder}>
                                         <div className={css.radioLabelName}>
                                             <FormattedMessage id="ProductListingPage.allowBackorders" />
                                         </div>
@@ -564,7 +625,7 @@ const EditListingProductFormComponent = props => (
                                                 className={css.radioButton}
                                             />
                                         </div>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                         </div>
@@ -681,11 +742,14 @@ const EditListingProductFormComponent = props => (
     />
 );
 
-EditListingProductFormComponent.defaultProps = { className: null, fetchErrors: null };
+EditListingProductFormComponent.defaultProps = { className: null, fetchErrors: null , listingMinimumPriceSubUnits: 0, formId: 'EditListingPricingAndStockForm'};
 
 EditListingProductFormComponent.propTypes = {
+    formId: string,
     className: string,
     intl: intlShape.isRequired,
+    marketplaceCurrency: string.isRequired,
+    listingMinimumPriceSubUnits: number,
     onSubmit: func.isRequired,
     saveActionMsg: string.isRequired,
     disabled: bool.isRequired,

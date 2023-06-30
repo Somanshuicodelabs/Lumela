@@ -94,7 +94,7 @@ export default function SectionBusiness(props) {
           <div className={css.categoriesBlock}>
             <Slider {...settings}>
               {listings.map((l, index) =>
-                index <= 3 ? (
+                index <= 6 ? (
                   <ListingCard
                     className={css.listingCard}
                     key={l.id.uuid}

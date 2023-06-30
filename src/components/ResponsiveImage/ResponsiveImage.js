@@ -40,14 +40,15 @@ import { FormattedMessage } from '../../util/reactIntl';
 import { propTypes } from '../../util/types';
 
 import NoImageIcon from './NoImageIcon';
+
 import css from './ResponsiveImage.module.css';
-import { closeListing } from '../../containers/ManageListingsPage/ManageListingsPage.duck';
 
 const ResponsiveImage = props => {
   const {
     className,
     rootClassName,
     alt,
+    url,
     noImageMessage,
     image,
     variants,
@@ -55,6 +56,11 @@ const ResponsiveImage = props => {
     ...rest
   } = props;
   const classes = classNames(rootClassName || css.root, className);
+
+  if (url) {
+    return <img alt={alt} src={url} />;
+  }
+
   if (image == null || variants.length === 0) {
     const noImageClasses = classNames(rootClassName || css.root, css.noImageContainer, className);
 

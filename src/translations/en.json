@@ -1035,7 +1035,7 @@
   "EditListingPricingAndStockForm.showListingFailed": "Fetching listing data failed.",
   "EditListingPricingAndStockForm.stockIsRequired": "Stock is required.",
   "EditListingPricingAndStockForm.stockLabel": "Stock",
-  "EditListingPricingAndStockForm.stockPlaceholder": "How many bikes do you have?",
+  "EditListingPricingAndStockForm.stockPlaceholder": "Stock",
   "EditListingPricingAndStockForm.stockUpdateFailed": "Oops, something went wrong with the stock update. Please refresh the page and try again.",
   "EditListingPricingAndStockForm.updateFailed": "Failed to update listing. Please try again.",
   "EditListingPricingAndStockPanel.createListingTitle": "Pricing & stock",

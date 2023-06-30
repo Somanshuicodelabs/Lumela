@@ -2,16 +2,13 @@ import React, { useState } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { array, bool, func, object, shape, string } from 'prop-types';
-
+import { array, arrayOf, bool, func, number, object, shape, string } from 'prop-types';
 import { ensureCurrentUser, ensureOwnListing, ensureUser } from '../../util/data';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
-
 import { useConfiguration } from '../../context/configurationContext';
 import { H3, Page, Footer, LayoutSingleColumn, LayoutWrapperAccountSettingsSideNav, FieldTextInput, LayoutSideNavigation, LayoutWrapperMain, UserNav } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
-
 import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { propTypes } from '../../util/types';
@@ -26,12 +23,22 @@ import {
     requestImageUpload,
     removeListingImage,
     savePayoutDetails,
+    compareAndSetStock,
 } from '../EditListingPage/EditListingPage.duck';
-// import { Form } from 'react-final-form';
 import css from './ProductListingPage.module.css';
 import { requestCreateListing } from './ProductListingPage.duck';
 
-const { UUID } = sdkTypes;
+const { UUID, Money } = sdkTypes;
+const getInitialValues = params => {
+    const { listing } = params;
+    const isPublished = listing?.id && listing?.attributes?.state !== LISTING_STATE_DRAFT;
+    const currentStock = listing?.currentStock;
+    // The listing resource has a relationship: `currentStock`,
+    // which you should include when making API calls.
+    const currentStockQuantity = currentStock?.attributes?.quantity;
+    const stock = currentStockQuantity != null ? currentStockQuantity : isPublished ? 0 : 1;
+    return { stock };
+};
 
 
 export const ProductListingPageComponent = props => {
@@ -52,17 +59,17 @@ export const ProductListingPageComponent = props => {
         panelUpdated,
         updateInProgress,
         errors,
-        page
+        page,
+        listingMinimumPriceSubUnits
     } = props;
-
+    const initialValues = getInitialValues(props);
+    const marketplaceCurrency = config.currency || ''
     const currentListing = ensureOwnListing(listing);
     const currentListingImages =
         currentListing && currentListing.images ? currentListing.images : [];
-
     const imageOrder = page?.uploadedImagesOrder || [];
     const unattachedImages = imageOrder.map(i => page.uploadedImages
         ?.[i]);
-
     const allImages = currentListingImages.concat(unattachedImages);
     const removedImageIds = page.removedImageIds || [];
     const images = allImages.filter(img => {
@@ -77,7 +84,7 @@ export const ProductListingPageComponent = props => {
         category,
         shortDescription,
         seller,
-        cost } = publicData || {}
+        price , sort, maxNo } = publicData || {}
     const { mainImageId } = publicData || {};
     const restImages = images && images.length
         ? mainImageId
@@ -86,8 +93,6 @@ export const ProductListingPageComponent = props => {
         : [];
     const { id } = params || {};
     const listingId = id ? new UUID(id) : null;
-    // const currentListing = ensureOwnListing(getOwnListing(listingId));
-    // const [imageState, setImageState] = useState(null);
     const ensuredCurrentUser = ensureCurrentUser(currentUser);
     const profileUser = ensureUser(user);
     const isCurrentUser =
@@ -96,13 +101,29 @@ export const ProductListingPageComponent = props => {
 
     const schemaTitleVars = { name: displayName, siteTitle: config.marketplaceName };
     const schemaTitle = intl?.formatMessage({ id: "ProfilePage.schemaTitle" }, schemaTitleVars);
+    const handleValues = async (values) => {
 
-    const handleValues = (values) => {
         const { title, brand, color, size, category,
             shortDescription,
             seller,
-            cost } = values;
-        onCreateListing({
+            price, stock ,sort,maxNo} = values;
+        const hasNoCurrentStock = listing?.currentStock?.attributes?.quantity == null;
+        const hasStockQuantityChanged = stock && stock !== initialValues.stock;
+        // currentStockQuantity is null or undefined, return null - otherwise use the value
+        const oldTotal = hasNoCurrentStock ? null : initialValues.stock;
+        const stockUpdateMaybe =
+            hasNoCurrentStock || hasStockQuantityChanged
+                ? {
+                    stockUpdate: {
+                        oldTotal,
+                        newTotal: stock,
+                    },
+                }
+                : {};
+
+        // New values for listing attributes
+        const updateValues = {
+            price,
             title: title,
             publicData: {
                 brand,
@@ -111,15 +132,20 @@ export const ProductListingPageComponent = props => {
                 category,
                 shortDescription,
                 seller,
-                cost
+                sort,
+                maxNo
             },
-        }, config)
+            ...stockUpdateMaybe
+
+        };
+        onCreateListing(updateValues, config, { oldTotal, newTotal: stock })
     }
+
     const handleValuesDraft = (values) => {
         const { title, brand, color, size, category,
             shortDescription,
             seller,
-            cost } = values;
+            price, sort, maxNo  } = values;
         onCreateListingDraft({
             title: title,
             publicData: {
@@ -129,10 +155,17 @@ export const ProductListingPageComponent = props => {
                 category,
                 shortDescription,
                 seller,
-                cost
+                price,
+                sort,
+                maxNo
             },
         }, config)
     }
+
+    const priceCurrencyValid =
+        initialValues.price instanceof Money
+            ? initialValues.price?.currency === marketplaceCurrency
+            : true;
 
     return (
         <Page title={schemaTitle} scrollingDisabled={scrollingDisabled}>
@@ -158,36 +191,41 @@ export const ProductListingPageComponent = props => {
                         <FormattedMessage id="ProductListingPage.addNewProduct" />
                     </h1>
                     <div className={css.contentBox}>
-                        <ProductListingPageForm
-                            className={css.productFormWrapper}
-                            images={restImages}
-                            initialValues={{
-                                images,
-                                title,
-                                brand,
-                                color,
-                                size,
-                                category,
-                                shortDescription,
-                                seller,
-                                cost
-                            }}
-                            saveActionMsg={intl.formatMessage({
-                                id: 'StripePayoutPage.submitButtonText',
-                            })}
-                            setResetForm={() => setResetForm(true)}
-                            onSubmit={handleValues}
-                            handleValues={handleValues}
-                            handleValuesDraft={handleValuesDraft}
-                            onChange={onChange}
-                            disabled={disabled}
-                            ready={ready}
-                            updated={panelUpdated}
-                            updateInProgress={updateInProgress}
-                            fetchErrors={errors}
-                            publicData={publicData}
-                            onImageUpload={onImageUpload}
-                        />
+                        {priceCurrencyValid ?
+                            <ProductListingPageForm
+                                className={css.productFormWrapper}
+                                images={restImages}
+                                initialValues={{
+                                    images,
+                                    title,
+                                    brand,
+                                    color,
+                                    size,
+                                    category,
+                                    shortDescription,
+                                    seller,
+                                    price,
+                                    sort
+
+                                }}
+                                saveActionMsg={intl.formatMessage({
+                                    id: 'StripePayoutPage.submitButtonText',
+                                })}
+                                setResetForm={() => setResetForm(true)}
+                                onSubmit={handleValues}
+                                handleValues={handleValues}
+                                handleValuesDraft={handleValuesDraft}
+                                onChange={onChange}
+                                disabled={disabled}
+                                ready={ready}
+                                updated={panelUpdated}
+                                updateInProgress={updateInProgress}
+                                fetchErrors={errors}
+                                publicData={publicData}
+                                onImageUpload={onImageUpload}
+                                listingMinimumPriceSubUnits={listingMinimumPriceSubUnits}
+                                marketplaceCurrency={marketplaceCurrency}
+                            /> : null}
                     </div>
                 </LayoutWrapperMain>
             </LayoutSideNavigation>
@@ -218,7 +256,13 @@ ProductListingPageComponent.propTypes = {
     submitButtonText: string.isRequired,
     listing: object,
     page: object.isRequired,
-
+    marketplaceCurrency: string.isRequired,
+    listingMinimumPriceSubUnits: number.isRequired,
+    listingTypes: arrayOf(
+        shape({
+            stockType: string,
+        })
+    ).isRequired,
     disabled: bool.isRequired,
     ready: bool.isRequired,
     onSubmit: func.isRequired,
@@ -229,10 +273,6 @@ ProductListingPageComponent.propTypes = {
         }),
         images: array,
     }),
-    // from useConfiguration()
-    // config: object.isRequired,
-
-    // from injectIntl
     intl: intlShape.isRequired,
 };
 
@@ -257,7 +297,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
     onUpdateListing: (tab, values, config) => dispatch(requestUpdateListing(tab, values, config)),
     onCreateListingDraft: (values, config) => dispatch(requestCreateListingDraft(values, config)),
-    onCreateListing: (values, config) => dispatch(requestCreateListing(values, config)),
+    onCreateListing: (values, config, stockUpdateMaybe) => dispatch(requestCreateListing(values, config, stockUpdateMaybe)),
     onPublishListingDraft: listingId => dispatch(requestPublishListingDraft(listingId)),
     onImageUpload: (data, listingImageConfig, imageType) =>
         dispatch(requestImageUpload(data, listingImageConfig, imageType)),
