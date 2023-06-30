@@ -124,7 +124,7 @@ export const ServiceListingPageComponent = props => {
                             saveActionMsg={submitButtonText}
                             setResetForm={() => setResetForm(true)}
                             onSubmit={values => {
-                                const { businessName, email, abn, website, instagram, facebook } = values;
+                                const { title ,price ,category,shortDescription,technicalNotes,hours,mins,cancelationPolicy,noOfBooking,months,days,advanceMonths,advanceDays} = values;
 
                                 onSubmit({
                                     title: businessName.trim(),
