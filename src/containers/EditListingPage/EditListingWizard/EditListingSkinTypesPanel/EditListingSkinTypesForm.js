@@ -98,7 +98,7 @@ export const EditListingSkinTypesFormComponent = props => (
                   disabled={submitDisabled}
                   ready={submitReady}
                 >
-                  {saveActionMsg}
+                   <FormattedMessage id="EditListingDescriptionForm.nextButton"/>
                 </Button>
               </div>
             </div>

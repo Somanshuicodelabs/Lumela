@@ -21,6 +21,8 @@ import SearchPage from './SearchPage/SearchPage.duck';
 import StripePayoutPage from './StripePayoutPage/StripePayoutPage.duck';
 import TransactionPage from './TransactionPage/TransactionPage.duck';
 import landingPageReducer from './LandingPage/LandingPage.duck';
+import ServiceListingPage from './ServiceListingPage/ServiceListingPage.duck';
+import ManageServiceListingsPage from './ManageServiceListingsPage/ManageServiceListingsPage.duck';
 
 export {
   CheckoutPage,
@@ -40,5 +42,7 @@ export {
   SearchPage,
   StripePayoutPage,
   TransactionPage,
-  landingPageReducer
+  landingPageReducer,
+  ServiceListingPage,
+  ManageServiceListingsPage
 };

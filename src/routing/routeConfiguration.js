@@ -43,6 +43,7 @@ const ServiceListingPage= loadable(() => import('../containers/ServiceListingPag
 const StripePayoutPage = loadable(() => import(/* webpackChunkName: "StripePayoutPage" */ '../containers/StripePayoutPage/StripePayoutPage'));
 const TermsOfServicePage = loadable(() => import(/* webpackChunkName: "TermsOfServicePage" */ '../containers/TermsOfServicePage/TermsOfServicePage'));
 const TransactionPage = loadable(() => import(/* webpackChunkName: "TransactionPage" */ '../containers/TransactionPage/TransactionPage'));
+const ManageServiceListingsPage =loadable(() => import('../containers/ManageServiceListingsPage/ManageServiceListingsPage'))
 
 // Styleguide helps you to review current components and develop new ones
 const StyleguidePage = loadable(() => import(/* webpackChunkName: "StyleguidePage" */ '../containers/StyleguidePage/StyleguidePage'));
@@ -296,6 +297,14 @@ const routeConfiguration = (layoutConfig) => {
       authPage: 'LoginPage',
       component: ManageListingsPage,
       loadData: pageDataLoadingAPI.ManageListingsPage.loadData,
+    },
+    {
+      path: '/service-listings',
+      name: 'ManageServiceListingsPage',
+      auth: true,
+      authPage: 'LoginPage',
+      component: ManageServiceListingsPage,
+      loadData: pageDataLoadingAPI.ManageServiceListingsPage.loadData,
     },
     {
       path: '/account',

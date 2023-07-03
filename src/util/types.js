@@ -361,6 +361,8 @@ propTypes.defaultPaymentMethod = shape({
   }),
 });
 
+export const BUSINESS_LISTING_TYPE = 'business'
+
 export const LINE_ITEM_NIGHT = 'line-item/night';
 export const LINE_ITEM_DAY = 'line-item/day';
 export const LINE_ITEM_HOUR = 'line-item/hour';
