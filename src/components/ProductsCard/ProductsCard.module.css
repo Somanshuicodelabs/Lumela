@@ -1,0 +1,51 @@
+.productCard {
+    background: #FFF;
+    box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.08);
+
+    & .imageBox {
+        & img {
+            width: 100%;
+        }
+    }
+
+    & .imageBody {
+        padding: 14px 9px;
+
+        & .productBodyHeading {
+            color: #000;
+            font-size: 17px;
+            font-family: Didact Gothic;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+        }
+
+        & .productSize {
+            color: #868686;
+            font-size: 17px;
+            font-family: Didact Gothic;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+        }
+
+        & .bottomWrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            & .productPrice {
+                color: #000;
+                font-size: 17px;
+                font-family: Didact Gothic;
+                font-style: normal;
+                font-weight: 400;
+                line-height: normal;
+            }
+
+            & .productDotIcon {
+                cursor: pointer;
+            }
+        }
+    }
+}

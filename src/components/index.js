@@ -126,6 +126,8 @@ export { default as SavedCardDetails } from './SavedCardDetails/SavedCardDetails
 export { default as StripeConnectAccountStatusBox } from './StripeConnectAccountStatusBox/StripeConnectAccountStatusBox';
 export { default as StripePaymentAddress } from './StripePaymentAddress/StripePaymentAddress';
 export { default as UserCard } from './UserCard/UserCard';
+export { default as ProductsCard } from './ProductsCard/ProductsCard';
+
 
 // Forms
 export { default as StripeConnectAccountForm } from './StripeConnectAccountForm/StripeConnectAccountForm';

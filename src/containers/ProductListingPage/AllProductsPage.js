@@ -6,7 +6,7 @@ import { bool, func, object, shape, string } from 'prop-types';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 
 import { useConfiguration } from '../../context/configurationContext';
-import { H3, Page, Footer, LayoutSingleColumn, LayoutWrapperAccountSettingsSideNav, FieldTextInput, LayoutSideNavigation, LayoutWrapperMain, UserNav } from '../../components';
+import { H3, Page, Footer, LayoutSingleColumn, LayoutWrapperAccountSettingsSideNav, FieldTextInput, LayoutSideNavigation, LayoutWrapperMain, UserNav, ProductsCard, PrimaryButton } from '../../components';
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
 
 import { isScrollingDisabled } from '../../ducks/ui.duck';
@@ -18,6 +18,47 @@ import { propTypes } from '../../util/types';
 import { requestCreateListingDraft, requestUpdateListing } from '../EditListingPage/EditListingPage.duck';
 import { ensureCurrentUser, ensureUser } from '../../util/data';
 import { fetchCurrentListing } from './ProductListingPage.duck';
+import css from './ProductListingPage.module.css';
+import productCardImage from '../../assets/productCardImage.png';
+
+const productData = [
+    {
+        productImage: productCardImage,
+        productHeading: "Glossier Oil Serum Hybrid futuredew",
+        productSize: "30ml",
+        productPrice: "$120",
+    },
+    {
+        productImage: productCardImage,
+        productHeading: "Glossier Oil Serum Hybrid futuredew",
+        productSize: "30ml",
+        productPrice: "$120",
+    },
+    {
+        productImage: productCardImage,
+        productHeading: "Glossier Oil Serum Hybrid futuredew",
+        productSize: "30ml",
+        productPrice: "$120",
+    },
+    {
+        productImage: productCardImage,
+        productHeading: "Glossier Oil Serum Hybrid futuredew",
+        productSize: "30ml",
+        productPrice: "$120",
+    },
+    {
+        productImage: productCardImage,
+        productHeading: "Glossier Oil Serum Hybrid futuredew",
+        productSize: "30ml",
+        productPrice: "$120",
+    },
+    {
+        productImage: productCardImage,
+        productHeading: "Glossier Oil Serum Hybrid futuredew",
+        productSize: "30ml",
+        productPrice: "$120",
+    },
+]
 
 export const AllProductsPageComponent = props => {
     const config = useConfiguration();
@@ -40,8 +81,8 @@ export const AllProductsPageComponent = props => {
 
     useEffect(() => {
         onfetchCurrentListing()
-    },[])
-    
+    }, [])
+
 
 
     return (
@@ -64,10 +105,24 @@ export const AllProductsPageComponent = props => {
                 footer={<Footer />}
             >
 
-            <div>
-                
-                
-            </div>
+                <div className={css.productPageWrapper}>
+                    <h2 className={css.mainHeading}>
+                        <FormattedMessage id="ProductListingPage.products" />
+                    </h2>
+                    <PrimaryButton>ADD NEW PRODUCT </PrimaryButton>
+                    <div className={css.productCardList}>
+                        {productData.map((item) => {
+                            return (
+                                <ProductsCard
+                                    productImage={item.productImage}
+                                    productHeading={item.productHeading}
+                                    productSize={item.productSize}
+                                    productPrice={item.productPrice}
+                                />
+                            )
+                        })}
+                    </div>
+                </div>
             </LayoutSideNavigation>
         </Page>
     )
@@ -117,7 +172,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
     onfetchCurrentListing: (listingId) => dispatch(fetchCurrentListing(listingId)),
-    
+
 });
 
 const AllProductsPage = compose(

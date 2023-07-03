@@ -11,6 +11,7 @@ const BRAND_JCB = 'jcb';
 const BRAND_MASTERCARD = 'mastercard';
 const BRAND_UNIONPAY = 'unionpay';
 const BRAND_VISA = 'visa';
+const DOTS = "dots";
 
 const IconCard = props => {
   const { className, rootClassName, brand } = props;
@@ -49,6 +50,14 @@ const IconCard = props => {
               <path d="M18.212 7.6957v-4.445l1.903.0065.9794 2.7327.9856-2.7392h1.8316v4.445l-1.1786.0105V4.6528l-1.1126 3.043h-1.0758L19.409 4.6423v3.0533z" />
             </g>
           </g>
+        </svg>
+      );
+    case DOTS:
+      return (
+        <svg width="21" height="5" viewBox="0 0 21 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="2.1759" cy="2.38672" r="2" fill="#C1C1C1" />
+          <circle cx="10.1759" cy="2.38672" r="2" fill="#C1C1C1" />
+          <circle cx="18.1759" cy="2.38672" r="2" fill="#C1C1C1" />
         </svg>
       );
     case BRAND_DINERS:
