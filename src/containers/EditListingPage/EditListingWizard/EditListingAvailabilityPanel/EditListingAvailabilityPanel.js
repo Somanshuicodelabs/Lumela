@@ -422,7 +422,7 @@ const EditListingAvailabilityPanel = props => {
                   onClick={onNextTab}
                   disabled={isNextButtonDisabled}
                 >
-                  {submitButtonText}
+                   <FormattedMessage id="EditListingDescriptionForm.nextButton"/>
                 </Button>
               ) : null}
             </div>

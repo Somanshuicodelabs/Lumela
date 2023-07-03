@@ -168,11 +168,11 @@ const LayoutWrapperAccountSettingsSideNavComponent = props => {
     },
     {
       text: <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.serviceListingTabTitle" />,
-      selected: currentTab === 'ServiceListingPage',
+      selected: currentTab === 'ManageServiceListingsPage',
       icon: <IconLogout />,
-      id: 'ServiceListingPageTab',
+      id: 'ManageServiceListingsPageTab',
       linkProps: {
-        name: 'ServiceListingPage',
+        name: 'ManageServiceListingsPage',
       },
     },
   ];

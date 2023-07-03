@@ -4,6 +4,7 @@ import { currentUserShowSuccess, fetchCurrentUser, fetchCurrentUserHasListings }
 import { createImageVariantConfig } from '../../util/sdkLoader';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
+import { addOwnEntities } from '../ManageListingsPage/ManageListingsPage.duck';
 // ================ Action types ================ //
 
 export const CLEAR_UPDATED_FORM = 'app/ServiceListingPage/CLEAR_UPDATED_FORM';
@@ -253,20 +254,20 @@ export const fetchCurrentListing = listingId => async (dispatch, getState, sdk) 
   }
 }
 
-export const createExpertListing = (actionPayload, config) => async (
+export const createExpertListing = (actionPayload, config,listingId) => async (
   dispatch,
   getState,
   sdk
 ) => {
   try {
     dispatch(expertCreateListingRequest());
-    const { ...rest } = actionPayload;
+    const { images,...rest } = actionPayload;
     console.log(actionPayload, '&&&  &&& => actionPayload');
     
-    // const imageProperty = imageId ? { images: [imageId] } : {};
+    const imageProperty = typeof images !== 'undefined' ? { images: imageIds(images) } : {};
 
-    const ownListingValues = { ...rest };
-    // const ownListingUpdateValues = { id: expertListingId, ...rest };
+    const ownListingValues = { ...imageProperty,...rest };
+    const ownListingUpdateValues = { id: listingId, ...rest };
     const imageVariantInfo = getImageVariantInfo(config.layout.listingImage);
 
     const queryParams = {
@@ -275,9 +276,13 @@ export const createExpertListing = (actionPayload, config) => async (
       'fields.image': imageVariantInfo.fieldsImage,
       ...imageVariantInfo.imageVariants,
     };
-
+    if (listingId) {
+    const result =   await sdk.ownListings.update(ownListingUpdateValues, queryParams);
+    console.log(result, '&&&  &&& => result');
+    
+    }
     const response =
-    //  expertListingId
+    //  listingId
     //   ? await sdk.ownListings.update(ownListingUpdateValues, queryParams)
       // : 
       await sdk.ownListings.create(ownListingValues, queryParams);
@@ -330,13 +335,15 @@ export const loadData = () => async (dispatch, getState, sdk) => {
     // const userRole = getUserRole(currentUser);
     dispatch(expertListingsRequest());
     // if (userRole === USER_ROLE_EXPERT && result.data.data.length > 0 && result.data.data) {
-    //   const response = await sdk.ownListings.query();
-    //   const listingId = response?.data?.data?.at(0)
-    //   // if (listingId) {
-    //   //   dispatch(fetchStripeAccount());
-    //   // }
-    //   dispatch(addMarketplaceEntities(response));
-    //   dispatch(expertListingsSuccess(response));
+      const response = await sdk.ownListings.query();
+      console.log(response, '&&&  &&& => response');
+      
+      const listingId = response?.data?.data?.at(0)
+      // if (listingId) {
+      //   dispatch(fetchStripeAccount());
+      // }
+      dispatch(addOwnEntities(response));
+      dispatch(expertListingsSuccess(response));
     // }
   } catch (error) {
     console.log(error, '&&&  &&& => error');

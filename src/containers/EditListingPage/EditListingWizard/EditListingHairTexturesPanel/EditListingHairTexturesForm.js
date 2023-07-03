@@ -110,8 +110,7 @@ export const EditListingHairTexturesFormComponent = props => (
                   inProgress={submitInProgress}
                   disabled={submitDisabled}
                   ready={submitReady}
-                >
-                  {saveActionMsg}
+                > <FormattedMessage id="EditListingDescriptionForm.nextButton"/>
                 </Button>
               </div>
             </div>
