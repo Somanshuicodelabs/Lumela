@@ -33,6 +33,7 @@ const PasswordResetPage = loadable(() => import(/* webpackChunkName: "PasswordRe
 const PaymentMethodsPage = loadable(() => import(/* webpackChunkName: "PaymentMethodsPage" */ '../containers/PaymentMethodsPage/PaymentMethodsPage'));
 const PrivacyPolicyPage = loadable(() => import(/* webpackChunkName: "PrivacyPolicyPage" */ '../containers/PrivacyPolicyPage/PrivacyPolicyPage'));
 const ProductListingPage= loadable(() => import('../containers/ProductListingPage/ProductListingPage'));
+const AllProductsPage= loadable(() => import('../containers/ProductListingPage/AllProductsPage'));
 const ProfilePage = loadable(() => import(/* webpackChunkName: "ProfilePage" */ '../containers/ProfilePage/ProfilePage'));
 const ProfileSettingsPage = loadable(() => import(/* webpackChunkName: "ProfileSettingsPage" */ '../containers/ProfileSettingsPage/ProfileSettingsPage'));
 const OrderPage = loadable(() => import(/* webpackChunkName: "OrderPage" */ '../containers/OrderPage/OrderPage'));
@@ -202,6 +203,15 @@ const routeConfiguration = (layoutConfig) => {
       component: ProductListingPage,
       // loadData: pageDataLoadingAPI.ProductListingPage.loadData,
     },
+    {
+      path: '/all-products',
+      name: 'AllProductsPage',
+      auth: true,
+      authPage: 'LoginPage',
+      component: AllProductsPage,
+      // loadData: pageDataLoadingAPI.ProductListingPage.loadData,
+    },
+
     {
       path: '/service-listing',
       name: 'ServiceListingPage',

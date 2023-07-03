@@ -60,7 +60,8 @@ export const ProductListingPageComponent = props => {
         updateInProgress,
         errors,
         page,
-        listingMinimumPriceSubUnits
+        listingMinimumPriceSubUnits,
+        onCreateDraftServiceListing
     } = props;
     const initialValues = getInitialValues(props);
     const marketplaceCurrency = config.currency || ''
@@ -84,7 +85,7 @@ export const ProductListingPageComponent = props => {
         category,
         shortDescription,
         seller,
-        price , sort, maxNo } = publicData || {}
+        price, sort, weight, tag } = publicData || {}
     const { mainImageId } = publicData || {};
     const restImages = images && images.length
         ? mainImageId
@@ -106,7 +107,7 @@ export const ProductListingPageComponent = props => {
         const { title, brand, color, size, category,
             shortDescription,
             seller,
-            price, stock ,sort,maxNo} = values;
+            price, stock, sort, maxNo, weight, dimensions, width, height,tag } = values;
         const hasNoCurrentStock = listing?.currentStock?.attributes?.quantity == null;
         const hasStockQuantityChanged = stock && stock !== initialValues.stock;
         // currentStockQuantity is null or undefined, return null - otherwise use the value
@@ -133,7 +134,13 @@ export const ProductListingPageComponent = props => {
                 shortDescription,
                 seller,
                 sort,
-                maxNo
+                maxNo,
+                weight,
+                dimensions,
+                listingType: 'product',
+                width,
+                height,
+                tag
             },
             ...stockUpdateMaybe
 
@@ -145,7 +152,7 @@ export const ProductListingPageComponent = props => {
         const { title, brand, color, size, category,
             shortDescription,
             seller,
-            price, sort, maxNo  } = values;
+            price, sort, maxNo, weight, dimensions, width, height ,tag} = values;
         onCreateListingDraft({
             title: title,
             publicData: {
@@ -157,7 +164,13 @@ export const ProductListingPageComponent = props => {
                 seller,
                 price,
                 sort,
-                maxNo
+                maxNo,
+                weight,
+                dimensions,
+                width,
+                height,
+                listingType: 'product',
+                tag
             },
         }, config)
     }
@@ -205,7 +218,13 @@ export const ProductListingPageComponent = props => {
                                     shortDescription,
                                     seller,
                                     price,
-                                    sort
+                                    sort,
+                                    weight,
+                                    tag
+                                    // maxNo,
+                                    // dimensions,
+                                    // width,
+                                    // height,
 
                                 }}
                                 saveActionMsg={intl.formatMessage({
@@ -308,6 +327,7 @@ const mapDispatchToProps = dispatch => ({
         dispatch(savePayoutDetails(values, isUpdateCall)),
     onGetStripeConnectAccountLink: params => dispatch(getStripeConnectAccountLink(params)),
     onRemoveListingImage: imageId => dispatch(removeListingImage(imageId)),
+    onCreateDraftServiceListing: (updatedValues, config) => dispatch(requestCreateListingDraft(updatedValues, config)),
 });
 
 const ProductListingPage = compose(

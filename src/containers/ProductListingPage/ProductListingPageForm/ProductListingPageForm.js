@@ -642,21 +642,21 @@ const EditListingProductFormComponent = props => (
                                         <div className={css.radioRowInput}>
                                             <FieldRadioButton
                                                 id="Both"
-                                                name="Both"
+                                                name="shipping"
                                                 label={bothLabel}
                                                 value="Both"
                                                 className={css.radioButton}
                                             />
                                             <FieldRadioButton
                                                 id="shippingOnly"
-                                                name="shippingOnly"
+                                                name="shipping"
                                                 label={shippingOnlyLabel}
                                                 value="shippingOnly"
                                                 className={css.radioButton}
                                             />
                                             <FieldRadioButton
                                                 id="localPickupOnly"
-                                                name="localPickupOnly"
+                                                name="shipping"
                                                 label={localPickupOnlyLabel}
                                                 value="localPickupOnly"
                                                 className={css.radioButton}
@@ -704,8 +704,8 @@ const EditListingProductFormComponent = props => (
                                             />
                                         </div>
                                         <FieldSelect
-                                            id="category"
-                                            name="category"
+                                            id="time"
+                                            name="time"
                                             className={css.inputBox}
                                             label={processTimeLabel}
                                         >
