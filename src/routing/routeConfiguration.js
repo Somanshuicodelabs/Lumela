@@ -76,7 +76,7 @@ const routeConfiguration = (layoutConfig) => {
   const ListingPage = layoutConfig?.listingPage?.variantType === 'carousel' 
     ? ListingPageCarousel 
     : ListingPageCoverPhoto;
-  
+
   return [
     {
       path: '/',
@@ -402,7 +402,7 @@ const routeConfiguration = (layoutConfig) => {
     {
       path: '/reset-password',
       name: 'PasswordResetPage',
-      component: PasswordResetPage ,
+      component: PasswordResetPage,
     },
 
     // Do not change this path!
@@ -422,7 +422,7 @@ const routeConfiguration = (layoutConfig) => {
     {
       path: '/preview',
       name: 'PreviewResolverPage',
-      component: PreviewResolverPage ,
+      component: PreviewResolverPage,
     },
   ];
 };

@@ -48,15 +48,10 @@
  */
 
 
-import color1 from '../assets/Colours1.jpg'
-import color2 from '../assets/Colours2.jpg'
-import color3 from '../assets/Colours3.jpg'
-import color4 from '../assets/Colours4.jpg'
-
-
-
-
-
+import color1 from '../assets/Colours1.jpg';
+// import color2 from '../assets/Colours2.jpg';
+// import color3 from '../assets/Colours3.jpg';
+// import color4 from '../assets/Colours4.jpg';
 
 export const listingFields = [
   {

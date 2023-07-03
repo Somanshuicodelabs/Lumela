@@ -271,6 +271,7 @@ export const loadData = (params, search, config) => {
     latlngBounds: ['bounds'],
   });
 
+
   // Add minStock filter with default value (1), if stock management is in use.
   // This can be overwriten with passed-in query parameters.
   const minStockMaybe = isStockInUse(config) ? { minStock: 1 } : {};

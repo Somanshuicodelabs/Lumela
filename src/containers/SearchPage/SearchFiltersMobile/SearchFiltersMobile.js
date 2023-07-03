@@ -13,6 +13,14 @@ import { ModalInMobile, Button } from '../../../components';
 import PopupOpenerButton from '../PopupOpenerButton/PopupOpenerButton';
 import css from './SearchFiltersMobile.module.css';
 
+import popularMobileImage1 from '../../../assets/popular-mobile-image-1.png';
+import popularMobileImage2 from '../../../assets/popular-mobile-image-2.png';
+import popularMobileImage3 from '../../../assets/popular-mobile-image-3.png';
+import popularMobileImage4 from '../../../assets/popular-mobile-image-4.png';
+import popularMobileImage5 from '../../../assets/popular-mobile-image-5.png';
+import TopbarSearchForm from '../../../components/Topbar/TopbarSearchForm/TopbarSearchForm';
+import { parse } from 'url';
+import { isOriginInUse } from '../../../util/search';
 class SearchFiltersMobileComponent extends Component {
   constructor(props) {
     super(props);
@@ -79,6 +87,7 @@ class SearchFiltersMobileComponent extends Component {
       noResultsInfo,
       intl,
       isMapVariant,
+      isMobile,
     } = this.props;
 
     const classes = classNames(rootClassName || css.root, className);
@@ -115,11 +124,18 @@ class SearchFiltersMobileComponent extends Component {
           {isMapVariant ? (
             <div className={css.mapIcon} onClick={onMapIconClick}>
               <FormattedMessage id="SearchFiltersMobile.openMapView" className={css.mapIconText} />
+
             </div>
+
           ) : null}
+
+          <div ><a href='/s'>Clear All</a></div>
+
         </div>
 
         {noResultsInfo ? noResultsInfo : null}
+
+
 
         <ModalInMobile
           id="SearchFiltersMobile.filters"
@@ -130,17 +146,13 @@ class SearchFiltersMobileComponent extends Component {
           containerClassName={css.modalContainer}
           closeButtonMessage={modalCloseButtonMessage}
         >
-          <div className={css.modalHeadingWrapper}>
-            <span className={css.modalHeading}>{filtersHeading}</span>
-            <button className={css.resetAllButton} onClick={e => this.resetAll(e)}>
-              <FormattedMessage id={'SearchFiltersMobile.resetAll'} />
-            </button>
-          </div>
+
           {this.state.isFiltersOpenOnMobile ? (
             <div className={css.filtersWrapper}>{children}</div>
           ) : null}
 
           <div className={css.showListingsContainer}>
+
             <Button className={css.showListingsButton} onClick={this.closeFilters}>
               {showListingsLabel}
             </Button>
@@ -159,7 +171,7 @@ SearchFiltersMobileComponent.defaultProps = {
   searchInProgress: false,
   selectedFiltersCount: 0,
   isMapVariant: true,
-  onMapIconClick: () => {},
+  onMapIconClick: () => { },
 };
 
 SearchFiltersMobileComponent.propTypes = {
@@ -197,12 +209,75 @@ const SearchFiltersMobile = props => {
   const history = useHistory();
 
   return (
-    <SearchFiltersMobileComponent
-      routeConfiguration={routeConfiguration}
-      intl={intl}
-      history={history}
-      {...props}
-    />
+
+    <>
+
+      <SearchFiltersMobileComponent
+        routeConfiguration={routeConfiguration}
+        intl={intl}
+        history={history}
+        {...props}
+      />
+
+      <div>
+        <div><h1>Popular categories</h1></div>
+        <div>
+          <a
+            href="s?pub_category=has_any%3Adermatologist%2ChairRemoval%2Cmassage%2CphysioMassage%2CskinSpecialist"
+            className={css.categoryBlock}
+          >
+            <div className={css.imgBlock}>
+              <img src={popularMobileImage1} alt="category" />
+              <div> <h2>Treatments</h2></div>
+            </div>
+
+          </a>
+        </div>
+        <div>
+          <a
+            href="s?pub_category=has_any%3AmakeupArtist%2Ceyebrows%2CeyeLashes%2Cnails"
+            className={css.categoryBlock}
+          >
+            <div className={css.imgBlock}>
+              <img src={popularMobileImage2} alt="category" />
+              <div> <h2>Mens/Barber</h2></div>
+            </div>
+
+          </a>
+        </div>
+        <div className={css.categoryBlock}>
+          <a href='#'>
+            <div className={css.imgBlock}>
+              <img src={popularMobileImage3} alt="category" />
+              <div><h2>Hairdresser</h2></div>
+            </div>
+
+          </a>
+        </div>
+        <div>
+          <a href="s?pub_category=has_any%3Aextensions" className={css.categoryBlock}>
+            <div className={css.imgBlock}>
+              <img src={popularMobileImage4} alt="category" />
+              <div> <h2>Extension</h2></div>
+            </div>
+
+          </a>
+        </div>
+        <div>
+          <a href="s?pub_category=has_any%3Abraidsandlocs" className={css.categoryBlock}>
+            <div className={css.imgBlock}>
+              <img src={popularMobileImage5} alt="category" />
+              <div><h2>Nails</h2></div>
+            </div>
+
+          </a>
+        </div>
+
+      </div>
+
+
+
+    </>
   );
 };
 

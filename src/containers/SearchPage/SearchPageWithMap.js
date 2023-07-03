@@ -52,6 +52,12 @@ import css from './SearchPage.module.css';
 import { KeywordFilter, LocationAutocompleteInput } from '../../examples';
 import { KeywordFilterPlainExample, KeywordFilterPopupExample } from './KeywordFilter/KeywordFilter.example';
 import { Form } from 'react-final-form';
+import Slider from 'react-slick';
+import popularMobileImage1 from '../../../src/assets/popular-mobile-image-1.png';
+import popularMobileImage2 from '../../../src/assets/popular-mobile-image-2.png';
+import popularMobileImage3 from '../../../src/assets/popular-mobile-image-3.png';
+import popularMobileImage4 from '../../../src/assets/popular-mobile-image-4.png';
+import popularMobileImage5 from '../../../src/assets/popular-mobile-image-5.png';
 
 
 const MODAL_BREAKPOINT = 768; // Search is in modal on mobile layout
@@ -267,6 +273,7 @@ export class SearchPageComponent extends Component {
       config,
     } = this.props;
 
+
     const { listingFields: listingFieldsConfig } = config?.listing || {};
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
 
@@ -307,8 +314,8 @@ export class SearchPageComponent extends Component {
     );
     const availablePrimaryFilters = [...customPrimaryFilters, ...defaultFilters];
     const availableFilters = [
-      ...customPrimaryFilters,
-      ...defaultFilters,
+      // ...customPrimaryFilters,
+      // ...defaultFilters,
       ...customSecondaryFilters,
     ];
 
@@ -430,10 +437,8 @@ export class SearchPageComponent extends Component {
     }
     const topbarSearcInitialValues = () => {
 
-      const { mobilemenu, mobilesearch, keywords, address, origin, bounds } = parse(location.search, {
-        latlng: ['origin'],
-        latlngBounds: ['bounds'],
-      });
+
+
 
       // Only render current search if full place object is available in the URL params
       const locationFieldsPresent = isOriginInUse(config)
@@ -479,6 +484,23 @@ export class SearchPageComponent extends Component {
           currentPage="SearchPage"
           currentSearchParams={urlQueryParams}
         />
+
+        <TopbarSearchForm
+          isKeywordsSearch
+          className={css.searchLink}
+          desktopInputRoot={css.topbarSearchWithLeftPadding}
+          onSubmit={handleSubmit1}
+          initialValues={initialSearchFormValues}
+          currentPage={SEARCH_PAGE}
+
+        />
+
+
+
+
+
+
+
         <div className={css.container}>
           <div className={css.searchResultContainer}>
             <SearchFiltersMobile
