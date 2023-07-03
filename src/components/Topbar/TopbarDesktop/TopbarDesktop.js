@@ -35,6 +35,7 @@ const TopbarDesktop = props => {
     onSearchSubmit,
     initialSearchFormValues,
   } = props;
+
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {

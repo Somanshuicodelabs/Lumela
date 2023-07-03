@@ -11,9 +11,10 @@ const NoSearchResultsMaybe = props => {
       <FormattedMessage id="SearchPage.noResults" />
       <br />
       {hasSearchParams ? (
-        <button className={css.resetAllFiltersButton} onClick={e => resetAll(e)}>
-          <FormattedMessage id={'SearchPage.resetAllFilters'} />
-        </button>
+        <></>
+        // <button className={css.resetAllFiltersButton} onClick={e => resetAll(e)}>
+        //   <FormattedMessage id={'SearchPage.resetAllFilters'} />
+        // </button>
       ) : null}
     </div>
   ) : null;

@@ -15,6 +15,7 @@ import popularCategoryImg3 from '../../../assets/popular-img3.png'
 import popularCategoryImg4 from '../../../assets/popular-img4.png';
 import popularCategoryImg5 from '../../../assets/popular-img5.png';
 import { KeywordFilterPlainExample } from '../KeywordFilter/KeywordFilter.example';
+import { countBy } from 'lodash';
 
 
 
@@ -71,7 +72,6 @@ const MainPanelHeader = props => {
     <>
 
 
-      <h2>Popular</h2>
 
 
       {/* <div>
@@ -139,15 +139,7 @@ const MainPanelHeader = props => {
               )}
             </span>
           </div>
-          {isSortByActive ? (
-            <div className={css.sortyByWrapper}>
-              <span className={css.sortyBy}>
 
-              </span>
-
-
-            </div>
-          ) : null}
         </div>
 
         {children}

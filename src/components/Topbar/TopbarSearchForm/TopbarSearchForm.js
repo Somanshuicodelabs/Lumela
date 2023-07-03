@@ -120,6 +120,9 @@ class TopbarSearchFormComponent extends Component {
 
   render() {
     const { onSubmit, appConfig, isKeywordsSearch, ...restOfProps } = this.props;
+
+
+
     // const isKeywordsSearch = isMainSearchTypeKeywords(appConfig);
     const submit = isKeywordsSearch ? this.onSubmit : onSubmit;
     return (

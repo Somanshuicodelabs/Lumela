@@ -44,8 +44,8 @@ const SearchFiltersPrimaryComponent = props => {
         {sortByComponent}
         {children}
         {toggleSecondaryFiltersOpenButton}
-        <button>Clear All</button>
-        <button>Apply</button>
+        <a href='/s'>Clear All</a>
+
 
       </div>
     </div>

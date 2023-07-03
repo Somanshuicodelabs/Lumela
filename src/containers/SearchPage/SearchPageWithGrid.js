@@ -253,6 +253,7 @@ export class SearchPageComponent extends Component {
     );
     const sortBy = mode => {
       return sortConfig.active ? (
+
         <SortBy
           sort={validQueryParams[sortConfig.queryParamName]}
           isConflictingFilterActive={!!conflictingFilterActive}
@@ -329,6 +330,8 @@ export class SearchPageComponent extends Component {
                   </>
                 );
               })}
+
+
               <button className={css.resetAllButton} onClick={e => this.handleResetAll(e)}>
                 <FormattedMessage id={'SearchFiltersMobile.resetAll'} />
               </button>

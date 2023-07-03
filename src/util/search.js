@@ -36,6 +36,8 @@ const constructQueryParamName = (key, scope) => {
  */
 export const getQueryParamNames = (listingFieldsConfig, defaultFiltersConfig) => {
   const queryParamKeysOfDefaultFilters = defaultFiltersConfig.map(config => config.key);
+
+
   const queryParamKeysOfListingFields = listingFieldsConfig.reduce((params, config) => {
     const param = constructQueryParamName(config.key, config.scope);
     return config.filterConfig?.indexForSearch ? [...params, param] : params;
@@ -71,6 +73,8 @@ export const isAnyFilterActive = (
 /**
  * Check if the main search type is 'keywords'
  */
+
+
 export const isMainSearchTypeKeywords = config =>
   config.search?.mainSearch?.searchType === 'keywords';
 
@@ -78,7 +82,7 @@ export const isMainSearchTypeKeywords = config =>
  * Check if the origin parameter is currently active.
  */
 export const isOriginInUse = config =>
-  config?.search?.mainSearch?.searchType === 'location' && config.maps?.search?.sortSearchByDistance;
+  config?.search?.mainSearch?.searchType === 'location' && config?.maps?.search?.sortSearchByDistance;
 
 
 /**

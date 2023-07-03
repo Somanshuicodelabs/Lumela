@@ -24,7 +24,7 @@ export const marketplaceColor = '#7c3aed';
 // By default logo gets 27 pixels vertical space, but it could be wider (e.g. 180px)
 // The default images are meant for retina displays and are therefore twice as big in actual dimensions
 export const logoImageDesktopURL = logoImageDesktop;
-export const logoImageMobileURL = logoImageMobile;
+// export const logoImageMobileURL = logoImageMobile;
 
 // brandImageURL is used as a background image on the "hero" section of several pages.
 // Used on AuthenticationPage, EmailVerificationPage, PasswordRecoveryPage, PasswordResetPage etc.
