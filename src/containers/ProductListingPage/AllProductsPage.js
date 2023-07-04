@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { compose } from 'redux';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { withRouter } from 'react-router';
 import { bool, func, object, shape, string } from 'prop-types';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
@@ -10,7 +10,7 @@ import { H3, Page, Footer, LayoutSingleColumn, LayoutWrapperAccountSettingsSideN
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
 
 import { isScrollingDisabled } from '../../ducks/ui.duck';
-import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
+import { getListingsById, getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { propTypes } from '../../util/types';
 // import ProductListingPageForm from './ProductListingPageForm/ProductListingPageForm';
 // import { Form } from 'react-final-form';
@@ -20,6 +20,7 @@ import { ensureCurrentUser, ensureUser } from '../../util/data';
 import { fetchCurrentListing } from './ProductListingPage.duck';
 import css from './ProductListingPage.module.css';
 import productCardImage from '../../assets/productCardImage.png';
+import { getOwnListingsById } from '../ManageListingsPage/ManageListingsPage.duck';
 
 const productData = [
     {
@@ -67,8 +68,12 @@ export const AllProductsPageComponent = props => {
         scrollingDisabled,
         currentUser,
         user,
-        onfetchCurrentListing
+        onfetchCurrentListing,
+        currentPageResultIds,
+        getOwnListing,
+        ownListings,
     } = props;
+    console.log('ownListings :>> ', ownListings);
     const ensuredCurrentUser = ensureCurrentUser(currentUser);
     const profileUser = ensureUser(user);
     const isCurrentUser =
@@ -80,7 +85,7 @@ export const AllProductsPageComponent = props => {
     const schemaTitle = intl?.formatMessage({ id: "ProfilePage.schemaTitle" }, schemaTitleVars);
 
     useEffect(() => {
-        onfetchCurrentListing()
+        onfetchCurrentListing().then(res => console.log('res :>> ', res))
     }, [])
 
 
@@ -111,13 +116,13 @@ export const AllProductsPageComponent = props => {
                     </h2>
                     <PrimaryButton>ADD NEW PRODUCT </PrimaryButton>
                     <div className={css.productCardList}>
-                        {productData.map((item) => {
+                        {ownListings.filter(item => item?.attributes?.publicData?.listingType === "product").map((item) => {
                             return (
                                 <ProductsCard
-                                    productImage={item.productImage}
-                                    productHeading={item.productHeading}
-                                    productSize={item.productSize}
-                                    productPrice={item.productPrice}
+                                    productImage={item?.images[0]?.attributes?.variants?.["square-small2x"]?.url}
+                                    productHeading={item?.attributes?.title}
+                                    productSize={item?.attributes?.publicData.size}
+                                    productPrice={"$"+(item?.attributes?.price?.amount/100)}
                                 />
                             )
                         })}
@@ -156,17 +161,32 @@ AllProductsPageComponent.propTypes = {
 };
 
 const mapStateToProps = state => {
-    const { currentUser } = state.user;
+    const { currentUser } = state.user,
+        { currentPageResultIds } = state.ProductListingPage;
 
     const getOwnListing = id => {
         const listings = getMarketplaceEntities(state, [{ id, type: 'ownListing' }]);
         return listings.length === 1 ? listings[0] : null;
     };
 
+    const ownListings = getOwnListingsById(state, currentPageResultIds)
+
+
+    // const getListing = id => {
+    //     console.log('id :>> ', id);
+    //     const ref = { id, type: 'listing' };
+    //     const listings = getMarketplaceEntities(state, [ref]);
+    //     return listings.length === 1 ? listings[0] : null;
+    //   };
+
     return {
+        state,
         currentUser,
         getOwnListing,
+        ownListings,
+        // getListing,
         scrollingDisabled: isScrollingDisabled(state),
+        currentPageResultIds,
     };
 };
 
