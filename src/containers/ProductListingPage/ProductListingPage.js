@@ -61,6 +61,7 @@ export const ProductListingPageComponent = props => {
         errors,
         page,
         listingMinimumPriceSubUnits,
+        onRemoveListingImage,
         onCreateDraftServiceListing
     } = props;
     const initialValues = getInitialValues(props);
@@ -76,6 +77,7 @@ export const ProductListingPageComponent = props => {
     const images = allImages.filter(img => {
         return !removedImageIds.includes(img.id);
     });
+
     const { publicData = {} } = currentListing.attributes;
     const {
         title,
@@ -107,7 +109,7 @@ export const ProductListingPageComponent = props => {
         const { title, brand, color, size, category,
             shortDescription,
             seller,
-            price, stock, sort, maxNo, weight, dimensions, width, height,tag } = values;
+            price, stock, sort, maxNo, weight, dimensions, width, height, tag } = values;
         const hasNoCurrentStock = listing?.currentStock?.attributes?.quantity == null;
         const hasStockQuantityChanged = stock && stock !== initialValues.stock;
         // currentStockQuantity is null or undefined, return null - otherwise use the value
@@ -126,6 +128,7 @@ export const ProductListingPageComponent = props => {
         const updateValues = {
             price,
             title: title,
+            images: images,
             publicData: {
                 brand,
                 color,
@@ -152,7 +155,7 @@ export const ProductListingPageComponent = props => {
         const { title, brand, color, size, category,
             shortDescription,
             seller,
-            price, sort, maxNo, weight, dimensions, width, height ,tag} = values;
+            price, sort, maxNo, weight, dimensions, width, height, tag } = values;
         onCreateListingDraft({
             title: title,
             publicData: {
@@ -204,13 +207,12 @@ export const ProductListingPageComponent = props => {
                         <FormattedMessage id="ProductListingPage.addNewProduct" />
                     </h1>
                     <div className={css.contentBox}>
-                        {priceCurrencyValid ?
                             <ProductListingPageForm
                                 className={css.productFormWrapper}
                                 images={restImages}
                                 initialValues={{
                                     images,
-                                    title,
+                                    // title,
                                     brand,
                                     color,
                                     size,
@@ -242,9 +244,10 @@ export const ProductListingPageComponent = props => {
                                 fetchErrors={errors}
                                 publicData={publicData}
                                 onImageUpload={onImageUpload}
+                                onRemoveImage={onRemoveListingImage}
                                 listingMinimumPriceSubUnits={listingMinimumPriceSubUnits}
                                 marketplaceCurrency={marketplaceCurrency}
-                            /> : null}
+                            />
                     </div>
                 </LayoutWrapperMain>
             </LayoutSideNavigation>
@@ -276,6 +279,7 @@ ProductListingPageComponent.propTypes = {
     listing: object,
     page: object.isRequired,
     marketplaceCurrency: string.isRequired,
+    onRemoveListingImage: func.isRequired,
     listingMinimumPriceSubUnits: number.isRequired,
     listingTypes: arrayOf(
         shape({
