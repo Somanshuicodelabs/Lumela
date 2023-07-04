@@ -24,9 +24,10 @@ import {
   resolveLatestProcessName,
 } from '../../transactions/transaction';
 
-import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2 } from '../../components';
+import { ModalInMobile, PrimaryButton, AvatarSmall, H1, H2, IconCard, Button } from '../../components';
 
 import css from './OrderPanel.module.css';
+import IconLocation from '../IconLocation/IconLocation';
 
 const BookingTimeForm = loadable(() =>
   import(/* webpackChunkName: "BookingTimeForm" */ './BookingTimeForm/BookingTimeForm')
@@ -183,20 +184,66 @@ const OrderPanel = props => {
         </div>
 
         <div className={css.orderHeading}>
+          <div className={css.favBox}>
+            <span className={css.favIcon}>
+              <IconCard brand="heart" />
+            </span>
+            <span className={css.saveTitle}>
+              <FormattedMessage id="OrderPanel.save" />
+            </span>
+          </div>
           {titleDesktop ? titleDesktop : <H2 className={titleClasses}>{title}</H2>}
           {subTitleText ? <div className={css.orderHelp}>{subTitleText}</div> : null}
+          <div className={css.ratingBox}>
+            <span className={css.rartingStar}>
+              <IconCard brand="ratingstar" />
+              <IconCard brand="ratingstar" />
+              <IconCard brand="ratingstar" />
+              <IconCard brand="ratingstar" />
+            </span>
+            <span className={css.ratingCount}>(101 Reviews)</span>
+          </div>
+          <div className={css.orderBottom}>
+            <div className={css.locationBox}>
+              <IconLocation />
+              <span>Shop 1-3 Albert Rd, Edgecliffe 2010</span>
+            </div>
+            <div className={css.closeBox}>
+              <IconCard brand="clock" />
+              <span>
+                <FormattedMessage id="OrderPanel.closedNow" />
+              </span>
+            </div>
+            <Button className={css.messageButton}>
+              <FormattedMessage id="OrderPanel.message" />
+              <IconCard brand="message" />
+            </Button>
+            <div className={css.limitedAvailability}>
+              <span className={css.availabilityLeft}>
+                <IconCard brand="availability" />
+              </span>
+              <span className={css.availabilityRight}>
+                <div className={css.availabilityHead}>
+                  Limited Availability!
+                </div>
+                <div className={css.availabilityDescription}>
+                  Salon By Kleins calendar is filling up for June - secure your spot now.
+                </div>
+              </span>
+            </div>
+          </div>
         </div>
 
-        {price ? (
+        {/* {price ? (
           <div className={css.priceContainer}>
             <p className={css.price}>{formatMoney(intl, price)}</p>
             <div className={css.perUnit}>
               <FormattedMessage id="OrderPanel.perUnit" values={{ unitType }} />
             </div>
           </div>
-        ) : null}
+        ) : null} */}
 
-        <div className={css.author}>
+        {/* <div className={css.author}>
           <AvatarSmall user={author} className={css.providerAvatar} />
           <span className={css.providerNameLinked}>
             <FormattedMessage id="OrderPanel.author" values={{ name: authorLink }} />
@@ -204,7 +251,7 @@ const OrderPanel = props => {
           <span className={css.providerNamePlain}>
             <FormattedMessage id="OrderPanel.author" values={{ name: authorDisplayName }} />
           </span>
-        </div>
+        </div> */}
 
         {showPriceMissing ? (
           <PriceMissing />

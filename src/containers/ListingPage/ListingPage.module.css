@@ -1,7 +1,6 @@
 @import '../../styles/customMediaQueries.css';
 
-.root {
-}
+.root {}
 
 .pageRoot {
   padding-bottom: 90px;
@@ -39,7 +38,8 @@
 
 .imageWrapperForSectionHero {
   composes: heroHeight;
-  background-color: var(--colorGrey100); /* Loading BG color */
+  background-color: var(--colorGrey100);
+  /* Loading BG color */
 
   /* Image carousel can be opened from the image, therefore we should show a pointer */
   cursor: pointer;
@@ -51,7 +51,8 @@
   width: 100%;
   color: var(--colorGrey100);
   background-color: var(--colorGrey700);
-  z-index: 1; /* bring on top of mobile image */
+  z-index: 1;
+  /* bring on top of mobile image */
 
   /* Action bar prevents the image click events going to the parent and
    should not show a pointer */
@@ -214,44 +215,227 @@
 }
 
 .mainColumnForProductLayout {
-  @media (--viewportMedium) {
-  }
+  @media (--viewportMedium) {}
+
   @media (--viewportLarge) {
     /* contentContainer's full width - (orderColumn + paddings + margin) */
-    max-width: calc(100% - 348px);
+    /* max-width: calc(100% - 348px);
     flex-basis: calc(100% - 348px);
     flex-shrink: 0;
-    flex-grow: 1;
+    flex-grow: 1; */
+    width: 60%;
   }
 }
 
 .orderColumnForProductLayout {
-  @media (--viewportMedium) {
-  }
+  @media (--viewportMedium) {}
+
   @media (--viewportLarge) {
     display: block;
-    margin-left: 48px;
-    flex-basis: 300px;
-    flex-shrink: 0;
+    /* margin-left: 48px; */
+    /* flex-basis: 300px;
+    flex-shrink: 0; */
+    width: 40%;
+    padding-right: 150px;
+    padding-top: 98px;
   }
 }
 
 .contentWrapperForProductLayout {
-  margin: 0 0 56px 0;
 
   @media (--viewportMedium) {
     width: 100%;
     max-width: var(--contentMaxWidth);
-    padding: 0 24px 0 24px;
-    margin: 0 auto 56px auto;
   }
 
   @media (--viewportLarge) {
     display: flex;
     flex-direction: row;
+    gap: 22px;
     max-width: calc(var(--contentMaxWidth) + 72px);
-    padding: 64px 36px 0 36px;
-    margin: 0 auto 117px auto;
+    justify-content: space-between;
+  }
+}
+
+.tabsBox {
+  max-width: var(--contentFixedWidth);
+  margin: 0px auto 100px auto;
+
+  & .listLink {
+    display: flex;
+    border-bottom: 1px solid #DBDBDB;
+
+    & li {
+      & button {
+        border: none;
+        padding-bottom: 6px;
+        cursor: pointer;
+      }
+
+      & .activeTab {
+        color: #69BAC9;
+        font-size: 24px;
+        font-style: italic;
+        font-weight: 700;
+        line-height: normal;
+        position: relative;
+
+        &:after {
+          content: "";
+          background: #69BAC9;
+          width: 100%;
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          height: 4px;
+        }
+      }
+
+      & .inActiveTab {
+        color: #4E4E4E;
+        font-size: 24px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+
+        &:after {
+          content: "";
+          background: #4e4e4e00;
+          width: 100%;
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          height: 4px;
+        }
+      }
+    }
+  }
+
+  & .tabsRowBox {
+    display: flex;
+    gap: 39px;
+
+    & .tabCategoryLeft {
+      border-radius: 2px;
+      border: 1px solid #A7A7A7;
+      padding: 10px 0;
+      flex: 1;
+
+      & ul {
+        padding: 0;
+        margin: 0;
+
+        & li {
+          list-style: none;
+          color: #000;
+          font-size: 18px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: normal;
+          padding: 4px 13px;
+          cursor: pointer;
+          position: relative;
+
+          &:hover {
+            background-color: #CACACA42;
+
+            &:after {
+              content: "";
+              position: absolute;
+              background-image: url(../../assets/rightarrow.png);
+              background-position: right;
+              background-repeat: no-repeat;
+              background-size: auto;
+              width: 20px;
+              height: 20px;
+            }
+          }
+        }
+      }
+    }
+
+    & .tabCategoryRight {
+      flex: 3;
+
+      & .sevicesList {
+        /* display: flex;
+        align-items: center; */
+        border: 1px solid #C4C4C4;
+        border-left: none;
+        border-right: none;
+        padding: 6px 0;
+
+        & .servicesListRight {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          & .servicesProfile {
+            display: flex;
+            align-items: center;
+            gap: 26px;
+
+            & img {
+              width: 90px;
+              height: 99px;
+            }
+
+            & .heading {
+              color: #000;
+              font-size: 24px;
+              font-style: normal;
+              font-weight: 700;
+              line-height: normal;
+            }
+
+            & .time {
+              color: #000;
+              font-size: 16px;
+              font-style: normal;
+              font-weight: 400;
+              line-height: normal;
+            }
+
+            & .descriptionServices {
+              color: #000;
+              font-size: 18px;
+              margin-top: 3px;
+              font-style: normal;
+              font-weight: 400;
+              line-height: normal;
+            }
+          }
+
+          & .bookingBox {
+            display: flex;
+            align-items: center;
+
+            & .bookingAmount {
+              margin-right: 39px;
+              color: #000;
+              font-size: 24px;
+              font-style: normal;
+              font-weight: 700;
+              line-height: normal;
+            }
+
+            & button {
+              border-radius: 3px;
+              background: #C96969;
+              padding: 5px 21px;
+              border: 1px solid #C96969;
+              cursor: pointer;
+              color: #FFF;
+              font-size: 18px;
+              font-style: normal;
+              font-weight: 400;
+              line-height: normal;
+              box-shadow: 0px 0px 16px 0px rgba(201, 105, 105, 0.40);
+            }
+          }
+        }
+      }
+    }
   }
 }
 
@@ -277,8 +461,8 @@
 }
 
 .orderColumnForHeroLayout {
-  @media (--viewportMedium) {
-  }
+  @media (--viewportMedium) {}
+
   @media (--viewportLarge) {
     display: block;
     margin-top: 80px;
@@ -291,6 +475,7 @@
 }
 
 .orderPanel {
+
   /* Note: panel height might be too much on small viewport - hence min-height */
   @media (--viewportLarge) and (min-height: 950px) {
     position: sticky;
@@ -301,8 +486,9 @@
 .productOrderPanel {
   @media (--viewportLarge) {
     display: block;
-    margin-top: 24px;
+    /* margin-top: 24px; */
   }
+
   /* Note: panel height might be too much on small viewport - hence min-height */
   @media (--viewportLarge) and (min-height: 950px) {
     position: sticky;
@@ -312,8 +498,11 @@
 
 .orderPanelTitle {
   /* Font */
-  font-weight: var(--fontWeightBold);
-
+  color: #000;
+  font-size: 48px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 100%;
   /* Layout */
   width: 100%;
   margin-top: 0;
@@ -343,12 +532,14 @@
   display: flex;
 
   @media (--viewportMedium) {
-    display: none; /* Hide the medium avatar from the bigger screens */
+    display: none;
+    /* Hide the medium avatar from the bigger screens */
   }
 }
 
 .avatarDesktop {
-  display: none; /* Hide the large avatar from the smaller screens */
+  display: none;
+  /* Hide the large avatar from the smaller screens */
 
   @media (--viewportMedium) {
     display: flex;
@@ -410,6 +601,7 @@
   width: 100%;
   margin-top: 0;
   margin-bottom: 0;
+
   @media (--viewportMedium) {
     margin-top: 0;
     margin-bottom: 2px;
@@ -565,6 +757,7 @@
     padding: 0;
     margin-top: 40px;
   }
+
   @media (--viewportLarge) {
     padding: 8px 0;
   }
@@ -668,6 +861,7 @@
   @media (--viewportMedium) {
     margin: 24px 0 48px 0;
   }
+
   @media (--viewportLarge) {
     margin: 0 0 40px 0;
     padding-bottom: 4px;
@@ -688,13 +882,13 @@
 
 .productDesktopHeading {
   display: none;
+
   @media (--viewportLarge) {
     display: block;
   }
 }
 
-.productSideContent {
-}
+.productSideContent {}
 
 .productBookingPanel {
   @media (--viewportLarge) {

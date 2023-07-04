@@ -46,6 +46,7 @@
   width: 100%;
   margin-top: 0;
   margin-bottom: 0;
+
   @media (--viewportMedium) {
     margin-top: 0;
     margin-bottom: 5px;
@@ -81,8 +82,7 @@
     margin-bottom: 0;
   }
 
-  @media (--viewportLarge) {
-  }
+  @media (--viewportLarge) {}
 }
 
 .author {
@@ -131,6 +131,145 @@
   @media (--viewportLarge) {
     display: block;
     margin-bottom: 0;
+    text-align: right;
+  }
+}
+
+.favBox {
+  display: flex;
+  align-items: center;
+  margin-bottom: 7px;
+  justify-content: flex-end;
+
+  & .favIcon {
+    & svg {
+      & path {
+        fill: none;
+      }
+    }
+  }
+
+  & .saveTitle {
+    color: #000;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    padding-left: 10px;
+  }
+}
+
+.ratingBox {
+  margin-top: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  & .rartingStar {
+    & svg {
+      margin-left: 9px;
+    }
+  }
+
+  & .ratingCount {
+    padding-left: 13px;
+    color: #000;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+}
+
+.closeBox {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  &>span {
+    margin-left: 15px;
+    color: #000;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+}
+
+.messageButton {
+  border-radius: 3px;
+  background: var(--secondary-blue, #91D6D5);
+  box-shadow: 0px 0px 16px 0px rgb(69 162 180 / 40%);
+  color: #FFF;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  border: 1px solid var(--secondary-blue, #91D6D5);
+  padding: 5px 21px;
+
+  & span {
+    margin-right: 10px;
+  }
+}
+
+.limitedAvailability {
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  border: 1px solid #dbdad9;
+  justify-content: flex-start;
+  text-align: left;
+  padding: 13px;
+  margin-top: 30px;
+
+  & .availabilityLeft {}
+
+  & .availabilityRight {
+    margin-left: 8px;
+
+    & .availabilityHead {
+      color: #121111;
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 18px;
+    }
+
+    & .availabilityDescription {
+      color: #121111;
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 18px;
+    }
+  }
+}
+
+.orderBottom {
+  margin-top: 116px;
+
+  & .locationBox {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    & span {
+      color: #000;
+      font-size: 24px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      margin-left: 16px;
+    }
+
+    & svg {
+      & path {
+        fill: #000;
+      }
+    }
   }
 }
 
@@ -220,6 +359,7 @@
     padding: 0;
   }
 }
+
 .priceContainerInCTA {
   flex-direction: column;
   align-items: center;
@@ -234,6 +374,7 @@
 
   margin-top: 0;
   margin-bottom: 0px;
+
   @media (--viewportMedium) {
     margin-top: 0;
     margin-bottom: 0;
@@ -255,8 +396,7 @@
     margin-bottom: 0;
   }
 
-  @media (--viewportLarge) {
-  }
+  @media (--viewportLarge) {}
 }
 
 .closedListingButton {
@@ -280,6 +420,7 @@
     padding: 0;
   }
 }
+
 .errorSidebar {
   color: var(--colorFail);
   padding: 0 24px;

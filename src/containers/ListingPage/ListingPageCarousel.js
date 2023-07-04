@@ -42,6 +42,7 @@ import {
   Footer,
   OrderPanel,
   LayoutSingleColumn,
+  Button,
 } from '../../components';
 
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
@@ -71,7 +72,7 @@ import SectionReviews from './SectionReviews';
 import SectionAuthorMaybe from './SectionAuthorMaybe';
 import SectionMapMaybe from './SectionMapMaybe';
 import SectionGallery from './SectionGallery';
-
+import serviceImage from '../../assets/men-style1.png';
 import css from './ListingPage.module.css';
 
 const MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE = 16;
@@ -82,6 +83,14 @@ export const ListingPageComponent = props => {
   const [inquiryModalOpen, setInquiryModalOpen] = useState(
     props.inquiryModalOpenForListingId === props.params.id
   );
+  const [activeTab, setActiveTab] = useState(0);
+
+  const handleTabClick = (index) => {
+    setActiveTab(index);
+  };
+
+  console.log(activeTab, '&&&  &&& => activeTab');
+
 
   const {
     isAuthenticated,
@@ -247,18 +256,19 @@ export const ListingPageComponent = props => {
   const productURL = `${config.marketplaceRootURL}${location.pathname}${location.search}${location.hash}`;
   const schemaPriceMaybe = price
     ? {
-        price: intl.formatNumber(convertMoneyToNumber(price), {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        }),
-        priceCurrency: price.currency,
-      }
+      price: intl.formatNumber(convertMoneyToNumber(price), {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }),
+      priceCurrency: price.currency,
+    }
     : {};
   const currentStock = currentListing.currentStock?.attributes?.quantity || 0;
   const schemaAvailability =
     currentStock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock';
 
   const createFilterOptions = options => options.map(o => ({ key: `${o.option}`, label: o.label }));
+
 
   return (
     <Page
@@ -283,38 +293,39 @@ export const ListingPageComponent = props => {
       }}
     >
       <LayoutSingleColumn className={css.pageRoot} topbar={topbar} footer={<Footer />}>
-        <div className={css.contentWrapperForProductLayout}>
-          <div className={css.mainColumnForProductLayout}>
-            {currentListing.id ? (
-              <ActionBarMaybe
-                className={css.actionBarForProductLayout}
-                isOwnListing={isOwnListing}
+        <div>
+          <div className={css.contentWrapperForProductLayout}>
+            <div className={css.mainColumnForProductLayout}>
+              {currentListing.id ? (
+                <ActionBarMaybe
+                  className={css.actionBarForProductLayout}
+                  isOwnListing={isOwnListing}
+                  listing={currentListing}
+                  editParams={{
+                    id: listingId.uuid,
+                    slug: listingSlug,
+                    type: listingPathParamType,
+                    tab: listingTab,
+                  }}
+                />
+              ) : null}
+              <SectionGallery
                 listing={currentListing}
-                editParams={{
-                  id: listingId.uuid,
-                  slug: listingSlug,
-                  type: listingPathParamType,
-                  tab: listingTab,
-                }}
+                variantPrefix={config.layout.listingImage.variantPrefix}
               />
-            ) : null}
-            <SectionGallery
-              listing={currentListing}
-              variantPrefix={config.layout.listingImage.variantPrefix}
-            />
-            <div className={css.mobileHeading}>
+              {/* <div className={css.mobileHeading}>
               <H4 as="h1" className={css.orderPanelTitle}>
                 <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
               </H4>
-            </div>
-            <SectionTextMaybe text={description} showAsIngress />
-            <SectionDetailsMaybe
+            </div> */}
+              {/* <SectionTextMaybe text={description} showAsIngress /> */}
+              {/* <SectionDetailsMaybe
               publicData={publicData}
               metadata={metadata}
               listingConfig={listingConfig}
               intl={intl}
-            />
-            {listingConfig.listingFields.reduce((pickedElements, config) => {
+            /> */}
+              {/* {listingConfig.listingFields.reduce((pickedElements, config) => {
               const { key, enumOptions, scope = 'public' } = config;
               const value =
                 scope === 'public' ? publicData[key] : scope === 'metadata' ? metadata[key] : null;
@@ -335,16 +346,16 @@ export const ListingPageComponent = props => {
                     <SectionTextMaybe key={key} heading={config?.showConfig?.label} text={value} />,
                   ]
                 : pickedElements;
-            }, [])}
+            }, [])} */}
 
-            <SectionMapMaybe
+              {/* <SectionMapMaybe
               geolocation={geolocation}
               publicData={publicData}
               listingId={currentListing.id}
               mapsConfig={config.maps}
-            />
-            <SectionReviews reviews={reviews} fetchReviewsError={fetchReviewsError} />
-            <SectionAuthorMaybe
+            /> */}
+              {/* <SectionReviews reviews={reviews} fetchReviewsError={fetchReviewsError} /> */}
+              {/* <SectionAuthorMaybe
               title={title}
               listing={currentListing}
               authorDisplayName={authorDisplayName}
@@ -356,43 +367,157 @@ export const ListingPageComponent = props => {
               onSubmitInquiry={onSubmitInquiry}
               currentUser={currentUser}
               onManageDisableScrolling={onManageDisableScrolling}
-            />
+            /> */}
+            </div>
+            <div className={css.orderColumnForProductLayout}>
+              <OrderPanel
+                className={css.productOrderPanel}
+                listing={currentListing}
+                isOwnListing={isOwnListing}
+                onSubmit={handleOrderSubmit}
+                // authorLink={
+                //   <NamedLink
+                //     className={css.authorNameLink}
+                //     name="ListingPage"
+                //     params={params}
+                //     to={{ hash: '#author' }}
+                //   >
+                //     {authorDisplayName}
+                //   </NamedLink>
+                // }
+                // title={<FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />}
+                titleDesktop={
+                  <H4 as="h1" className={css.orderPanelTitle}>
+                    <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
+                  </H4>
+                }
+                author={ensuredAuthor}
+                onManageDisableScrolling={onManageDisableScrolling}
+                onContactUser={onContactUser}
+                monthlyTimeSlots={monthlyTimeSlots}
+                onFetchTimeSlots={onFetchTimeSlots}
+                onFetchTransactionLineItems={onFetchTransactionLineItems}
+                lineItems={lineItems}
+                fetchLineItemsInProgress={fetchLineItemsInProgress}
+                fetchLineItemsError={fetchLineItemsError}
+                marketplaceCurrency={config.currency}
+                dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
+                marketplaceName={config.marketplaceName}
+              />
+            </div>
           </div>
-          <div className={css.orderColumnForProductLayout}>
-            <OrderPanel
-              className={css.productOrderPanel}
-              listing={currentListing}
-              isOwnListing={isOwnListing}
-              onSubmit={handleOrderSubmit}
-              authorLink={
-                <NamedLink
-                  className={css.authorNameLink}
-                  name="ListingPage"
-                  params={params}
-                  to={{ hash: '#author' }}
+          <div className={css.tabsBox}>
+            <ul className={css.listLink}>
+              <li>
+                <button
+                  className={activeTab === 0 ? css.activeTab : css.inActiveTab}
+                  onClick={() => handleTabClick(0)}
                 >
-                  {authorDisplayName}
-                </NamedLink>
+                  Services
+                </button>
+              </li>
+              <li>
+                <button
+                  className={activeTab === 1 ? css.activeTab : css.inActiveTab}
+                  onClick={() => handleTabClick(1)}
+                >
+                  Products
+                </button>
+              </li>
+              <li>
+                <button
+                  className={activeTab === 2 ? css.activeTab : css.inActiveTab}
+                  onClick={() => handleTabClick(2)}
+                >
+                  About
+                </button>
+              </li>
+              <li>
+                <button
+                  className={activeTab === 3 ? css.activeTab : css.inActiveTab}
+                  onClick={() => handleTabClick(3)}
+                >
+                  Gallery
+                </button>
+              </li>
+            </ul>
+            <div>
+              {activeTab === 0 &&
+                <div className={css.tabsRowBox}>
+                  <div className={css.tabCategoryLeft}>
+                    <ul>
+                      <li>
+                        Category (1)
+                      </li>
+                      <li>
+                        This Category (3)
+                      </li>
+                      <li>
+                        Hair 1 (2)
+                      </li>
+                      <li>
+                        This one 2 (7)
+                      </li>
+                      <li>
+                        Long Category Name (1)
+                      </li>
+                      <li>
+                        This is it (1)
+                      </li>
+                    </ul>
+                  </div>
+                  <div className={css.tabCategoryRight}>
+                    <div className={css.sevicesList}>
+                      <div className={css.servicesListRight}>
+                        <div className={css.servicesProfile}>
+                          <img src={serviceImage} />
+                          <div>
+                            <div className={css.heading}>Haircut</div>
+                            <div className={css.time}>45 Mins</div>
+                            <div className={css.descriptionServices}>
+                              Description here if needed. blah blah blah
+                            </div>
+                          </div>
+                        </div>
+                        <div className={css.bookingBox}>
+                          <div className={css.bookingAmount}>
+                            $75
+                          </div>
+                          <div>
+                            <Button>BOOK NOW</Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className={css.sevicesList}>
+                      <div className={css.servicesListRight}>
+                        <div className={css.servicesProfile}>
+                          <img src={serviceImage} />
+                          <div>
+                            <div className={css.heading}>Haircut</div>
+                            <div className={css.time}>45 Mins</div>
+                            <div className={css.descriptionServices}>
+                              Description here if needed. blah blah blah
+                            </div>
+                          </div>
+                        </div>
+                        <div className={css.bookingBox}>
+                          <div className={css.bookingAmount}>
+                            $75
+                          </div>
+                          <div>
+                            <Button>BOOK NOW</Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               }
-              title={<FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />}
-              titleDesktop={
-                <H4 as="h1" className={css.orderPanelTitle}>
-                  <FormattedMessage id="ListingPage.orderTitle" values={{ title: richTitle }} />
-                </H4>
-              }
-              author={ensuredAuthor}
-              onManageDisableScrolling={onManageDisableScrolling}
-              onContactUser={onContactUser}
-              monthlyTimeSlots={monthlyTimeSlots}
-              onFetchTimeSlots={onFetchTimeSlots}
-              onFetchTransactionLineItems={onFetchTransactionLineItems}
-              lineItems={lineItems}
-              fetchLineItemsInProgress={fetchLineItemsInProgress}
-              fetchLineItemsError={fetchLineItemsError}
-              marketplaceCurrency={config.currency}
-              dayCountAvailableForBooking={config.stripe.dayCountAvailableForBooking}
-              marketplaceName={config.marketplaceName}
-            />
+              {activeTab === 1 && <p>Content for Tab 2</p>}
+              {activeTab === 2 && <p>Content for Tab 3</p>}
+              {activeTab === 3 && <p>Content for Tab 4</p>}
+            </div>
           </div>
         </div>
       </LayoutSingleColumn>
