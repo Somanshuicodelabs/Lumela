@@ -152,7 +152,6 @@ export default manageListingsPageReducer;
  */
 export const getOwnListingsById = (state, listingIds) => {
   const { ownEntities } = state.ManageListingsPage;
-  console.log('ownEntities :>> ', ownEntities);
   const resources = listingIds.map(id => ({
     id,
     type: 'ownListing',

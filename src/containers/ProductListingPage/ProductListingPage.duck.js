@@ -4,6 +4,7 @@ import { compareAndSetStock, updateStockOfListingMaybe } from '../EditListingPag
 import { currentUserShowSuccess, fetchCurrentUser, fetchCurrentUserHasListings } from '../../ducks/user.duck';
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { addOwnEntities } from '../ManageListingsPage/ManageListingsPage.duck';
+import { parse } from '../../util/urlHelpers';
 const { UUID } = sdkTypes;
 
 // ================ Action types ================ //
@@ -227,7 +228,6 @@ export const fetchCurrentListing = listingId => async (dispatch, getState, sdk) 
       include: ["images"],
       'fields.image': ['variants.square-small', 'variants.square-small2x']
     }, { expand: true });
-    console.log('response :>> ', response);
     dispatch(addOwnEntities(response));
     dispatch(showListingsSuccess(response));
     return response;
@@ -265,8 +265,12 @@ export const fetchCurrentListing = listingId => async (dispatch, getState, sdk) 
 //     };
 //   };
 
-export const loadData = () => async (dispatch, getState, sdk) => {
+export const loadData = (params, search) => async (dispatch, getState, sdk) => {
   try {
+   const searchParams = parse(search);
+   console.log('searchPar :>> ', searchParams);
+   
+    
     const fetchUser = await dispatch(fetchCurrentUser())
     const result = await dispatch(fetchCurrentUserHasListings());
 

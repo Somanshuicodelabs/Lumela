@@ -1,10 +1,12 @@
 import React from 'react'
 import css from './ProductsCard.module.css';
 import IconCard from '../IconCard/IconCard';
+import NamedLink from '../NamedLink/NamedLink';
 
 const ProductsCard = (props) => {
-    const { productImage, productHeading, productSize, productPrice } = props;
+    const { productImage, productHeading, productSize, productPrice ,id} = props;
     return (
+        <NamedLink name="ProductListingPage" to={{search:`?id=${id?.uuid}`}} >
         <div className={css.productCard}>
             <div className={css.imageBox}>
                 <img src={productImage} />
@@ -20,6 +22,7 @@ const ProductsCard = (props) => {
                 </div>
             </div>
         </div>
+        </NamedLink>
     )
 }
 

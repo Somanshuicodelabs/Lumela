@@ -564,7 +564,6 @@ export function compareAndSetStock(listingId, oldTotal, newTotal) {
       .then(response => {
         // NOTE: compareAndSet returns the stock resource of the listing.
         // We update client app's internal state with these updated API entities.
-        console.log(response, '&& >>>>>>> && => response');
         dispatch(addMarketplaceEntities(response));
         dispatch(setStockSuccess(response));
       })
@@ -592,7 +591,6 @@ export function compareAndSetStock(listingId, oldTotal, newTotal) {
 // this means that there needs to be a sequence of calls:
 // create, set stock, show listing (to get updated currentStock entity)
 export function requestCreateListingDraft(data, config) {
-  console.log('data :>> ', data);
   return (dispatch, getState, sdk) => {
     dispatch(createListingDraftRequest(data));
     const { stockUpdate, images, ...rest } = data;
@@ -611,10 +609,10 @@ export function requestCreateListingDraft(data, config) {
     };
 
     let createDraftResponse = null;
+
     return sdk.ownListings
       .createDraft(ownListingValues, queryParams)
       .then(response => {
-        console.log('response :>> ', response);
         createDraftResponse = response;
         
         const listingId = response.data.data.id;

@@ -57,6 +57,7 @@ const SearchResultsPanel = props => {
   return (
     <div className={classes}>
       <div className={isMapVariant ? css.listingCardsMapVariant : css.listingCards}>
+      {/* // const listing = listings.filter(item => item?.attributes?.publicData?.abn === "abn") */}
         {listings.map(l => (
           <ListingCard
             className={css.listingCard}

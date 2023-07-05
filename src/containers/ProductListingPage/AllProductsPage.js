@@ -6,7 +6,7 @@ import { bool, func, object, shape, string } from 'prop-types';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 
 import { useConfiguration } from '../../context/configurationContext';
-import { H3, Page, Footer, LayoutSingleColumn, LayoutWrapperAccountSettingsSideNav, FieldTextInput, LayoutSideNavigation, LayoutWrapperMain, UserNav, ProductsCard, PrimaryButton } from '../../components';
+import { H3, Page, Footer, LayoutSingleColumn, LayoutWrapperAccountSettingsSideNav, FieldTextInput, LayoutSideNavigation, LayoutWrapperMain, UserNav, ProductsCard, PrimaryButton, NamedLink, FieldSelect } from '../../components';
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
 
 import { isScrollingDisabled } from '../../ducks/ui.duck';
@@ -73,7 +73,6 @@ export const AllProductsPageComponent = props => {
         getOwnListing,
         ownListings,
     } = props;
-    console.log('ownListings :>> ', ownListings);
     const ensuredCurrentUser = ensureCurrentUser(currentUser);
     const profileUser = ensureUser(user);
     const isCurrentUser =
@@ -85,7 +84,7 @@ export const AllProductsPageComponent = props => {
     const schemaTitle = intl?.formatMessage({ id: "ProfilePage.schemaTitle" }, schemaTitleVars);
 
     useEffect(() => {
-        onfetchCurrentListing().then(res => console.log('res :>> ', res))
+        onfetchCurrentListing().then(res => res)
     }, [])
 
 
@@ -114,19 +113,23 @@ export const AllProductsPageComponent = props => {
                     <h2 className={css.mainHeading}>
                         <FormattedMessage id="ProductListingPage.products" />
                     </h2>
-                    <PrimaryButton>ADD NEW PRODUCT </PrimaryButton>
-                    <div className={css.productCardList}>
-                        {ownListings.filter(item => item?.attributes?.publicData?.listingType === "product").map((item) => {
-                            return (
-                                <ProductsCard
-                                    productImage={item?.images[0]?.attributes?.variants?.["square-small2x"]?.url}
-                                    productHeading={item?.attributes?.title}
-                                    productSize={item?.attributes?.publicData.size}
-                                    productPrice={"$"+(item?.attributes?.price?.amount/100)}
-                                />
-                            )
-                        })}
-                    </div>
+                    <NamedLink name="ProductListingPage"   >
+                        <PrimaryButton>ADD NEW PRODUCT </PrimaryButton>
+                    </NamedLink>
+                    
+                        <div className={css.productCardList}>
+                            {ownListings.filter(item => item?.attributes?.publicData?.listingType === "product").map((item) => {
+                                return (
+                                    <ProductsCard
+                                        productImage={item?.images[0]?.attributes?.variants?.["square-small2x"]?.url}
+                                        productHeading={item?.attributes?.title}
+                                        productSize={item?.attributes?.publicData.size}
+                                        productPrice={"$" + (item?.attributes?.price?.amount / 100)}
+                                        id={item?.id}
+                                    />
+                                )
+                            })}
+                        </div>
                 </div>
             </LayoutSideNavigation>
         </Page>

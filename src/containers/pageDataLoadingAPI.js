@@ -22,6 +22,7 @@
  import { loadData as StripePayoutPageLoader } from './StripePayoutPage/StripePayoutPage.duck';
  import { loadData as TermsOfServicePageLoader } from './TermsOfServicePage/TermsOfServicePage.duck';
  import { loadData as ServiceListingPagePageLoader } from './ServiceListingPage/ServiceListingPage.duck';
+ import { loadData as ProductListingPageLoader } from './ProductListingPage/ProductListingPage.duck';
  import {
    loadData as TransactionPageLoader,
    setInitialValues as TransactionPageInitialValues,
@@ -89,9 +90,9 @@
      OrderPage: {
        loadData: OrderPageLoader,
      },
-    //  ProductListingPage: {
-    //    loadData: ProductListingPageLoader,
-    //  },
+     ProductListingPage: {
+       loadData: ProductListingPageLoader,
+     },
 
      SearchPage: {
        loadData: SearchPageLoader,

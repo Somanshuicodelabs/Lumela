@@ -13,8 +13,10 @@ import {
 } from '../../util/urlHelpers';
 import { getProcess, isBookingProcessAlias } from '../../transactions/transaction';
 import { fetchCurrentUser, fetchCurrentUserHasOrdersSuccess } from '../../ducks/user.duck';
+import { addOwnEntities } from '../ManageListingsPage/ManageListingsPage.duck';
 
 const { UUID } = sdkTypes;
+const resultIds = data => data.data.map(l => l.id);
 
 // ================ Action types ================ //
 
@@ -39,6 +41,10 @@ export const SEND_INQUIRY_REQUEST = 'app/ListingPage/SEND_INQUIRY_REQUEST';
 export const SEND_INQUIRY_SUCCESS = 'app/ListingPage/SEND_INQUIRY_SUCCESS';
 export const SEND_INQUIRY_ERROR = 'app/ListingPage/SEND_INQUIRY_ERROR';
 
+export const SHOW_LISTINGS_REQUEST = 'app/EditListingPage/SHOW_LISTINGS_REQUEST';
+export const SHOW_LISTINGS_SUCCESS = 'app/EditListingPage/SHOW_LISTINGS_SUCCESS';
+export const SHOW_LISTINGS_ERROR = 'app/EditListingPage/SHOW_LISTINGS_ERROR';
+
 // ================ Reducer ================ //
 
 const initialState = {
@@ -59,6 +65,7 @@ const initialState = {
   sendInquiryInProgress: false,
   sendInquiryError: null,
   inquiryModalOpenForListingId: null,
+  currentPageResultIds:[],
 };
 
 const listingPageReducer = (state = initialState, action = {}) => {
@@ -71,6 +78,25 @@ const listingPageReducer = (state = initialState, action = {}) => {
       return { ...state, id: payload.id, showListingError: null };
     case SHOW_LISTING_ERROR:
       return { ...state, showListingError: payload };
+
+      case SHOW_LISTINGS_REQUEST:
+      return {
+        ...state,
+        searchInProgress: true,
+        searchMapListingIds: [],
+        searchListingsError: null,
+      };
+    case SHOW_LISTINGS_SUCCESS:
+      return {
+        ...state,
+        currentPageResultIds: resultIds(payload.data),
+        pagination: payload.data.meta,
+        searchInProgress: false,
+      };
+    case SHOW_LISTINGS_ERROR:
+      // eslint-disable-next-line no-console
+      console.error(payload);
+      return { ...state, searchInProgress: false, searchListingsError: payload };
 
     case FETCH_REVIEWS_REQUEST:
       return { ...state, fetchReviewsError: null };
@@ -150,6 +176,22 @@ export const showListingRequest = id => ({
 
 export const showListingError = e => ({
   type: SHOW_LISTING_ERROR,
+  error: true,
+  payload: e,
+});
+
+export const showListingsRequest = searchParams => ({
+  type: SHOW_LISTINGS_REQUEST,
+  payload: { searchParams },
+});
+
+export const showListingsSuccess = response => ({
+  type: SHOW_LISTINGS_SUCCESS,
+  payload: { data: response.data },
+});
+
+export const showListingsError = e => ({
+  type: SHOW_LISTINGS_ERROR,
   error: true,
   payload: e,
 });
@@ -372,6 +414,26 @@ export const fetchTransactionLineItems = ({ orderData, listingId, isOwnListing }
       });
     });
 };
+
+export const fetchCurrentListing = (listingId) => async (dispatch, getState, sdk) => {
+  try {
+    dispatch(showListingsRequest());
+    const queryParams = {
+      expand: true,
+      'fields.image': ['variants.square-small', 'variants.square-small2x'],
+    };
+    const response = await sdk.ownListings.query({
+      include: ["images"],
+      'fields.image': ['variants.square-small', 'variants.square-small2x']
+    }, { expand: true });
+    console.log('response :>> ', response);
+    dispatch(addOwnEntities(response));
+    dispatch(showListingsSuccess(response));
+    return response;
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 export const loadData = (params, search, config) => dispatch => {
   const listingId = new UUID(params.id);

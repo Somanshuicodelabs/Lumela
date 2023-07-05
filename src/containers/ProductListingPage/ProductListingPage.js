@@ -10,7 +10,7 @@ import { useConfiguration } from '../../context/configurationContext';
 import { H3, Page, Footer, LayoutSingleColumn, LayoutWrapperAccountSettingsSideNav, FieldTextInput, LayoutSideNavigation, LayoutWrapperMain, UserNav } from '../../components';
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 import { isScrollingDisabled, manageDisableScrolling } from '../../ducks/ui.duck';
-import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
+import { getListingsById, getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { propTypes } from '../../util/types';
 import ProductListingPageForm from './ProductListingPageForm/ProductListingPageForm';
 import {
@@ -27,6 +27,8 @@ import {
 } from '../EditListingPage/EditListingPage.duck';
 import css from './ProductListingPage.module.css';
 import { requestCreateListing } from './ProductListingPage.duck';
+import { getOwnListingsById } from '../ManageListingsPage/ManageListingsPage.duck';
+import { parse } from '../../util/urlHelpers';
 
 const { UUID, Money } = sdkTypes;
 const getInitialValues = params => {
@@ -62,8 +64,13 @@ export const ProductListingPageComponent = props => {
         page,
         listingMinimumPriceSubUnits,
         onRemoveListingImage,
-        onCreateDraftServiceListing
+        onPublishListingDraft,
+        onCreateDraftServiceListing,
+        state
     } = props;
+    console.log('listing :>> ', listing);
+    
+
     const initialValues = getInitialValues(props);
     const marketplaceCurrency = config.currency || ''
     const currentListing = ensureOwnListing(listing);
@@ -156,8 +163,23 @@ export const ProductListingPageComponent = props => {
             shortDescription,
             seller,
             price, sort, maxNo, weight, dimensions, width, height, tag } = values;
+        const hasNoCurrentStock = listing?.currentStock?.attributes?.quantity == null;
+        const hasStockQuantityChanged = stock && stock !== initialValues.stock;
+        // currentStockQuantity is null or undefined, return null - otherwise use the value
+        const oldTotal = hasNoCurrentStock ? null : initialValues.stock;
+        const stockUpdateMaybe =
+            hasNoCurrentStock || hasStockQuantityChanged
+                ? {
+                    stockUpdate: {
+                        oldTotal,
+                        newTotal: stock,
+                    },
+                }
+                : {};
         onCreateListingDraft({
+            price,
             title: title,
+            images: images,
             publicData: {
                 brand,
                 color,
@@ -165,7 +187,6 @@ export const ProductListingPageComponent = props => {
                 category,
                 shortDescription,
                 seller,
-                price,
                 sort,
                 maxNo,
                 weight,
@@ -175,13 +196,38 @@ export const ProductListingPageComponent = props => {
                 listingType: 'product',
                 tag
             },
+            ...stockUpdateMaybe
         }, config)
     }
 
-    const priceCurrencyValid =
-        initialValues.price instanceof Money
-            ? initialValues.price?.currency === marketplaceCurrency
-            : true;
+    // const priceCurrencyValid =
+    //     initialValues.price instanceof Money
+    //         ? initialValues.price?.currency === marketplaceCurrency
+    //         : true;
+
+    // save draft
+    const listingSearchId = typeof window !== 'undefined' &&
+    parse(window.location.search);
+    const listingID = new UUID(listingSearchId?.id)
+    const ownListings = getOwnListingsById(state, [listingID])
+    console.log('listingID :>> ', listingID);
+    console.log('listingSearchId :>> ', ownListings);
+    // const initialValues
+
+    // const { brand,
+    //     color,
+    //     size,
+    //     category,
+    //     shortDescription,
+    //     seller,
+    //     price,
+    //     sort,
+    //     weight,
+    //     tag } = ownListings[0]?.attributes?.publicData || {};
+
+    const newInitialValues = 
+        ownListings ? {}: null
+    
 
     return (
         <Page title={schemaTitle} scrollingDisabled={scrollingDisabled}>
@@ -207,47 +253,48 @@ export const ProductListingPageComponent = props => {
                         <FormattedMessage id="ProductListingPage.addNewProduct" />
                     </h1>
                     <div className={css.contentBox}>
-                            <ProductListingPageForm
-                                className={css.productFormWrapper}
-                                images={restImages}
-                                initialValues={{
-                                    images,
-                                    // title,
-                                    brand,
-                                    color,
-                                    size,
-                                    category,
-                                    shortDescription,
-                                    seller,
-                                    price,
-                                    sort,
-                                    weight,
-                                    tag
-                                    // maxNo,
-                                    // dimensions,
-                                    // width,
-                                    // height,
+                        <ProductListingPageForm
+                            className={css.productFormWrapper}
+                            images={restImages}
+                            initialValues={{
+                                images,
+                                // title,
+                                brand,
+                                color,
+                                size,
+                                category,
+                                shortDescription,
+                                seller,
+                                price,
+                                sort,
+                                weight,
+                                tag
+                                // maxNo,
+                                // dimensions,
+                                // width,
+                                // height,
 
-                                }}
-                                saveActionMsg={intl.formatMessage({
-                                    id: 'StripePayoutPage.submitButtonText',
-                                })}
-                                setResetForm={() => setResetForm(true)}
-                                onSubmit={handleValues}
-                                handleValues={handleValues}
-                                handleValuesDraft={handleValuesDraft}
-                                onChange={onChange}
-                                disabled={disabled}
-                                ready={ready}
-                                updated={panelUpdated}
-                                updateInProgress={updateInProgress}
-                                fetchErrors={errors}
-                                publicData={publicData}
-                                onImageUpload={onImageUpload}
-                                onRemoveImage={onRemoveListingImage}
-                                listingMinimumPriceSubUnits={listingMinimumPriceSubUnits}
-                                marketplaceCurrency={marketplaceCurrency}
-                            />
+                            }}
+                            saveActionMsg={intl.formatMessage({
+                                id: 'StripePayoutPage.submitButtonText',
+                            })}
+                            setResetForm={() => setResetForm(true)}
+                            onSubmit={handleValues}
+                            handleValues={handleValues}
+                            handleValuesDraft={handleValuesDraft}
+                            onChange={onChange}
+                            disabled={disabled}
+                            ready={ready}
+                            updated={panelUpdated}
+                            updateInProgress={updateInProgress}
+                            onPublishListingDraft={onPublishListingDraft}
+                            fetchErrors={errors}
+                            publicData={publicData}
+                            onImageUpload={onImageUpload}
+                            onRemoveImage={onRemoveListingImage}
+                            listingMinimumPriceSubUnits={listingMinimumPriceSubUnits}
+                            marketplaceCurrency={marketplaceCurrency}
+                        />
                     </div>
                 </LayoutWrapperMain>
             </LayoutSideNavigation>
@@ -271,6 +318,7 @@ ProductListingPageComponent.propTypes = {
         uploadedImage: propTypes.image,
     }),
     onImageUpload: func.isRequired,
+    onPublishListingDraft: func.isRequired,
     scrollingDisabled: bool.isRequired,
     updateInProgress: bool.isRequired,
     uploadImageError: propTypes.error,
@@ -300,8 +348,11 @@ ProductListingPageComponent.propTypes = {
 };
 
 const mapStateToProps = state => {
+    console.log('state :>> ', state);
     const page = state.EditListingPage;
     const { currentUser, currentUserListing } = state.user;
+    // const { currentPageResultIds } = state.ProductListingPage;
+    // const ownListings = getOwnListingsById(state, )
 
     const getOwnListing = id => {
         const listings = getMarketplaceEntities(state, [{ id, type: 'ownListing' }]);
@@ -309,6 +360,7 @@ const mapStateToProps = state => {
     };
 
     return {
+        state,
         currentUser,
         currentUserListing,
         page,

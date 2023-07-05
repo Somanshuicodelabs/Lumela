@@ -722,6 +722,7 @@ const mapStateToProps = state => {
     activeListingId,
   } = state.SearchPage;
   const listings = getListingsById(state, currentPageResultIds);
+ 
 
   return {
     listings,

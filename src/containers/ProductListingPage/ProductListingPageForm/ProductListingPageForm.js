@@ -102,7 +102,7 @@ const EditListingProductFormComponent = props => {
                     onRemoveImage,
                     formId,
                     listingMinimumPriceSubUnits,
-                    marketplaceCurrency,
+                    marketplaceCurrency
                 } = formRenderProps;
                 const businessNameMessage = intl.formatMessage({
                     id: 'EditListingDescriptionForm.businessName',
@@ -274,6 +274,7 @@ const EditListingProductFormComponent = props => {
                 return (
                     <Form className={classes} onSubmit={e => {
                         setSubmittedImages(images);
+                        handleValuesDraft()
                         handleSubmit(e);
                     }}>
                         {errorMessageCreateListingDraft}
@@ -360,7 +361,7 @@ const EditListingProductFormComponent = props => {
                                                 )}
                                                 placeholder={intl.formatMessage({
                                                     id: 'EditListingPricingAndStockForm.priceInputPlaceholder',
-                                           P     })}
+                                                })}
                                                 currencyConfig={appSettings.getCurrencyFormatting(marketplaceCurrency)}
                                                 validate={priceValidators}
                                             />
