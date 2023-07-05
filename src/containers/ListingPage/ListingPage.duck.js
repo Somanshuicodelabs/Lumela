@@ -418,16 +418,13 @@ export const fetchTransactionLineItems = ({ orderData, listingId, isOwnListing }
 export const fetchCurrentListing = (listingId) => async (dispatch, getState, sdk) => {
   try {
     dispatch(showListingsRequest());
-    const queryParams = {
-      expand: true,
-      'fields.image': ['variants.square-small', 'variants.square-small2x'],
-    };
-    const response = await sdk.ownListings.query({
-      include: ["images"],
+    const params = {
+      pub_listingType:'product',
+      include: ["images","author"],
       'fields.image': ['variants.square-small', 'variants.square-small2x']
-    }, { expand: true });
-    console.log('response :>> ', response);
-    dispatch(addOwnEntities(response));
+    };
+    const response = await sdk.listings.query(params, { expand: true });
+    dispatch(addMarketplaceEntities(response));
     dispatch(showListingsSuccess(response));
     return response;
   } catch (error) {
