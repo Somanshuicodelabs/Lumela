@@ -31,7 +31,7 @@ import {
   userDisplayNameAsString,
 } from '../../util/data';
 import { richText } from '../../util/richText';
-import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
+import { getListingsById, getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { manageDisableScrolling, isScrollingDisabled } from '../../ducks/ui.duck';
 import { initializeCardPaymentData } from '../../ducks/stripe.duck.js';
 
@@ -93,8 +93,6 @@ export const ListingPageComponent = props => {
     setActiveTab(index);
   };
 
-  console.log(activeTab, '&&&  &&& => activeTab');
-
 
   const {
     isAuthenticated,
@@ -128,7 +126,6 @@ export const ListingPageComponent = props => {
     user,
     onfetchCurrentListing
   } = props;
-  console.log('ownListing :>> ', ownListings);
 
   useEffect(() => {
     onfetchCurrentListing().then(res => res)
@@ -289,7 +286,6 @@ export const ListingPageComponent = props => {
     currentStock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock';
 
   const createFilterOptions = options => options.map(o => ({ key: `${o.option}`, label: o.label }));
-
 
   return (
     <Page
@@ -541,10 +537,10 @@ export const ListingPageComponent = props => {
                     </h2>
                     
                         <div className={css.productCardList}>
-                            {ownListings.filter(item => item?.attributes?.publicData?.listingType === "product").map((item) => {
+                            {ownListings.filter(item => (item.attributes.state=="published") && currentListing.author.id.uuid === item.author.id.uuid ).map((item) => {
                                 return (
                                     <ProductsCard
-                                        productImage={item?.images[0]?.attributes?.variants?.["square-small2x"]?.url}
+                                        productImage={item?.images?.[0]?.attributes?.variants?.["square-small2x"]?.url}
                                         productHeading={item?.attributes?.title}
                                         productSize={item?.attributes?.publicData.size}
                                         productPrice={"$" + (item?.attributes?.price?.amount / 100)}
@@ -652,7 +648,6 @@ const EnhancedListingPage = props => {
 };
 
 const mapStateToProps = state => {
-  console.log('state :>> ', state);
   const { currentPageResultIds } = state.ProductListingPage;
   const { isAuthenticated } = state.auth;
   const {
@@ -681,8 +676,7 @@ const mapStateToProps = state => {
     return listings.length === 1 ? listings[0] : null;
   };
 
-  const ownListings = getOwnListingsById(state, currentPageResultIds)
-  console.log('ownListings ownListings:>> ', ownListings);
+  const ownListings = getListingsById(state, currentPageResultIds)
 
   return {
     isAuthenticated,

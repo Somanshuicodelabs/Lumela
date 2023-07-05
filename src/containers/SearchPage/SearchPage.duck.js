@@ -236,6 +236,7 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
   const sortMaybe = sort === config.search.sortConfig.relevanceKey ? {} : { sort };
 
   const params = {
+    pub_listingType:'business',
     ...rest,
     ...priceMaybe,
     ...datesMaybe,

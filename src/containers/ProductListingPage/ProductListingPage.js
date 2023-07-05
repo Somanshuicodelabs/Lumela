@@ -68,7 +68,6 @@ export const ProductListingPageComponent = props => {
         onCreateDraftServiceListing,
         state
     } = props;
-    console.log('listing :>> ', listing);
     
 
     const initialValues = getInitialValues(props);
@@ -200,33 +199,49 @@ export const ProductListingPageComponent = props => {
         }, config)
     }
 
-    // const priceCurrencyValid =
-    //     initialValues.price instanceof Money
-    //         ? initialValues.price?.currency === marketplaceCurrency
-    //         : true;
-
     // save draft
     const listingSearchId = typeof window !== 'undefined' &&
     parse(window.location.search);
     const listingID = new UUID(listingSearchId?.id)
     const ownListings = getOwnListingsById(state, [listingID])
-    console.log('listingID :>> ', listingID);
-    console.log('listingSearchId :>> ', ownListings);
-    // const initialValues
 
-    // const { brand,
-    //     color,
-    //     size,
-    //     category,
-    //     shortDescription,
-    //     seller,
-    //     price,
-    //     sort,
-    //     weight,
-    //     tag } = ownListings[0]?.attributes?.publicData || {};
+    const newInitialValues = ownListings && ownListings.length ? {
+        images: ownListings[0]?.images.map((item) => item?.attributes?.variants?.["square-small2x"]?.url),
+        title: ownListings[0].attributes.title,
+        brand:ownListings[0].attributes.publicData.brand,
+        color:ownListings[0].attributes.publicData.color,
+        size:ownListings[0].attributes.publicData.size,
+        category:ownListings[0].attributes.publicData.category,
+        shortDescription:ownListings[0].attributes.publicData.shortDescription,
+        seller:ownListings[0].attributes.publicData.seller,
+        price:ownListings[0].attributes?.price?.amount,
+        sort:ownListings[0].attributes.publicData.sort,
+        weight:ownListings[0].attributes.publicData.weight,
+        tag:ownListings[0].attributes.publicData.tag,
+        maxNo: ownListings[0].attributes.publicData.maxNo,
+        dimensions: ownListings[0].attributes.publicData.dimensions,
+        width: ownListings[0].attributes.publicData.weight,
+        height: ownListings[0].attributes.publicData.height,
 
-    const newInitialValues = 
-        ownListings ? {}: null
+    } : {
+        images:[],
+        title: '',
+        brand: '',
+        color: '',
+        size: '',
+        category: '',
+        shortDescription: '',
+        seller: '',
+        price: '',
+        sort: '',
+        weight: '',
+        tag: '',
+        maxNo: '',
+        dimensions: '',
+        width:'',
+        height:''
+
+    }
     
 
     return (
@@ -256,25 +271,7 @@ export const ProductListingPageComponent = props => {
                         <ProductListingPageForm
                             className={css.productFormWrapper}
                             images={restImages}
-                            initialValues={{
-                                images,
-                                // title,
-                                brand,
-                                color,
-                                size,
-                                category,
-                                shortDescription,
-                                seller,
-                                price,
-                                sort,
-                                weight,
-                                tag
-                                // maxNo,
-                                // dimensions,
-                                // width,
-                                // height,
-
-                            }}
+                            initialValues={newInitialValues}
                             saveActionMsg={intl.formatMessage({
                                 id: 'StripePayoutPage.submitButtonText',
                             })}
@@ -348,7 +345,6 @@ ProductListingPageComponent.propTypes = {
 };
 
 const mapStateToProps = state => {
-    console.log('state :>> ', state);
     const page = state.EditListingPage;
     const { currentUser, currentUserListing } = state.user;
     // const { currentPageResultIds } = state.ProductListingPage;
