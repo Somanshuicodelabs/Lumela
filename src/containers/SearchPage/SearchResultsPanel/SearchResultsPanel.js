@@ -58,7 +58,7 @@ const SearchResultsPanel = props => {
     <div className={classes}>
       <div className={isMapVariant ? css.listingCardsMapVariant : css.listingCards}>
       {/* // const listing = listings.filter(item => item?.attributes?.publicData?.abn === "abn") */}
-        {listings.map(l => (
+        {listings.filter(item => item?.attributes?.publicData?.listingType === "business").map(l => (
           <ListingCard
             className={css.listingCard}
             key={l.id.uuid}
