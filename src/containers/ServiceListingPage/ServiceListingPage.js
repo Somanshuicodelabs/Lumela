@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { bool, func, object, shape, string } from 'prop-types';
 
-import { ensureCurrentUser, ensureOwnListing, ensureUser } from '../../util/data';
+import { ensureCurrentUser, ensureListing, ensureOwnListing, ensureUser } from '../../util/data';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 
@@ -13,14 +13,15 @@ import { H3, Page, Footer, LayoutSingleColumn, LayoutWrapperAccountSettingsSideN
 import TopbarContainer from '../../containers/TopbarContainer/TopbarContainer';
 
 import { isScrollingDisabled } from '../../ducks/ui.duck';
-import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
-import { propTypes } from '../../util/types';
+import { getListingsById, getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
+import { BUSINESS_LISTING_TYPE, propTypes } from '../../util/types';
 // import ProductListingPageForm from './ProductListingPageForm/ProductListingPageForm';
 // import { Form } from 'react-final-form';
 import css from './ServiceListingPage.module.css';
 import ServiceListingPageForm from './ServiceListingPageForm/ServiceListingPageForm';
-import { createExpertListing } from './ServiceListingPage.duck';
-import { requestCreateListingDraft, requestUpdateListing } from '../EditListingPage/EditListingPage.duck';
+import { createExpertListing, uploadImage } from './ServiceListingPage.duck';
+import { removeListingImage, requestCreateListingDraft, requestImageUpload, requestUpdateListing } from '../EditListingPage/EditListingPage.duck';
+import { getOwnListingsById } from '../ManageListingsPage/ManageListingsPage.duck';
 
 const { UUID } = sdkTypes;
 
@@ -33,7 +34,6 @@ export const ServiceListingPageComponent = props => {
         image: savedImage,
         onImageUpload,
         uploadImageError,
-        getOwnListing,
         scrollingDisabled,
         uploadInProgress,
         createListingInProgress,
@@ -53,26 +53,38 @@ export const ServiceListingPageComponent = props => {
         panelUpdated,
         updateInProgress,
         errors,
-        images,
         onCreateServiceListing,
         onCreateDraftServiceListing,
-        onUpdateUserListing
+        onUpdateUserListing,
+        listings,
+        onRemoveListingImage,
+        page
     } = props;
+console.log(page, '&&&  &&& => page');
 
+const imageOrder = page?.uploadedImagesOrder || [];
+    const unattachedImages = imageOrder.map(i => page.uploadedImages
+        ?.[i]);
 
+        const currentListing = listings.filter((st)=>st.attributes.publicData.listingType === BUSINESS_LISTING_TYPE)
+        const currentListingImages =
+        currentListing && currentListing.images ? currentListing.images : [];
+    const allImages = currentListingImages.concat(unattachedImages);
+    const removedImageIds = page.removedImageIds || [];
+    const images = allImages.filter(img => {
+        return !removedImageIds.includes(img.id);
+    });
 
     const [resetForm, setResetForm] = useState(false);
-    const currentListing = ensureOwnListing(listing);
-    const unitType = listing?.attributes?.publicData?.unitType;
-    const { publicData = {} } = currentListing.attributes;
-    const restImages = images && images.length
-        ? mainImageId
-            ? images.filter(image => !image.imageType && mainImageId && image.id && (!image.id.uuid || (image.id.uuid && image.id.uuid != mainImageId)))
-            : images.filter(image => !image.imageType)
-        : [];
+    const unitType = currentListing?.attributes?.publicData?.unitType;
+    const { publicData = {} } = !!currentListing.id && currentListing?.attributes;
+    const {serviceTags=[]} = publicData||{};
+
     const { id } = params || {};
-    const listingId = id ? new UUID(id) : null;
-    // const currentListing = ensureOwnListing(getOwnListing(listingId));
+    const listingId = currentListing.at(0)?.id;
+    console.log(listingId?.id, '&&&  &&& => currentListing.id');
+    
+    // const listings = ensureOwnListing(getOwnListing(listingId));
     // const [imageState, setImageState] = useState(null);
     const ensuredCurrentUser = ensureCurrentUser(currentUser);
     const profileUser = ensureUser(user);
@@ -110,7 +122,6 @@ export const ServiceListingPageComponent = props => {
                     <div className={css.contentBox}>
                         <ServiceListingPageForm
                             className={css.productFormWrapper}
-                            images={restImages}
                             onCreateDraftServiceListing={onCreateDraftServiceListing}
                             config={config}
                             initialValues={{}
@@ -132,7 +143,8 @@ export const ServiceListingPageComponent = props => {
                                     days,
                                     advanceMonths,
                                     advanceDays,
-                                    tag
+                                    tag,
+                                    images
                                 } = values;
 
                                 const updatedValues = {
@@ -155,18 +167,54 @@ export const ServiceListingPageComponent = props => {
                                         tag
                                     },
                                 }
-                                onCreateServiceListing(updatedValues, config).then(() => {
-                                    // onUpdateUserListing(null config)
+                                // const { tag } = (listing && listing.id && listing.attributes.publicData) || {};
+                                // let tag =[];
+                                const { serviceTagsData = {} } = (listing && listing.id && listing.attributes.publicData) || {};
+
+                                if (serviceTags && serviceTags && serviceTagsData[serviceTags] && serviceTagsData[serviceTags].length) {
+                                    serviceTagsData[serviceTags] = serviceTagsData[serviceTags].filter(sc => sc != listingId.uuid);
+                                    if (serviceTagsData[serviceTags] && serviceTagsData[serviceTags].length == 0) {
+                                        delete serviceTagsData[serviceTags];
+                                    }
+                                }
+                                if (tag) {
+                                    if (serviceTagsData[tag]) {
+                                        if (serviceTagsData[tag].length) {
+                                            serviceTagsData[tag].push(listingId.uuid);
+                                        } else {
+                                            serviceTagsData[tag] = [listingId.uuid];
+                                        }
+                                    } else {
+                                        serviceTagsData[tag] = [listingId.uuid];
+                                    }
+                                }
+
+                                // const merchantPublicData = {
+                                //     category: "shop-by-merchants",
+                                //     subCategories: Object.keys(subCategoryData),
+                                //     subCategoryData,
+                                // };
+                                onCreateServiceListing(updatedValues, config).then((r) => {
+                                     const data = {
+                                          publicData:{
+                                            serviceTags:[...tag,...serviceTags]
+                                        }
+                                    }
+                                    onUpdateUserListing(data ,config,listingId);
                                 })
                             }}
                             onChange={onChange}
                             disabled={disabled}
                             unitType={unitType}
+                            onImageUpload={onImageUpload}
+                            onRemoveImage={onRemoveListingImage}
                             ready={ready}
                             updated={panelUpdated}
                             updateInProgress={updateInProgress}
                             fetchErrors={errors}
                             publicData={publicData}
+                            images={images}
+                            listingImageConfig={config.layout.listingImage}
                         />
                     </div>
                 </LayoutWrapperMain>
@@ -204,24 +252,25 @@ ServiceListingPageComponent.propTypes = {
 
 const mapStateToProps = state => {
     const { currentUser } = state.user;
-
-    const getOwnListing = id => {
-        const listings = getMarketplaceEntities(state, [{ id, type: 'ownListing' }]);
-        return listings.length === 1 ? listings[0] : null;
-    };
+    const {currentPageResultIds} = state.ServiceListingPage;
+    const page = state.EditListingPage;
+    const listings = getOwnListingsById(state, currentPageResultIds);
 
     return {
         currentUser,
-        getOwnListing,
+        page,
+        listings,
         scrollingDisabled: isScrollingDisabled(state),
     };
 };
 
 const mapDispatchToProps = dispatch => ({
-    onImageUpload: (data, config, templateType) => dispatch(uploadImage(data, config, templateType)),
+    onImageUpload: (data, listingImageConfig, imageType) =>
+    dispatch(requestImageUpload(data, listingImageConfig, imageType)),
     onCreateServiceListing: (updatedValues, config) => dispatch(createExpertListing(updatedValues, config)),
     onCreateDraftServiceListing: (updatedValues, config) => dispatch(requestCreateListingDraft(updatedValues, config)),
-    onUpdateUserListing: (tab, data, config) => dispatch(requestUpdateListing(tab, data, config))
+    onUpdateUserListing: (data, config,listingId) => dispatch(createExpertListing( data, config,listingId)),
+    onRemoveListingImage: imageId => dispatch(removeListingImage(imageId)),
 });
 
 const ServiceListingPage = compose(

@@ -89,7 +89,7 @@ const EditListingDescriptionPanel = props => {
                   website,
                   instagram,
                   facebook,
-                  listingType: 'editListing'
+                  listingType:'business'
                 },
               });
             }}
