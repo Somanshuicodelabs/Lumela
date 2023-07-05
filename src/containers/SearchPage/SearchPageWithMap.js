@@ -436,10 +436,10 @@ export class SearchPageComponent extends Component {
       history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, searchParams));
     }
     const topbarSearcInitialValues = () => {
-
-
-
-
+      const { mobilemenu, mobilesearch, keywords, address, origin, bounds } = parse(location.search, {
+        latlng: ['origin'],
+        latlngBounds: ['bounds'],
+      });
       // Only render current search if full place object is available in the URL params
       const locationFieldsPresent = isOriginInUse(config)
         ? address && origin && bounds
