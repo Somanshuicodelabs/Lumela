@@ -1127,7 +1127,7 @@
   "ListingPage.detailsTitle": "Details",
   "ListingPage.orderTitle": "{title}",
   "ListingPage.reviewsTitle": "Reviews ({count})",
-  "MainPanelHeader.foundResults": "{count, number} {count, plural, one {result} other {results}}",
+  "MainPanelHeader.foundResults": "Near you ({count})",
   "MainPanelHeader.loadingResults": "Loading search results…",
   "MainPanelHeader.sortBy": "Sort by:",
   "ManageListingCard.closeListingText": "close listing",

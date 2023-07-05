@@ -59,6 +59,7 @@
     justify-content: flex-start;
     padding: 24px 0 0 24px;
   }
+
   @media (--viewportLarge) {
     /* Layout */
     padding: 40px 0 0 36px;
@@ -73,6 +74,7 @@
   @media (min-width: 1440px) {
     padding: 40px 0 0 calc((100vw - 1368px) / 2);
   }
+
   @media (--viewportXLarge) {
     padding: 40px 0 0 calc((100vw - 1800px) / 2);
   }
@@ -95,6 +97,7 @@
     padding: 8px 60px 24px 0;
   }
 }
+
 .filter:first-child {
   padding-top: 0;
 }
@@ -156,6 +159,7 @@
   @media (min-width: 1440px) {
     padding: 40px calc((100vw - 1368px) / 2) 0 59px;
   }
+
   @media (--viewportXLarge) {
     padding: 40px calc((100vw - 1800px) / 2) 0 59px;
   }

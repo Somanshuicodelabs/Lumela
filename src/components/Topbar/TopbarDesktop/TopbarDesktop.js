@@ -227,6 +227,7 @@ const TopbarDesktop = props => {
     authInProgress,
     submitSignup,
   } = props;
+
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {

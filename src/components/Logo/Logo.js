@@ -16,7 +16,7 @@ const Logo = props => {
   }
 
   return (
-    <img className={className} src={logoImageMobileURL} alt={config.marketplaceName} {...rest} />
+    <img className={className}  {...rest} />
   );
 };
 

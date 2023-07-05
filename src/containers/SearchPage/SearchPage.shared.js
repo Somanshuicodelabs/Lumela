@@ -105,9 +105,10 @@ export const validURLParamForExtendedData = (
 export const validFilterParams = (
   params,
   listingFieldsConfig,
-  defaultFiltersConfig,
+  defaultFiltersConfig = [],
   dropNonFilterParams = true
 ) => {
+
   const listingFieldFiltersConfig = listingFieldsConfig.filter(
     config => config.filterConfig?.indexForSearch
   );
@@ -115,6 +116,7 @@ export const validFilterParams = (
     constructQueryParamName(f.key, f.scope)
   );
   const builtInFilterParamNames = defaultFiltersConfig.map(f => f.key);
+
   const filterParamNames = [...listingFieldParamNames, ...builtInFilterParamNames];
 
   const paramEntries = Object.entries(params);
