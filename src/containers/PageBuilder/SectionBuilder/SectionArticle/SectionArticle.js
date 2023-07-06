@@ -121,39 +121,46 @@ const SectionArticle = props => {
       options={fieldOptions}
     >
       {hasHeaderFields ? (
-        <header className={defaultClasses.sectionDetails}>
-          <Field data={title} className={defaultClasses.title} options={fieldOptions} />
-          <Field data={description} className={defaultClasses.description} options={fieldOptions} />
+        <header className={classNames(defaultClasses.sectionDetails, props?.additionalClass)}>
+          <Field
+            data={title}
+            className={classNames(defaultClasses.title, props?.title?.additionalClass)}
+            options={fieldOptions}
+          />
+          <Field
+            data={description}
+            className={classNames(defaultClasses.description, props?.description?.additionalClass)}
+            options={fieldOptions}
+          />
           <Field data={callToAction} className={defaultClasses.ctaButton} options={fieldOptions} />
         </header>
       ) : null}
       {hasBlocks ? (
         <div
-          className={classNames(defaultClasses.blockContainer, css.articleMain, {
-            [css.noSidePaddings]: isInsideContainer,
-          })}
+          className={classNames(
+            defaultClasses.blockContainer,
+            css.articleMain,
+            props?.additionalClass,
+            {
+              [css.noSidePaddings]: isInsideContainer,
+            }
+          )}
         >
           <BlockBuilder
             blocks={blocks}
+            id={sectionId}
             ctaButtonClass={defaultClasses.ctaButton}
             options={options}
           />
-          { sectionId == 'hero-landing' &&
-          <TopbarSearchForm
-            isKeywordsSearch
-            className={css.searchLink}
-            desktopInputRoot={css.topbarSearchWithLeftPadding}
-            onSubmit={handleSubmit1}
-            initialValues={initialSearchFormValues}
-          />}
-
-          { sectionId == 'hero-landing' &&
-          <TopbarSearchForm
-            className={css.searchLink}
-            desktopInputRoot={css.topbarSearchWithLeftPadding}
-            onSubmit={handleSubmit}
-            initialValues={initialSearchFormValues}
-            />}
+          {sectionId == 'hero-landing' &&
+            <TopbarSearchForm
+              isKeywordsSearch
+              className={css.searchLink}
+              desktopInputRoot={css.topbarSearchWithLeftPadding}
+              onSubmit={handleSubmit1}
+              initialValues={initialSearchFormValues}
+            />
+          }
         </div>
       ) : null}
     </SectionContainer>

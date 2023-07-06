@@ -900,3 +900,11 @@
     flex-shrink: 0;
   }
 }
+
+.productPageWrapper {
+  & .productCardList {
+    display: grid;
+    gap: 66px;
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
