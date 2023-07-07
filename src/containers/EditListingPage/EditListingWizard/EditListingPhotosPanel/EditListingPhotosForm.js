@@ -622,7 +622,7 @@ export const EditListingPhotosFormComponent = props => {
                     disabled={submitDisabled}
                     ready={submitReady}
                   >
-                    <FormattedMessage id="EditListingDescriptionForm.nextButton" />
+                    <FormattedMessage id="EditListingDescriptionForm.nextButton"/>
                   </Button>
                 </div>
               </div>

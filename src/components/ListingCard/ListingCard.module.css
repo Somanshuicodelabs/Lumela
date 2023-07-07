@@ -46,6 +46,15 @@
   }
 }
 
+.categoryImg {
+  border-radius: 0;
+  width: 100%;
+
+  @media (--viewportSmall) {
+    width: 50%;
+  }
+}
+
 .rootForImage {
   /* Layout - image will take space defined by aspect ratio wrapper */
   position: absolute;
@@ -114,6 +123,7 @@
   background-color: var(--matterColorLight);
   overflow: hidden;
   flex-direction: column;
+
   @media (--viewportMedium) {
     flex-direction: row;
   }
@@ -130,7 +140,14 @@
   }
 
   & .categoryInfo {
-    padding: 0.75rem;
+    border-radius: 0;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    @media (--viewportSmall) {
+      width: 50%;
+    }
 
     & .categoryHead {
       display: flex;
@@ -138,7 +155,7 @@
       justify-content: space-between;
       margin: 0 0 0.563rem 0;
 
-      & > h2 {
+      &>h2 {
         color: var(--matterColorDark);
         font-weight: var(--fontWeightBold);
         font-size: 1.125rem;
@@ -150,7 +167,7 @@
         -webkit-line-clamp: 1;
       }
 
-      & > span {
+      &>span {
         color: var(--marketplaceColor);
         font-size: 1rem;
         line-height: 1.25rem;
@@ -167,7 +184,7 @@
         display: flex;
         align-items: center;
 
-        & > svg {
+        &>svg {
           fill: var(--marketplaceSecondaryColor);
           width: 0.938rem;
           margin-left: 0.5rem;
@@ -198,13 +215,14 @@
       margin: 0rem;
       display: flex;
 
-      & > svg {
+      &>svg {
         margin-right: 0.5rem;
         width: 1rem;
         min-width: 1rem;
         fill: none;
       }
-      & > span {
+
+      &>span {
         width: calc(100% - 1rem);
         overflow: hidden;
         display: inline-block;
@@ -220,11 +238,12 @@
 
       & .location {
         margin-bottom: 0.563rem;
-        & > svg {
+
+        &>svg {
           margin-right: 0.563rem;
           width: 1.2rem;
 
-          & > path {
+          &>path {
             stroke: none;
             color: var(--matterColorDark);
           }
@@ -232,7 +251,8 @@
 
         &:last-child {
           margin-bottom: 0;
-          & > svg {
+
+          &>svg {
             margin-right: 0.563rem;
           }
         }
@@ -240,10 +260,126 @@
     }
   }
 }
+
+.categoryInfo {
+  padding: 0.75rem;
+
+  & .categoryHead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 0 0.563rem 0;
+
+    &>h2 {
+      color: var(--matterColorDark);
+      font-weight: var(--fontWeightBold);
+      font-size: 1.125rem;
+      line-height: 1.375rem;
+      margin: 0;
+      -webkit-box-orient: vertical;
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-line-clamp: 1;
+    }
+
+    &>span {
+      color: var(--marketplaceColor);
+      font-size: 1rem;
+      line-height: 1.25rem;
+      font-weight: var(--fontWeightMedium);
+      margin: 0rem;
+    }
+
+    & .rating {
+      color: var(--matterColor);
+      font-size: 1.125rem;
+      line-height: 1.375rem;
+      font-weight: var(--fontWeightMedium);
+      margin: 0rem;
+      display: flex;
+      align-items: center;
+
+      &>svg {
+        fill: var(--marketplaceSecondaryColor);
+        width: 0.938rem;
+        margin-left: 0.5rem;
+      }
+    }
+  }
+
+  & .descripton {
+    color: var(--matterColor);
+    font-size: 1.125rem;
+    line-height: 1.375rem;
+    font-weight: var(--fontWeightMedium);
+    margin: 0rem;
+    display: flex;
+    align-items: center;
+    margin: 0 0 0.5rem 0;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+  }
+
+  & .location {
+    color: var(--matterColor);
+    font-size: 1rem;
+    line-height: 1.25rem;
+    font-weight: var(--fontWeightMedium);
+    margin: 0rem;
+    display: flex;
+
+    &>svg {
+      margin-right: 0.5rem;
+      width: 1rem;
+      min-width: 1rem;
+      fill: none;
+    }
+
+    &>span {
+      width: calc(100% - 1rem);
+      overflow: hidden;
+      display: inline-block;
+      /* white-space: nowrap;
+      text-overflow: ellipsis; */
+    }
+  }
+
+  & .cardContact {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1.125rem;
+
+    & .location {
+      margin-bottom: 0.563rem;
+
+      &>svg {
+        margin-right: 0.563rem;
+        width: 1.2rem;
+
+        &>path {
+          stroke: none;
+          color: var(--matterColorDark);
+        }
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+
+        &>svg {
+          margin-right: 0.563rem;
+        }
+      }
+    }
+  }
+}
+
 .searchListingCard {
   border-radius: 0;
   background: var(--matterColorLight);
   border: 1px solid rgba(177, 177, 177, 0.15);
+
   /* box-shadow: 0px 2px 20px rgba(0, 0, 0, 0.08); */
   & .category {
     flex-direction: column;
@@ -251,41 +387,51 @@
     box-shadow: none;
     height: 100%;
     border: none;
+
     @media (--viewportSmall) {
       flex-direction: row;
     }
+
     & .categoryImg {
       border-radius: 0;
       width: 100%;
+
       @media (--viewportSmall) {
         width: 50%;
       }
     }
+
     & .categoryInfo {
       border-radius: 0;
       display: flex;
       flex-direction: column;
       width: 100%;
+
       @media (--viewportSmall) {
         width: 50%;
       }
     }
   }
 }
+
 .landingListingCard {
   border: none;
   box-shadow: none;
+
   & .category {
     flex-direction: column;
+
     & .categoryImg {
       position: relative;
       overflow: hidden;
       width: 100%;
+
       & .threeToTwoWrapper {
         & .aspectWrapper {
           padding-bottom: 50%;
-          & > div {
-            & > img {
+
+          &>div {
+            &>img {
               position: absolute;
               top: 0;
               bottom: 0;
@@ -312,7 +458,7 @@
         justify-content: space-between;
         margin: 0 0 3px 0;
 
-        & > h2 {
+        &>h2 {
           font-family: 'Montserrat';
           font-style: normal;
           font-weight: 700;
@@ -322,13 +468,14 @@
           margin: 0;
           padding: 0;
           text-transform: uppercase;
+
           @media (--viewportMedium) {
             font-size: 18px;
             line-height: 22px;
           }
         }
 
-        & > span {
+        &>span {
           font-family: 'Didact Gothic';
           font-style: normal;
           font-weight: 400;
@@ -343,6 +490,7 @@
           }
         }
       }
+
       & .descripton {
         font-family: 'Didact Gothic';
         font-style: normal;
@@ -356,16 +504,20 @@
           font-size: 16px;
           line-height: 21px;
         }
-        & > svg {
+
+        &>svg {
           margin-right: 0.5rem;
           width: 1rem;
         }
+
         &.hideOnLandingCard {
           display: none;
         }
       }
+
       & .cardContact {
         margin-top: 0;
+
         & .location {
           font-family: 'Didact Gothic';
           font-style: normal;
@@ -379,14 +531,17 @@
             font-size: 16px;
             line-height: 21px;
           }
-          & > svg {
+
+          &>svg {
             margin-right: 0.5rem;
             width: 1rem;
           }
+
           &.hideOnLandingCard {
             display: none;
           }
-          & > span {
+
+          &>span {
             width: calc(100% - 1rem);
             overflow: hidden;
             display: inline-block;
@@ -414,11 +569,13 @@
             font-size: 16px;
             line-height: 21px;
           }
-          & > svg {
+
+          &>svg {
             margin-right: 0.5rem;
             width: 1rem;
           }
         }
+
         & .serviceType {
           font-family: 'Didact Gothic';
           font-style: normal;
@@ -427,11 +584,13 @@
           line-height: 20px;
           color: #000000;
           margin: 0;
+
           @media (--viewportMedium) {
             font-size: 18px;
             line-height: 24px;
           }
         }
+
         & .rating {
           color: var(--matterColor);
           font-size: 1.125rem;
@@ -441,7 +600,7 @@
           display: flex;
           align-items: center;
 
-          & > svg {
+          &>svg {
             fill: var(--marketplaceSecondaryColor);
             width: 0.938rem;
             margin-left: 0.5rem;

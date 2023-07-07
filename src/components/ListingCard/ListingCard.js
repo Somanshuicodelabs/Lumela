@@ -86,21 +86,8 @@ export const ListingCardComponent = props => {
 
   return (
     <NamedLink className={classes} name="ListingPage" params={{ id, slug }}>
-      <AspectRatioWrapper
-        className={css.aspectRatioWrapper}
-        width={aspectWidth}
-        height={aspectHeight}
-        {...setActivePropsMaybe}
-      >
-        <LazyImage
-          rootClassName={css.rootForImage}
-          alt={title}
-          image={firstImage}
-          variants={variants}
-          sizes={renderSizes}
-        />
-      </AspectRatioWrapper>
       <div className={css.category}>
+
         <div className={css.categoryImg}>
           <span className={css.favorite}>
             <IconFavorite />
@@ -110,8 +97,20 @@ export const ListingCardComponent = props => {
             onMouseEnter={() => setActiveListing(currentListing.id)}
             onMouseLeave={() => setActiveListing(null)}
           >
-            <div className={css.aspectWrapper}>
-            </div>
+            <AspectRatioWrapper
+              className={css.aspectRatioWrapper}
+              width={aspectWidth}
+              height={aspectHeight}
+              {...setActivePropsMaybe}
+            >
+              <LazyImage
+                rootClassName={css.rootForImage}
+                alt={title}
+                image={firstImage}
+                variants={variants}
+                sizes={renderSizes}
+              />
+            </AspectRatioWrapper>
           </div>
         </div>
         <div className={css.categoryInfo}>

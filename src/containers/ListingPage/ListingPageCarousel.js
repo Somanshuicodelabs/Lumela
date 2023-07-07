@@ -129,16 +129,16 @@ export const ListingPageComponent = props => {
 
   useEffect(() => {
     onfetchCurrentListing().then(res => res)
-}, [])
+  }, [])
 
   const ensuredCurrentUser = ensureCurrentUser(currentUser);
-    const profileUser = ensureUser(user);
-    const isCurrentUser =
-        ensuredCurrentUser.id && profileUser.id && ensuredCurrentUser.id.uuid === profileUser.id.uuid;
-    const { bio, displayName } = profileUser?.attributes?.profile || {};
+  const profileUser = ensureUser(user);
+  const isCurrentUser =
+    ensuredCurrentUser.id && profileUser.id && ensuredCurrentUser.id.uuid === profileUser.id.uuid;
+  const { bio, displayName } = profileUser?.attributes?.profile || {};
 
-    const schemaTitleVars = { name: displayName, siteTitle: config.marketplaceName };
-    const schemaTitle = intl?.formatMessage({ id: "ProfilePage.schemaTitle" }, schemaTitleVars);
+  const schemaTitleVars = { name: displayName, siteTitle: config.marketplaceName };
+  const schemaTitle = intl?.formatMessage({ id: "ProfilePage.schemaTitle" }, schemaTitleVars);
 
   // prop override makes testing a bit easier
   // TODO: improve this when updating test setup
@@ -531,24 +531,24 @@ export const ListingPageComponent = props => {
                   </div>
                 </div>
               }
-              {activeTab === 1 && <div className={css.productPageWrapper}>
-                    <h2 className={css.mainHeading}>
-                        <FormattedMessage id="ProductListingPage.products" />
-                    </h2>
-                    
-                        <div className={css.productCardList}>
-                            {ownListings.filter(item => (item.attributes.state=="published") && currentListing.author.id.uuid === item.author.id.uuid ).map((item) => {
-                                return (
-                                    <ProductsCard
-                                        productImage={item?.images?.[0]?.attributes?.variants?.["square-small2x"]?.url}
-                                        productHeading={item?.attributes?.title}
-                                        productSize={item?.attributes?.publicData.size}
-                                        productPrice={"$" + (item?.attributes?.price?.amount / 100)}
-                                        id={item?.id}
-                                    />
-                                )
-                            })}
-                        </div>
+              {activeTab === 1 &&
+                <div className={css.productPageWrapper}>
+                  <h2 className={css.mainHeading}>
+                    <FormattedMessage id="ProductListingPage.products" />
+                  </h2>
+                  <div className={css.productCardList}>
+                    {ownListings.filter(item => (item.attributes.state == "published") && currentListing.author.id.uuid === item.author.id.uuid).map((item) => {
+                      return (
+                        <ProductsCard
+                          productImage={item?.images?.[0]?.attributes?.variants?.["square-small2x"]?.url}
+                          productHeading={item?.attributes?.title}
+                          productSize={item?.attributes?.publicData.size}
+                          productPrice={"$" + (item?.attributes?.price?.amount / 100)}
+                          id={item?.id}
+                        />
+                      )
+                    })}
+                  </div>
                 </div>}
               {activeTab === 2 && <p>Content for Tab 3</p>}
               {activeTab === 3 && <p>Content for Tab 4</p>}
@@ -708,7 +708,7 @@ const mapDispatchToProps = dispatch => ({
   onInitializeCardPaymentData: () => dispatch(initializeCardPaymentData()),
   onFetchTimeSlots: (listingId, start, end, timeZone) =>
     dispatch(fetchTimeSlots(listingId, start, end, timeZone)),
-    onfetchCurrentListing: (listingId) => dispatch(fetchCurrentListing(listingId)),
+  onfetchCurrentListing: (listingId) => dispatch(fetchCurrentListing(listingId)),
 });
 
 // Note: it is important that the withRouter HOC is **outside** the

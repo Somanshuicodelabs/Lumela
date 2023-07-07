@@ -207,76 +207,15 @@ const SearchFiltersMobile = props => {
   const routeConfiguration = useRouteConfiguration();
   const intl = useIntl();
   const history = useHistory();
-
+  
   return (
-
     <>
-
       <SearchFiltersMobileComponent
         routeConfiguration={routeConfiguration}
         intl={intl}
         history={history}
         {...props}
       />
-
-      <div>
-        <div><h1>Popular categories</h1></div>
-        <div>
-          <a
-            href="s?pub_category=has_any%3Adermatologist%2ChairRemoval%2Cmassage%2CphysioMassage%2CskinSpecialist"
-            className={css.categoryBlock}
-          >
-            <div className={css.imgBlock}>
-              <img src={popularMobileImage1} alt="category" />
-              <div> <h2>Treatments</h2></div>
-            </div>
-
-          </a>
-        </div>
-        <div>
-          <a
-            href="s?pub_category=has_any%3AmakeupArtist%2Ceyebrows%2CeyeLashes%2Cnails"
-            className={css.categoryBlock}
-          >
-            <div className={css.imgBlock}>
-              <img src={popularMobileImage2} alt="category" />
-              <div> <h2>Mens/Barber</h2></div>
-            </div>
-
-          </a>
-        </div>
-        <div className={css.categoryBlock}>
-          <a href='#'>
-            <div className={css.imgBlock}>
-              <img src={popularMobileImage3} alt="category" />
-              <div><h2>Hairdresser</h2></div>
-            </div>
-
-          </a>
-        </div>
-        <div>
-          <a href="s?pub_category=has_any%3Aextensions" className={css.categoryBlock}>
-            <div className={css.imgBlock}>
-              <img src={popularMobileImage4} alt="category" />
-              <div> <h2>Extension</h2></div>
-            </div>
-
-          </a>
-        </div>
-        <div>
-          <a href="s?pub_category=has_any%3Abraidsandlocs" className={css.categoryBlock}>
-            <div className={css.imgBlock}>
-              <img src={popularMobileImage5} alt="category" />
-              <div><h2>Nails</h2></div>
-            </div>
-
-          </a>
-        </div>
-
-      </div>
-
-
-
     </>
   );
 };

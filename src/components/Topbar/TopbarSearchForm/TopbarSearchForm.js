@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import { intlShape, injectIntl } from '../../../util/reactIntl';
 import { isMainSearchTypeKeywords } from '../../../util/search';
 
-import { Form, LocationAutocompleteInput } from '../../../components';
+import { Button, Form, LocationAutocompleteInput, IconSearchGlass } from '../../../components';
 
 import IconSearchDesktop from './IconSearchDesktop';
 import css from './TopbarSearchForm.module.css';
@@ -152,23 +152,33 @@ class TopbarSearchFormComponent extends Component {
 
           return (
             <Form className={classes} onSubmit={submitFormFn} enforcePagePreloadFor="SearchPage">
-              {isKeywordsSearch ? (
-                <KeywordSearchField
-                  keywordSearchWrapperClasses={keywordSearchWrapperClasses}
-                  iconClass={classNames(isMobile ? css.mobileIcon : css.desktopIcon || css.icon)}
-                  intl={intl}
-                  isMobile={isMobile}
-                  inputRef={this.setSearchInputRef}
-                />
-              ) : (
-                <LocationSearchField
-                  desktopInputRootClass={desktopInputRootClass}
-                  intl={intl}
-                  isMobile={isMobile}
-                  inputRef={this.setSearchInputRef}
-                  onLocationChange={this.onChange}
-                />
-              )}
+              <div className={css.homeSearchBox}>
+                <div className={css.homeKeyword}>
+                  <KeywordSearchField
+                    keywordSearchWrapperClasses={keywordSearchWrapperClasses}
+                    iconClass={classNames(isMobile ? css.mobileIcon : css.desktopIcon || css.icon)}
+                    intl={intl}
+                    isMobile={isMobile}
+                    inputRef={this.setSearchInputRef}
+                    className={css.homeKeyword}
+                  />
+                </div>
+                <div className={css.locationBox}>
+                  <span>
+                    
+                  </span>
+                  <LocationSearchField
+                    desktopInputRootClass={desktopInputRootClass}
+                    intl={intl}
+                    isMobile={isMobile}
+                    inputRef={this.setSearchInputRef}
+                    onLocationChange={this.onChange}
+                  />
+                </div>
+                <Button className={css.searchButton}>
+                  <IconSearchGlass />
+                </Button>
+              </div>
             </Form>
           );
         }}
