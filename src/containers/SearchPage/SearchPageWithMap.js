@@ -526,7 +526,7 @@ export class SearchPageComponent extends Component {
                 >
                   <div className={css.imgBlock}>
                     <img src={popularMobileImage1} alt="category" />
-                    <div> <h2>Treatments</h2></div>
+                    <h2>Treatments</h2>
                   </div>
                 </a>
               </div>
@@ -537,7 +537,7 @@ export class SearchPageComponent extends Component {
                 >
                   <div className={css.imgBlock}>
                     <img src={popularMobileImage2} alt="category" />
-                    <div> <h2>Mens/Barber</h2></div>
+                    <h2>Mens/Barber</h2>
                   </div>
                 </a>
               </div>
@@ -545,7 +545,7 @@ export class SearchPageComponent extends Component {
                 <a href='#'>
                   <div className={css.imgBlock}>
                     <img src={popularMobileImage3} alt="category" />
-                    <div><h2>Hairdresser</h2></div>
+                    <h2>Hairdresser</h2>
                   </div>
                 </a>
               </div>
@@ -553,7 +553,7 @@ export class SearchPageComponent extends Component {
                 <a href="s?pub_category=has_any%3Aextensions" className={css.categoryBlock}>
                   <div className={css.imgBlock}>
                     <img src={popularMobileImage4} alt="category" />
-                    <div> <h2>Extension</h2></div>
+                    <h2>Extension</h2>
                   </div>
                 </a>
               </div>
@@ -561,7 +561,7 @@ export class SearchPageComponent extends Component {
                 <a href="s?pub_category=has_any%3Abraidsandlocs" className={css.categoryBlock}>
                   <div className={css.imgBlock}>
                     <img src={popularMobileImage5} alt="category" />
-                    <div><h2>Nails</h2></div>
+                    <h2>Nails</h2>
                   </div>
                 </a>
               </div>
