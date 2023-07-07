@@ -1,9 +1,18 @@
 import React, { useState } from 'react';
-import { arrayOf, func, number, shape, string } from 'prop-types';
+import { arrayOf, func, number, object, shape, string } from 'prop-types';
 import classNames from 'classnames';
 
 import { Menu, MenuContent, MenuItem, MenuLabel } from '../../../components';
 import css from './SortByPopup.module.css';
+import { types as sdkTypes } from '../../../util/sdkLoader';
+import { useConfiguration } from '../../../context/configurationContext';
+import routeConfiguration from '../../../routing/routeConfiguration';
+import { createResourceLocatorString } from '../../../util/routes';
+import { compose } from 'redux';
+import { withRouter } from 'react-router-dom';
+import { injectIntl } from 'react-intl';
+
+const { LatLng, LatLngBounds } = sdkTypes;
 
 const optionLabel = (options, key) => {
   const option = options.find(o => o.key === key);
@@ -24,38 +33,13 @@ const SortByIcon = props => {
     </svg>
   );
 };
-const handelSortClick = () => {
-  const { currentUser, currentSearchParams, history, resetAll } = this.props;
-
-  if (currentUser && currentUser?.currentUser?.attributes?.profile?.protectedData?.location) {
-    const { search, selectedPlace } = currentUser?.currentUser?.attributes?.profile?.protectedData?.location;
-
-    const { origin, bounds } = selectedPlace;
-    const sdkBounds = new LatLngBounds(
-      new LatLng(bounds.ne.lat, bounds.ne.lng),
-      new LatLng(bounds.sw.lat, bounds.sw.lng)
-    );
-    const originMaybe = config.sortSearchByDistance ? { origin } : {};
-    const searchParams = {
-      ...currentSearchParams,
-      ...originMaybe,
-      address: search,
-      bounds: sdkBounds,
-    };
-    this.toggleFilterDrawer()
-    history.push(
-      createResourceLocatorString('SearchPage', routeConfiguration(), {}, searchParams)
-    );
-
-    this.setState({ sortActive: true });
-  } else {
-    history.push(createResourceLocatorString('SearchPage', routeConfiguration(), resetAll, {}));
-  }
-}
 
 
 const SortByPopup = props => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
+  const [sortActive, setSortActive] = useState(false);
+  const config = useConfiguration();
   const {
     rootClassName,
     className,
@@ -66,9 +50,13 @@ const SortByPopup = props => {
     initialValue,
     contentPlacementOffset,
     onSelect,
+    currentUser, 
+    currentSearchParams,
+    history,
+    resetAll
   } = props;
 
-  const onToggleActive = isOpenParam => {
+  const onToggleActive = (isOpenParam) => {
     setIsOpen(isOpenParam);
   };
 
@@ -77,6 +65,42 @@ const SortByPopup = props => {
     onSelect(urlParameter, option);
   };
 
+  const toggleFilterDrawer = () => {
+    setIsFilterDrawerOpen(!isFilterDrawerOpen);
+  };
+
+  const handelSortClick = () => {
+    if (
+      currentUser &&
+      currentUser?.currentUser?.attributes?.profile?.protectedData?.location
+    ) {
+      const { search, selectedPlace } =
+        currentUser?.currentUser?.attributes?.profile?.protectedData?.location;
+
+      const { origin, bounds } = selectedPlace;
+      const sdkBounds = new LatLngBounds(
+        new LatLng(bounds.ne.lat, bounds.ne.lng),
+        new LatLng(bounds.sw.lat, bounds.sw.lng)
+      );
+      const originMaybe = config.sortSearchByDistance ? { origin } : {};
+      const searchParams = {
+        ...currentSearchParams,
+        ...originMaybe,
+        address: search,
+        bounds: sdkBounds,
+      };
+      toggleFilterDrawer();
+      history.push(
+        createResourceLocatorString('SearchPage', routeConfiguration(), {}, searchParams)
+      );
+
+      setSortActive(true);
+    } else {
+      history.push(
+        createResourceLocatorString('SearchPage', routeConfiguration(), resetAll, {})
+      );
+    }
+  };
   // resolve menu label text and class
   const menuLabel = initialValue ? optionLabel(options, initialValue) : label;
 
@@ -109,7 +133,7 @@ const SortByPopup = props => {
               <button
                 className={css.menuItem}
                 disabled={option.disabled}
-                onClick={() => (selected ? null : option?.key == 'location' ? handelSortClick() : selectOption(urlParam, option.key))}
+                onClick={() => (selected ? null : option?.key == 'closest' ? handelSortClick() : selectOption(urlParam, option.key))}
               >
                 <span className={menuItemBorderClass} />
                 {option.longLabel || option.label}
@@ -143,8 +167,17 @@ SortByPopup.propTypes = {
       label: string.isRequired,
     })
   ).isRequired,
+  history: shape({
+    push: func.isRequired,
+  }).isRequired,
+  location: shape({
+    search: string,
+  }).isRequired,
   initialValue: string,
   contentPlacementOffset: number,
 };
 
-export default SortByPopup;
+export default compose(
+  withRouter,
+  injectIntl
+) (SortByPopup);

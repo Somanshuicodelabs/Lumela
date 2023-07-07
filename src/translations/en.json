@@ -1455,6 +1455,8 @@
   "StripePayoutPage.loadingData": "Loading data…",
   "StripePayoutPage.redirectingToStripe": "You returned early from Stripe. Redirecting you back to Stripe…",
   "StripePayoutPage.submitButtonText": "Save details",
+  "ProductListing.submitButtonText": "ADD PRODUCT",
+  "ProductListing.updateButtonText": "UPDATE PRODUCT",
   "StripePayoutPage.title": "Payout details",
   "Topbar.genericError": "Oh no, something went wrong. Please check your network connection and try again.",
   "Topbar.logoIcon": "Go to homepage",

@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import { propTypes } from '../../../util/types';
 import { maxLength, required, composeValidators } from '../../../util/validators';
 import * as validators from '../../../util/validators';
-import { Form, Button, FieldTextInput, NamedLink, AddImages, ValidationError, FieldSelect, FieldRadioButton, FieldCurrencyInput } from '../../../components';
+import { Form, Button, FieldTextInput, NamedLink, AddImages, ValidationError, FieldSelect, FieldRadioButton, FieldCurrencyInput, Modal } from '../../../components';
 import css from './ProductListingPageForm.module.css';
 import IconCollection from '../../../components/IconCollection/IconCollection';
 import IconCamera from '../../../components/IconCamera/IconCamera';
@@ -17,6 +17,7 @@ import { formatMoney } from '../../../util/currency';
 import appSettings from '../../../config/settings';
 import { useConfiguration } from '../../../context/configurationContext';
 import { isEqual } from 'lodash';
+import { offers } from '../../../marketplace-custom-config'
 
 const TITLE_MAX_LENGTH = 60;
 const ACCEPT_IMAGES = 'image/*';
@@ -47,9 +48,15 @@ const getPriceValidators = (listingMinimumPriceSubUnits, marketplaceCurrency, in
 
 
 const EditListingProductFormComponent = props => {
-
+    const { category = [] } = props;
     const [state, setState] = useState({ imageUploadRequested: false, mainImageUploadRequested: false });
     const [submittedImages, setSubmittedImages] = useState([]);
+    const [categoryOptions, setCategoryOptions] = useState(offers.filter(itm => category.includes(itm.key)));
+    const [remainingCategory, setRemainingCategory] = useState(offers.filter(itm => !category.includes(itm.key)));
+    const [openCategory, openCategoryModal] = useState(false);
+
+    // const remainingCategory = offers.filter(itm => !category.includes(itm.key))
+
 
     const onImageUploadHandler = (file, imageType) => {
         const { listingImageConfig, onImageUpload } = props;
@@ -104,6 +111,8 @@ const EditListingProductFormComponent = props => {
                     listingMinimumPriceSubUnits,
                     marketplaceCurrency
                 } = formRenderProps;
+
+
                 const businessNameMessage = intl.formatMessage({
                     id: 'EditListingDescriptionForm.businessName',
                 });
@@ -329,9 +338,49 @@ const EditListingProductFormComponent = props => {
                                             className={css.inputBox}
                                             label="category"
                                         >
-                                            <option disabled value="Select">Select</option>
-                                            <option value="">Category for this product</option>
+                                            <option value="Select">Select</option>
+                                            {categoryOptions.map((item) => <option value={item.key}>{item.value}</option>)}
+
                                         </FieldSelect>
+                                        <h6 onClick={(e) => {
+                                            e.preventDefault();
+                                            openCategoryModal(true)
+                                        }}>Select Catagory</h6>
+                                        {/* <Modal
+                                            id="ProductListingPage.categoryModal"
+                                            isOpen={openCategory}
+                                            onClose={() => openCategoryModal(false)}
+                                            onManageDisableScrolling={() => { }}
+                                        >
+                                            <div>
+                                                <h4>Categories</h4>
+                                                {categoryOptions.map((item, index) => {
+                                                    return <p>{item.value}</p>
+                                                })}
+                                                {console.log('remainingCategory :>> ', remainingCategory)}
+                                                {console.log('categoryOptions :>> ', categoryOptions
+                                                
+                                                
+                                                )}
+
+                                                <Button type='button' onClick={(e) => {
+                                                    e.preventDefault();
+                                                    const addCategoryValue = JSON.parse(JSON.stringify(categoryOptions));
+                                                    addCategoryValue.push({ key: "", value: "" });
+                                                    setCategoryOptions(addCategoryValue);
+                                                }
+                                                }>
+                                                    <FieldTextInput
+                                                id="color"
+                                                name="color"
+                                                className={css.inputBox}
+                                                type="text"
+                                                label="color"
+                                            // validate={validators.composeValidators(emailRequired, emailValid)}
+                                            />
+                                                </Button>
+                                            </div>
+                                        </Modal> */}
                                         <FieldTextInput
                                             id="shortDescription"
                                             name="shortDescription"

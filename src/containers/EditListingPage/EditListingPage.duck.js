@@ -245,7 +245,7 @@ export default function reducer(state = initialState, action = {}) {
     case PUBLISH_LISTING_REQUEST:
       return {
         ...state,
-        listingId: payload.listingId,
+        listingId: payload?.listingId,
         publishListingError: null,
       };
     case PUBLISH_LISTING_SUCCESS:

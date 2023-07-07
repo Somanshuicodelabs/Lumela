@@ -6,7 +6,7 @@ import { bool, func, object, shape, string } from 'prop-types';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 
 import { useConfiguration } from '../../context/configurationContext';
-import { H3, Page, Footer, LayoutSingleColumn, LayoutWrapperAccountSettingsSideNav, FieldTextInput, LayoutSideNavigation, LayoutWrapperMain, UserNav, ProductsCard, PrimaryButton, NamedLink, FieldSelect } from '../../components';
+import { H3, Page, Footer, LayoutSingleColumn, LayoutWrapperAccountSettingsSideNav, FieldTextInput, LayoutSideNavigation, LayoutWrapperMain, UserNav, ProductsCard, PrimaryButton, NamedLink, FieldSelect, Button } from '../../components';
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
 
 import { isScrollingDisabled } from '../../ducks/ui.duck';
@@ -21,6 +21,8 @@ import { fetchCurrentListing } from './ProductListingPage.duck';
 import css from './ProductListingPage.module.css';
 import productCardImage from '../../assets/productCardImage.png';
 import { getOwnListingsById } from '../ManageListingsPage/ManageListingsPage.duck';
+import { Form } from 'react-final-form';
+import KeywordFilter from '../SearchPage/KeywordFilter/KeywordFilter';
 
 const productData = [
     {
@@ -73,6 +75,15 @@ export const AllProductsPageComponent = props => {
         getOwnListing,
         ownListings,
     } = props;
+    const [filterText, setFilterText] = useState('');
+    const filteredListings = ownListings.filter((listing) => {
+        const title = listing.attributes.title.toLowerCase();
+        return title.includes(filterText.toLowerCase());
+    });
+
+    const handleFilterChange = (event) => {
+        setFilterText(event.target.value);
+    };
     const ensuredCurrentUser = ensureCurrentUser(currentUser);
     const profileUser = ensureUser(user);
     const isCurrentUser =
@@ -86,6 +97,13 @@ export const AllProductsPageComponent = props => {
     useEffect(() => {
         onfetchCurrentListing().then(res => res)
     }, [])
+
+    const input = 'example';
+
+    // const filteredListings = ownListings.filter(listing => {
+    //     return listing.attributes.title.includes(input);
+    //   });
+    //   console.log('filteredListings :>> ', filteredListings);
 
 
 
@@ -116,20 +134,28 @@ export const AllProductsPageComponent = props => {
                     <NamedLink name="ProductListingPage"   >
                         <PrimaryButton>ADD NEW PRODUCT </PrimaryButton>
                     </NamedLink>
-                    
+
+
+                    <div>
+                        <input type="text" placeholder="Search" value={filterText} onChange={handleFilterChange} />
+                        {/* Use the filteredListings as needed */}
                         <div className={css.productCardList}>
-                            {ownListings.filter(item => item?.attributes?.publicData?.listingType === "product").map((item) => {
-                                return (
+                            {filteredListings
+                                .filter((item) => item?.attributes?.publicData?.listingType === 'product')
+                                .map((item, index) => (
                                     <ProductsCard
-                                        productImage={item?.images[0]?.attributes?.variants?.["square-small2x"]?.url}
+                                        key={index}
+                                        productImage={item?.images[0]?.attributes?.variants?.['square-small2x']?.url}
                                         productHeading={item?.attributes?.title}
                                         productSize={item?.attributes?.publicData.size}
-                                        productPrice={"$" + (item?.attributes?.price?.amount / 100)}
+                                        productPrice={'$' + item?.attributes?.price?.amount / 100}
                                         id={item?.id}
                                     />
-                                )
-                            })}
+                                ))}
                         </div>
+                    </div>
+
+
                 </div>
             </LayoutSideNavigation>
         </Page>

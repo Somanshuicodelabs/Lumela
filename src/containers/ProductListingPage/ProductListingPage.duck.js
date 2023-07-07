@@ -12,14 +12,21 @@ export const CREATE_LISTING_REQUEST = 'app/EditListingPage/UPDATE_LISTING_REQUES
 export const CREATE_LISTING_SUCCESS = 'app/EditListingPage/UPDATE_LISTING_SUCCESS';
 export const CREATE_LISTING_ERROR = 'app/EditListingPage/UPDATE_LISTING_ERROR';
 
-export const UPDATE_PROFILE_REQUEST = 'app/EditListingPage/UPDATE_PROFILE_REQUEST';
-export const UPDATE_PROFILE_SUCCESS = 'app/EditListingPage/UPDATE_PROFILE_SUCCESS';
-export const UPDATE_PROFILE_ERROR = 'app/EditListingPage/UPDATE_PROFILE_ERROR';
+export const UPDATE_LISTING_REQUEST = 'app/EditListingPage/UPDATE_PROFILE_REQUEST';
+export const UPDATE_LISTING_SUCCESS = 'app/EditListingPage/UPDATE_PROFILE_SUCCESS';
+export const UPDATE_LISTING_ERROR = 'app/EditListingPage/UPDATE_PROFILE_ERROR';
 
 export const SHOW_LISTINGS_REQUEST = 'app/EditListingPage/SHOW_LISTINGS_REQUEST';
 export const SHOW_LISTINGS_SUCCESS = 'app/EditListingPage/SHOW_LISTINGS_SUCCESS';
 export const SHOW_LISTINGS_ERROR = 'app/EditListingPage/SHOW_LISTINGS_ERROR';
 
+export const SHOW_BUSINESS_LISTINGS_REQUEST = 'app/EditListingPage/SHOW_BUSINESS_LISTINGS_REQUEST';
+export const SHOW_BUSINESS_LISTINGS_SUCCESS = 'app/EditListingPage/SHOW_BUISNESS_LISTINGS_SUCCESS';
+export const SHOW_BUSINESS_LISTINGS_ERROR = 'app/EditListingPage/SHOW_BUSINESS_LISTINGS_ERROR';
+
+export const PUBLISH_LISTING_REQUEST = 'app/EditListingPage/PUBLISH_LISTING_REQUEST';
+export const PUBLISH_LISTING_SUCCESS = 'app/EditListingPage/PUBLISH_LISTING_SUCCESS';
+export const PUBLISH_LISTING_ERROR = 'app/EditListingPage/PUBLISH_LISTING_ERROR';
 
 
 export const CLEAR_UPDATED_FORM = 'app/EditListingPage/CLEAR_UPDATED_FORM';
@@ -36,8 +43,8 @@ const initialState = {
   updateInProgress: false,
   updateProfileError: null,
   currentPageResultIds:[],
+  currentBusinessLising:{},
   pagination: null,
-
 }
 
 export default function reducer(state = initialState, action = {}) {
@@ -73,27 +80,59 @@ export default function reducer(state = initialState, action = {}) {
       // eslint-disable-next-line no-console
       console.error(payload);
       return { ...state, searchInProgress: false, searchListingsError: payload };
+    case SHOW_BUSINESS_LISTINGS_REQUEST:
+      return {
+        ...state,
+        searchInProgress: true,
+        searchMapListingIds: [],
+        searchListingsError: null,
+      };
+    case SHOW_BUSINESS_LISTINGS_SUCCESS:
+      return {
+        ...state,
+        currentBusinessLising: payload,
+      };
+    case SHOW_BUSINESS_LISTINGS_ERROR:
+      // eslint-disable-next-line no-console
+      console.error(payload);
+      return { ...state, searchInProgress: false, searchListingsError: payload };
 
 
-    case UPDATE_PROFILE_REQUEST:
+    case UPDATE_LISTING_REQUEST:
       return {
         ...state,
         updateInProgress: true,
-        updateProfileError: null,
+        updateListingError: null,
       };
-    case UPDATE_PROFILE_SUCCESS:
+    case UPDATE_LISTING_SUCCESS:
       return {
         ...state,
-        image: null,
-        updateInProgress: false,
+        ...updateUploadedImagesState(state, payload),
+        createListingInProgress: false,
       };
-    case UPDATE_PROFILE_ERROR:
+    case UPDATE_LISTING_ERROR:
       return {
-        ...state,
-        image: null,
-        updateInProgress: false,
-        updateProfileError: payload,
+        ...state, createListingInProgress: false, createListingError: payload 
       };
+
+      case PUBLISH_LISTING_REQUEST:
+        return {
+          ...state,
+          updateInProgress: true,
+          updateListingError: null,
+        };
+      case PUBLISH_LISTING_SUCCESS:
+        return {
+          ...state,
+          createListingDraftInProgress: false,
+        };
+      case PUBLISH_LISTING_ERROR: {
+        return {
+          ...state,
+            createListingInProgress: false,
+            error: payload,
+        };
+      }
 
     case CLEAR_UPDATED_FORM:
       return { ...state, updateProfileError: null, uploadImageError: null };
@@ -114,19 +153,14 @@ export const createListingRequest = () => ({ type: CREATE_LISTING_REQUEST })
 export const createListingSuccess = () => ({ type: CREATE_LISTING_SUCCESS })
 export const createListingError = () => ({ type: CREATE_LISTING_ERROR })
 
-export const updateProfileRequest = params => ({
-  type: UPDATE_PROFILE_REQUEST,
-  payload: { params },
-});
-export const updateProfileSuccess = result => ({
-  type: UPDATE_PROFILE_SUCCESS,
-  payload: result.data,
-});
-export const updateProfileError = error => ({
-  type: UPDATE_PROFILE_ERROR,
-  payload: error,
-  error: true,
-});
+export const updateListingRequest = () => ({ type: UPDATE_LISTING_REQUEST })
+export const updateListingSuccess = () => ({ type: UPDATE_LISTING_SUCCESS })
+export const updateListingError = () => ({ type: UPDATE_LISTING_ERROR })
+
+export const publishListingRequest =  () => ({type: PUBLISH_LISTING_REQUEST});
+export const publishListingSuccess =  () => ({type: PUBLISH_LISTING_SUCCESS});
+export const publishListingError =  () => ({type: PUBLISH_LISTING_ERROR});
+
 
 export const clearUpdatedForm = () => ({
   type: CLEAR_UPDATED_FORM,
@@ -145,6 +179,22 @@ export const showListingsSuccess = response => ({
 
 export const showListingsError = e => ({
   type: SHOW_LISTINGS_ERROR,
+  error: true,
+  payload: e,
+});
+export const showBusinessListingsRequest = searchParams => ({
+  type: SHOW_BUSINESS_LISTINGS_REQUEST,
+  payload: { searchParams },
+});
+
+export const showBusinessListingsSuccess = response => (
+  {
+  type: SHOW_BUSINESS_LISTINGS_SUCCESS,
+  payload: response,
+});
+
+export const showBusinessListingsError = e => ({
+  type: SHOW_BUSINESS_LISTINGS_ERROR,
   error: true,
   payload: e,
 });
@@ -181,8 +231,6 @@ export function requestCreateListing(data, config, stockUpdateMaybe) {
     // Note: in this template, image upload is not happening at the same time as listing creation.
     // const imageProperty = typeof images !== 'undefined' ? { images: imageIds(images) } : {};
     const ownListingValues = { ...rest, images: images.map(itm => itm.imageId) };
-    console.log('ownListingValues :>> ', ownListingValues);
-
     const imageVariantInfo = getImageVariantInfo(config?.layout?.listingImage);
     const queryParams = {
       expand: true,
@@ -217,6 +265,65 @@ export function requestCreateListing(data, config, stockUpdateMaybe) {
   }
 }
 
+export function requestUpdateListing(data, config, stockUpdateMaybe) {
+
+  return (dispatch, getState, sdk) => {
+    dispatch(updateListingRequest(data));
+    const { stockUpdate, images,listingSearchId, ...rest } = data;
+
+    // If images should be saved, create array out of the image UUIDs for the API call
+    // Note: in this template, image upload is not happening at the same time as listing creation.
+    // const imageProperty = typeof images !== 'undefined' ? { images: imageIds(images) } : {};
+    const ownListingValues = { ...rest, id:listingSearchId.id, images: images.map(itm => itm.imageId) };
+    const imageVariantInfo = getImageVariantInfo(config?.layout?.listingImage);
+    // console.log('queryParams :>> ', queryParams);
+
+    let createListingResponse = null;
+    return sdk.ownListings.update(ownListingValues, {
+      expand: true,
+        include: ["images"]
+      }  )
+      .then(response => {
+        console.log('response :>> ', response);
+        createListingResponse = response;
+        const listingId = response.data.data.id;
+        dispatch(updateStockOfListingMaybe(listingId, stockUpdate, dispatch))
+      })
+      .then(() => {
+        // Modify store to understand that we have created listing and can redirect away
+        dispatch(showBusinessListingsSuccess(createListingResponse));
+        return createListingResponse;
+      })
+      .catch(e => {
+        console.log('error at requestCreateListing :>> ', e);
+        return dispatch(updateListingError(storableError(e)));
+      });
+
+  }
+}
+
+// export function requestPublishListingDraft  (data, config) {
+//   console.log('data :>> ', data);
+//   return (dispatch, getState, sdk) => {
+//   dispatch(publishListingRequest(data));
+//   const { listingSearchId, ...rest } = data;
+//   const ownListingValues = { ...rest, id:listingSearchId.id};
+
+//   return sdk.ownListings
+//     .publishDraft(ownListingValues, { expand: true })
+//     .then(response => {
+//       console.log('response :>> ', response);
+//       // Add the created listing to the marketplace data
+//       dispatch(addMarketplaceEntities(response));
+//       dispatch(publishListingSuccess(response));
+//       return response;
+//     })
+//     .catch(e => {
+//       dispatch(publishListingError(storableError(e)));
+//     });
+//   }
+// };
+
 export const fetchCurrentListing = listingId => async (dispatch, getState, sdk) => {
   try {
     dispatch(showListingsRequest());
@@ -236,56 +343,33 @@ export const fetchCurrentListing = listingId => async (dispatch, getState, sdk) 
   }
 }
 
-// export const updateProfile = actionPayload => {
-//     return (dispatch, getState, sdk) => {
-//       dispatch(updateProfileRequest());
 
-//       const queryParams = {
-//         expand: true,
-//         include: ['profileImage'],
-//         'fields.image': ['variants.square-small', 'variants.square-small2x'],
-//       };
-
-//       return sdk.currentUser
-//         .updateProfile(actionPayload, queryParams)
-//         .then(response => {
-//           dispatch(updateProfileSuccess(response));
-
-//           const entities = denormalisedResponseEntities(response);
-//           if (entities.length !== 1) {
-//             throw new Error('Expected a resource in the sdk.currentUser.updateProfile response');
-//           }
-//           const currentUser = entities[0];
-
-//           // Update current user in state.user.currentUser through user.duck.js
-//           dispatch(currentUserShowSuccess(currentUser));
-//           return response;
-//         })
-//         .catch(e => dispatch(updateProfileError(storableError(e))));
-//     };
-//   };
+export const fetchBusinessListing = (businessUserId) => async (dispatch, getState, sdk) => {
+  try {
+    dispatch(showBusinessListingsRequest());
+    const params = {
+      id: new UUID (businessUserId),
+      include: ["images","author"],
+      'fields.image': ['variants.square-small', 'variants.square-small2x']
+    };
+    const response = await sdk.ownListings.show(params, { expand: true });
+    dispatch(showBusinessListingsSuccess(response.data.data));
+    return response;
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 export const loadData = (params, search) => async (dispatch, getState, sdk) => {
   try {
-   const searchParams = parse(search);
-   console.log('searchPar :>> ', searchParams);
-   
-    
+    const searchParams = parse(search);
+    await dispatch(fetchBusinessListing(getState().user.currentUser?.attributes?.profile?.publicData?.userListingId))
+
     const fetchUser = await dispatch(fetchCurrentUser())
     const result = await dispatch(fetchCurrentUserHasListings());
 
     const currentUser = getState().user.currentUser;
-    // const userRole = getUserRole(currentUser);
     dispatch(showListingsRequest());
-    // if (userRole === USER_ROLE_EXPERT && result.data.data.length > 0 && result.data.data) {
-    //   const response = await sdk.ownListings.query();
-    //   const listingId = response?.data?.data?.at(0)
-    //   // if (listingId) {
-    //   //   dispatch(fetchStripeAccount());
-    //   // }
-    //   dispatch(addMarketplaceEntities(response));
-    //   dispatch(expertListingsSuccess(response));
-    // }
   } catch (error) {
     console.log(error, '&&&  &&& => error');
   }

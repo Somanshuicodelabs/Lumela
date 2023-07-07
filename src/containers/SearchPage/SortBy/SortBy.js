@@ -1,5 +1,5 @@
 import React from 'react';
-import { string, bool } from 'prop-types';
+import { string, bool, shape, func, object } from 'prop-types';
 
 import { useConfiguration } from '../../../context/configurationContext';
 import { intlShape, injectIntl } from '../../../util/reactIntl';
@@ -9,6 +9,7 @@ import SortByPlain from './SortByPlain';
 import SortByPopup from './SortByPopup';
 
 import css from './SortBy.module.css';
+import { useSelector } from 'react-redux';
 
 const SortBy = props => {
   const config = useConfiguration();
@@ -19,11 +20,14 @@ const SortBy = props => {
     isConflictingFilterActive,
     hasConflictingFilters,
     intl,
+    history,
     mode,
     ...rest
   } = props;
 
   const { relevanceKey, relevanceFilter, queryParamName } = config.search.sortConfig;
+
+  
 
   const mobileClassesMaybe =
     mode === 'mobile'
@@ -69,7 +73,10 @@ const SortBy = props => {
     hasConflictingFilters && !isConflictingFilterActive
       ? relevanceKey
       : sort || relevanceValue || defaultValue;
+
+  const currentUser = useSelector(state => state.user.currentUser);
   const componentProps = {
+    currentUser : {currentUser},
     urlParam: queryParamName,
     label: intl.formatMessage({ id: 'SortBy.heading' }),
     options,

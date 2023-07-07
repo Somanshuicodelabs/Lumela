@@ -197,8 +197,8 @@ class TopbarComponent extends Component {
       submitLogin,
       submitSignup,
     } = this.props;
-    
-    
+
+
 
 
     const { mobilemenu, mobilesearch, keywords, address, origin, bounds } = parse(location?.search, {

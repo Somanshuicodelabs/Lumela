@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -19,14 +19,13 @@ import {
     requestDeleteAvailabilityException,
     requestCreateListingDraft,
     requestPublishListingDraft,
-    requestUpdateListing,
     requestImageUpload,
     removeListingImage,
     savePayoutDetails,
     compareAndSetStock,
 } from '../EditListingPage/EditListingPage.duck';
 import css from './ProductListingPage.module.css';
-import { requestCreateListing } from './ProductListingPage.duck';
+import { fetchBusinessListing, requestCreateListing, requestUpdateListing } from './ProductListingPage.duck';
 import { getOwnListingsById } from '../ManageListingsPage/ManageListingsPage.duck';
 import { parse } from '../../util/urlHelpers';
 
@@ -51,6 +50,7 @@ export const ProductListingPageComponent = props => {
         onImageUpload,
         scrollingDisabled,
         onCreateListing,
+        onUpdateListing,
         onCreateListingDraft,
         user,
         currentUser,
@@ -65,10 +65,15 @@ export const ProductListingPageComponent = props => {
         listingMinimumPriceSubUnits,
         onRemoveListingImage,
         onPublishListingDraft,
-        onCreateDraftServiceListing,
-        state
+        state,
+        category,
+        onfetchBusinessListing
     } = props;
-    
+    const businessUserId = currentUser?.attributes?.profile?.publicData?.userListingId || "";
+    const listingSearchId = typeof window !== 'undefined' &&
+        parse(window.location.search);
+    const listingID = new UUID(listingSearchId?.id)
+    const ownListings = getOwnListingsById(state, [listingID])
 
     const initialValues = getInitialValues(props);
     const marketplaceCurrency = config.currency || ''
@@ -85,28 +90,15 @@ export const ProductListingPageComponent = props => {
     });
 
     const { publicData = {} } = currentListing.attributes;
-    const {
-        title,
-        brand,
-        color,
-        size,
-        category,
-        shortDescription,
-        seller,
-        price, sort, weight, tag } = publicData || {}
+
     const { mainImageId } = publicData || {};
     const restImages = images && images.length
         ? mainImageId
             ? images.filter(image => !image.imageType && mainImageId && image.id && (!image.id.uuid || (image.id.uuid && image.id.uuid != mainImageId)))
             : images.filter(image => !image.imageType)
         : [];
-    const { id } = params || {};
-    const listingId = id ? new UUID(id) : null;
-    const ensuredCurrentUser = ensureCurrentUser(currentUser);
     const profileUser = ensureUser(user);
-    const isCurrentUser =
-        ensuredCurrentUser.id && profileUser.id && ensuredCurrentUser.id.uuid === profileUser.id.uuid;
-    const { bio, displayName } = profileUser?.attributes?.profile || {};
+    const { displayName } = profileUser?.attributes?.profile || {};
 
     const schemaTitleVars = { name: displayName, siteTitle: config.marketplaceName };
     const schemaTitle = intl?.formatMessage({ id: "ProfilePage.schemaTitle" }, schemaTitleVars);
@@ -118,7 +110,6 @@ export const ProductListingPageComponent = props => {
             price, stock, sort, maxNo, weight, dimensions, width, height, tag } = values;
         const hasNoCurrentStock = listing?.currentStock?.attributes?.quantity == null;
         const hasStockQuantityChanged = stock && stock !== initialValues.stock;
-        // currentStockQuantity is null or undefined, return null - otherwise use the value
         const oldTotal = hasNoCurrentStock ? null : initialValues.stock;
         const stockUpdateMaybe =
             hasNoCurrentStock || hasStockQuantityChanged
@@ -131,7 +122,7 @@ export const ProductListingPageComponent = props => {
                 : {};
 
         // New values for listing attributes
-        const updateValues = {
+        const createdValues = {
             price,
             title: title,
             images: images,
@@ -154,7 +145,33 @@ export const ProductListingPageComponent = props => {
             ...stockUpdateMaybe
 
         };
-        onCreateListing(updateValues, config, { oldTotal, newTotal: stock })
+        const updatedValues = {
+            listingSearchId,
+            price,
+            title: title,
+            images: images,
+            publicData: {
+                brand,
+                color,
+                size,
+                category,
+                shortDescription,
+                seller,
+                sort,
+                maxNo,
+                weight,
+                dimensions,
+                listingType: 'product',
+                width,
+                height,
+                tag
+            },
+            ...stockUpdateMaybe
+
+        };
+        listingSearchId.id ?
+            onUpdateListing(updatedValues, config, { oldTotal, newTotal: stock }) :
+            onCreateListing(createdValues, config, { oldTotal, newTotal: stock })
     }
 
     const handleValuesDraft = (values) => {
@@ -200,31 +217,32 @@ export const ProductListingPageComponent = props => {
     }
 
     // save draft
-    const listingSearchId = typeof window !== 'undefined' &&
-    parse(window.location.search);
-    const listingID = new UUID(listingSearchId?.id)
-    const ownListings = getOwnListingsById(state, [listingID])
+
+    console.log('ownListings :>> ', ownListings);
+        const {brand,color,size,shortDescription,seller,sort,weight,tag,maxNo,dimensions,width,height} = ownListings[0]?.attributes?.publicData ||{};
+        const {title,price} =  ownListings[0]?.attributes || {};
+
 
     const newInitialValues = ownListings && ownListings.length ? {
-        images: ownListings[0]?.images.map((item) => item?.attributes?.variants?.["square-small2x"]?.url),
-        title: ownListings[0].attributes.title,
-        brand:ownListings[0].attributes.publicData.brand,
-        color:ownListings[0].attributes.publicData.color,
-        size:ownListings[0].attributes.publicData.size,
-        category:ownListings[0].attributes.publicData.category,
-        shortDescription:ownListings[0].attributes.publicData.shortDescription,
-        seller:ownListings[0].attributes.publicData.seller,
-        price:ownListings[0].attributes?.price?.amount,
-        sort:ownListings[0].attributes.publicData.sort,
-        weight:ownListings[0].attributes.publicData.weight,
-        tag:ownListings[0].attributes.publicData.tag,
-        maxNo: ownListings[0].attributes.publicData.maxNo,
-        dimensions: ownListings[0].attributes.publicData.dimensions,
-        width: ownListings[0].attributes.publicData.weight,
-        height: ownListings[0].attributes.publicData.height,
+        images: ownListings[0]?.images,
+        title: title,
+        brand: brand,
+        color: color,
+        size: size,
+        category: ownListings[0].attributes.publicData.category,
+        shortDescription: shortDescription,
+        seller: seller,
+        price: price,
+        sort: sort,
+        weight: weight,
+        tag: tag,
+        maxNo: maxNo,
+        dimensions: dimensions,
+        width: width,
+        height: height,
 
     } : {
-        images:[],
+        images: [],
         title: '',
         brand: '',
         color: '',
@@ -232,17 +250,22 @@ export const ProductListingPageComponent = props => {
         category: '',
         shortDescription: '',
         seller: '',
-        price: '',
+        price: 0,
         sort: '',
         weight: '',
         tag: '',
         maxNo: '',
         dimensions: '',
-        width:'',
-        height:''
+        width: '',
+        height: ''
 
     }
-    
+    const submitButton = listingSearchId.id ? intl.formatMessage({
+        id: "ProductListing.updateButtonText"
+    }) : intl.formatMessage({
+        id: "ProductListing.submitButtonText",
+    })
+
 
     return (
         <Page title={schemaTitle} scrollingDisabled={scrollingDisabled}>
@@ -255,7 +278,6 @@ export const ProductListingPageComponent = props => {
                             desktopClassName={css.desktopTopbar}
                             mobileClassName={css.mobileTopbar}
                         />
-                        {/* <UserNavUserNav currentPage="ProductListingPage" /> */}
                     </>
                 }
                 sideNav={null}
@@ -272,15 +294,14 @@ export const ProductListingPageComponent = props => {
                             className={css.productFormWrapper}
                             images={restImages}
                             initialValues={newInitialValues}
-                            saveActionMsg={intl.formatMessage({
-                                id: 'StripePayoutPage.submitButtonText',
-                            })}
+                            saveActionMsg={submitButton}
                             setResetForm={() => setResetForm(true)}
                             onSubmit={handleValues}
                             handleValues={handleValues}
                             handleValuesDraft={handleValuesDraft}
                             onChange={onChange}
                             disabled={disabled}
+                            category={category}
                             ready={ready}
                             updated={panelUpdated}
                             updateInProgress={updateInProgress}
@@ -347,8 +368,9 @@ ProductListingPageComponent.propTypes = {
 const mapStateToProps = state => {
     const page = state.EditListingPage;
     const { currentUser, currentUserListing } = state.user;
-    // const { currentPageResultIds } = state.ProductListingPage;
-    // const ownListings = getOwnListingsById(state, )
+    const category = state?.ProductListingPage?.currentBusinessLising?.attributes?.publicData?.category
+        || [];
+
 
     const getOwnListing = id => {
         const listings = getMarketplaceEntities(state, [{ id, type: 'ownListing' }]);
@@ -358,6 +380,7 @@ const mapStateToProps = state => {
     return {
         state,
         currentUser,
+        category,
         currentUserListing,
         page,
         getOwnListing,
@@ -366,9 +389,9 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-    onUpdateListing: (tab, values, config) => dispatch(requestUpdateListing(tab, values, config)),
     onCreateListingDraft: (values, config) => dispatch(requestCreateListingDraft(values, config)),
     onCreateListing: (values, config, stockUpdateMaybe) => dispatch(requestCreateListing(values, config, stockUpdateMaybe)),
+    onUpdateListing: (values, config, stockUpdateMaybe) => dispatch(requestUpdateListing(values, config, stockUpdateMaybe)),
     onPublishListingDraft: listingId => dispatch(requestPublishListingDraft(listingId)),
     onImageUpload: (data, listingImageConfig, imageType) =>
         dispatch(requestImageUpload(data, listingImageConfig, imageType)),
@@ -380,6 +403,7 @@ const mapDispatchToProps = dispatch => ({
     onGetStripeConnectAccountLink: params => dispatch(getStripeConnectAccountLink(params)),
     onRemoveListingImage: imageId => dispatch(removeListingImage(imageId)),
     onCreateDraftServiceListing: (updatedValues, config) => dispatch(requestCreateListingDraft(updatedValues, config)),
+    onfetchBusinessListing: (listingId) => dispatch(fetchBusinessListing(listingId)),
 });
 
 const ProductListingPage = compose(
