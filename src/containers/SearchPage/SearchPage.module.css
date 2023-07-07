@@ -63,31 +63,6 @@
 
   & :global(.slick-slider) {
     position: relative;
-    padding-top: var(--topbarHeightDesktop);
-    min-height: calc(100vh - var(--topbarHeightDesktop));
-  }
-
-  &>a {
-    cursor: pointer;
-    color: var(--addaListingColor);
-
-    @media (max-width: 767px) {
-      text-decoration: underline;
-    }
-
-/* Container for side and content */
-.layoutWrapperContainer {
-  composes: container;
-  /* parent aka root is flexbox, this container takes all available space */
-  flex-shrink: 0;
-
-.fixedWidthContainer {
-  width: 100%;
-  max-width: var(--contentFixedWidth);
-  margin: 0 auto;
-
-  & :global(.slick-slider) {
-    position: relative;
     display: block;
     box-sizing: border-box;
     -webkit-user-select: none;
@@ -259,10 +234,26 @@
     transform: rotate(0deg);
   }
 
-.resetAllButton {
-  composes: h5 from global;
-  font-weight: var(--fontWeightMedium);
-  color: var(--colorGrey300);
+  & :global(.slick-arrow) {
+    font-size: 0;
+    z-index: 1;
+    line-height: 0;
+    position: absolute;
+    top: 50%;
+    display: block;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    -webkit-transform: translate(0, -50%);
+    -ms-transform: translate(0, -50%);
+    transform: translate(0, -50%);
+    cursor: pointer;
+    color: transparent;
+    border: none;
+    outline: none;
+    border-radius: 100px;
+    background: var(--marketplaceColor);
+  }
 
   & :global(.slick-prev) {
     left: 0px;
