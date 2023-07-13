@@ -52,7 +52,6 @@ export class ManageServiceListingsPageComponent extends Component {
       scrollingDisabled,
       intl,
     } = this.props;
-    console.log(listings, '&&&  &&& => listings');
 
     const hasPaginationInfo = !!pagination && pagination.totalItems != null;
     const listingsAreLoaded = !queryInProgress && hasPaginationInfo;
@@ -217,8 +216,6 @@ const mapStateToProps = state => {
     closingListingError,
   } = state.ManageServiceListingsPage;
   const listings = getOwnListingsById(state, currentPageResultIds);
-  console.log(pagination, '&&&  &&& => pagination');
-
   return {
     currentPageResultIds,
     listings: listings.filter((s) => s.attributes.publicData.listingType === 'service'),

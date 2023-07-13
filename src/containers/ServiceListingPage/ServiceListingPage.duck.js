@@ -21,6 +21,10 @@ export const EXPERT_LISTINGS_REQUEST = 'app/ServiceListingPage/EXPERT_LISTINGS_R
 export const EXPERT_LISTINGS_SUCCESS = 'app/ServiceListingPage/EXPERT_LISTINGS_SUCCESS';
 export const EXPERT_LISTINGS_ERROR = 'app/ServiceListingPage/EXPERT_LISTINGS_ERROR';
 
+export const SHOW_BUSINESS_LISTINGS_REQUEST = 'app/ServiceListingPage/SHOW_BUSINESS_LISTINGS_REQUEST';
+export const SHOW_BUSINESS_LISTINGS_SUCCESS = 'app/ServiceListingPage/SHOW_BUISNESS_LISTINGS_SUCCESS';
+export const SHOW_BUSINESS_LISTINGS_ERROR = 'app/ServiceListingPage/SHOW_BUSINESS_LISTINGS_ERROR';
+
 export const EXPERT_CREATE_LISTINGS_REQUEST =
   'app/ServiceListingPage/EXPERT_CREATE_LISTINGS_REQUEST';
 export const EXPERT_CREATE_LISTINGS_SUCCESS =
@@ -58,11 +62,13 @@ const initialState = {
   updateProfileError: null,
   searchInProgress: false,
   currentPageResultIds: [],
+  currentBusinessLising:{},
   searchListingsError: null,
   createListingInProgress: false,
   availabilityInProgress: false,
   createListingError: null,
 };
+// console.log('currentBusinessLising :>> ', currentBusinessLising);
 const resultIds = data => data.data.map(l => l.id);
 
 export default function reducer(state = initialState, action = {}) {
@@ -89,6 +95,23 @@ export default function reducer(state = initialState, action = {}) {
         availabilityInProgress: false,
         createListingError: payload,
       };
+
+      case SHOW_BUSINESS_LISTINGS_REQUEST:
+        return {
+          ...state,
+          searchInProgress: true,
+          searchMapListingIds: [],
+          searchListingsError: null,
+        };
+      case SHOW_BUSINESS_LISTINGS_SUCCESS:
+        return {
+          ...state,
+          currentBusinessLising: payload,
+        };
+      case SHOW_BUSINESS_LISTINGS_ERROR:
+        // eslint-disable-next-line no-console
+        console.error(payload);
+        return { ...state, searchInProgress: false, searchListingsError: payload };
     case EXPERT_LISTINGS_REQUEST:
       return {
         ...state,
@@ -187,6 +210,23 @@ export const updateProfileError = error => ({
   error: true,
 });
 
+export const showBusinessListingsRequest = searchParams => ({
+  type: SHOW_BUSINESS_LISTINGS_REQUEST,
+  payload: { searchParams },
+});
+
+export const showBusinessListingsSuccess = response => (
+  {
+  type: SHOW_BUSINESS_LISTINGS_SUCCESS,
+  payload: response,
+});
+
+export const showBusinessListingsError = e => ({
+  type: SHOW_BUSINESS_LISTINGS_ERROR,
+  error: true,
+  payload: e,
+});
+
 export const expertListingsRequest = searchParams => ({
   type: EXPERT_LISTINGS_REQUEST,
   payload: { searchParams },
@@ -260,9 +300,9 @@ export const createExpertListing = (actionPayload, config,listingId) => async (
   sdk
 ) => {
   try {
+    console.log('actionPayload :>> ', actionPayload);
     dispatch(expertCreateListingRequest());
     const { images,...rest } = actionPayload;
-    console.log(actionPayload, '&&&  &&& => actionPayload');
     
     const imageProperty = typeof images !== 'undefined' ? { images: imageIds(images) } : {};
 
@@ -278,7 +318,6 @@ export const createExpertListing = (actionPayload, config,listingId) => async (
     };
     if (listingId) {
     const result =   await sdk.ownListings.update(ownListingUpdateValues, queryParams);
-    console.log(result, '&&&  &&& => result');
     
     }
     const response =
@@ -286,7 +325,8 @@ export const createExpertListing = (actionPayload, config,listingId) => async (
     //   ? await sdk.ownListings.update(ownListingUpdateValues, queryParams)
       // : 
       await sdk.ownListings.create(ownListingValues, queryParams);
-      console.log(response, '&&&  &&& => response');
+
+      console.log('responseCreatew :>> ', response);
       
     dispatch(expertCreateListingSuccess());
     dispatch(fetchCurrentListing(response.data.data.id))
@@ -326,17 +366,34 @@ export const updateProfile = actionPayload => {
   };
 };
 
+export const fetchBusinessListing = (businessUserId) => async (dispatch, getState, sdk) => {
+  try {
+    dispatch(showBusinessListingsRequest());
+    const params = {
+      id: new UUID (businessUserId),
+      include: ["images","author"],
+      'fields.image': ['variants.square-small', 'variants.square-small2x']
+    };
+    const response = await sdk.ownListings.show(params, { expand: true });
+    dispatch(showBusinessListingsSuccess(response.data.data));
+    return response;
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 export const loadData = () => async (dispatch, getState, sdk) => {
   try {
     const fetchUser = await dispatch(fetchCurrentUser())
     const result = await dispatch(fetchCurrentUserHasListings());
+
+    await dispatch(fetchBusinessListing(getState().user.currentUser?.attributes?.profile?.publicData?.userListingId))
 
     const currentUser = getState().user.currentUser;
     // const userRole = getUserRole(currentUser);
     dispatch(expertListingsRequest());
     // if (userRole === USER_ROLE_EXPERT && result.data.data.length > 0 && result.data.data) {
       const response = await sdk.ownListings.query();
-      console.log(response, '&&&  &&& => response');
       
       const listingId = response?.data?.data?.at(0)
       // if (listingId) {

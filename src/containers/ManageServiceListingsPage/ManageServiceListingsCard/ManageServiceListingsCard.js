@@ -288,7 +288,6 @@ export const ManageServiceListingsCardComponent = props => {
   } = props;
   const classes = classNames(rootClassName || css.root, className);
   const currentListing = ensureOwnListing(listing);
-  console.log(currentListing, '&&&  &&& => currentListing');
 
   const id = currentListing.id.uuid;
   const { title = '', price, state } = currentListing.attributes;
@@ -314,7 +313,6 @@ export const ManageServiceListingsCardComponent = props => {
   });
 
   const { formattedPrice, priceTitle } = priceData(price, config.currency, intl);
-  console.log(formattedPrice, '&&&  &&& => formattedPrice');
 
   const hasError = hasOpeningError || hasClosingError;
   const thisListingInProgress =

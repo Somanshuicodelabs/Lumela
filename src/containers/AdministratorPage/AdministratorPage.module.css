@@ -1,0 +1,29 @@
+.contentBox {}
+
+.productFormWrapper {
+    margin: unset !important;
+    max-width: 100% !important;
+}
+
+
+
+.mainHeading {
+    margin-top: 0;
+    margin-bottom: 26px;
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 44px;
+    letter-spacing: 0em;
+    text-transform: capitalize;
+    color: #000;
+}
+
+.productCardList {
+    border-radius: 7px;
+    background: #FFF;
+    box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.08);
+    padding: 18px 15px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}

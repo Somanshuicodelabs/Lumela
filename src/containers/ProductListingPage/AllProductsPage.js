@@ -6,62 +6,16 @@ import { bool, func, object, shape, string } from 'prop-types';
 import { FormattedMessage, injectIntl, intlShape } from '../../util/reactIntl';
 
 import { useConfiguration } from '../../context/configurationContext';
-import { H3, Page, Footer, LayoutSingleColumn, LayoutWrapperAccountSettingsSideNav, FieldTextInput, LayoutSideNavigation, LayoutWrapperMain, UserNav, ProductsCard, PrimaryButton, NamedLink, FieldSelect, Button } from '../../components';
+import { Page, Footer,LayoutSideNavigation, ProductsCard, PrimaryButton, NamedLink} from '../../components';
 import TopbarContainer from '../TopbarContainer/TopbarContainer';
 
 import { isScrollingDisabled } from '../../ducks/ui.duck';
-import { getListingsById, getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
+import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { propTypes } from '../../util/types';
-// import ProductListingPageForm from './ProductListingPageForm/ProductListingPageForm';
-// import { Form } from 'react-final-form';
-// import { createExpertListing } from './ServiceListingPage.duck';
-import { requestCreateListingDraft, requestUpdateListing } from '../EditListingPage/EditListingPage.duck';
 import { ensureCurrentUser, ensureUser } from '../../util/data';
 import { fetchCurrentListing } from './ProductListingPage.duck';
 import css from './ProductListingPage.module.css';
-import productCardImage from '../../assets/productCardImage.png';
 import { getOwnListingsById } from '../ManageListingsPage/ManageListingsPage.duck';
-import { Form } from 'react-final-form';
-import KeywordFilter from '../SearchPage/KeywordFilter/KeywordFilter';
-
-const productData = [
-    {
-        productImage: productCardImage,
-        productHeading: "Glossier Oil Serum Hybrid futuredew",
-        productSize: "30ml",
-        productPrice: "$120",
-    },
-    {
-        productImage: productCardImage,
-        productHeading: "Glossier Oil Serum Hybrid futuredew",
-        productSize: "30ml",
-        productPrice: "$120",
-    },
-    {
-        productImage: productCardImage,
-        productHeading: "Glossier Oil Serum Hybrid futuredew",
-        productSize: "30ml",
-        productPrice: "$120",
-    },
-    {
-        productImage: productCardImage,
-        productHeading: "Glossier Oil Serum Hybrid futuredew",
-        productSize: "30ml",
-        productPrice: "$120",
-    },
-    {
-        productImage: productCardImage,
-        productHeading: "Glossier Oil Serum Hybrid futuredew",
-        productSize: "30ml",
-        productPrice: "$120",
-    },
-    {
-        productImage: productCardImage,
-        productHeading: "Glossier Oil Serum Hybrid futuredew",
-        productSize: "30ml",
-        productPrice: "$120",
-    },
-]
 
 export const AllProductsPageComponent = props => {
     const config = useConfiguration();
@@ -71,8 +25,6 @@ export const AllProductsPageComponent = props => {
         currentUser,
         user,
         onfetchCurrentListing,
-        currentPageResultIds,
-        getOwnListing,
         ownListings,
     } = props;
     const [filterText, setFilterText] = useState('');

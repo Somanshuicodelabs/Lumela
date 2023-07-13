@@ -19,6 +19,7 @@ import { FieldArray } from 'react-final-form-arrays';
 // import { FieldAddImage } from '../../EditListingPage/EditListingWizard/EditListingPhotosPanel/EditListingPhotosForm';
 import arrayMutators from 'final-form-arrays';
 import ListingImage from '../../EditListingPage/EditListingWizard/EditListingPhotosPanel/ListingImage';
+import { offers } from '../../../marketplace-custom-config';
 
 const TITLE_MAX_LENGTH = 60;
 const ACCEPT_IMAGES = 'image/*';
@@ -60,7 +61,6 @@ export const FieldAddImage = props => {
       <Field form={null} {...rest}>
         {fieldprops => {
           const { accept, input, label, disabled: fieldDisabled } = fieldprops;
-          console.log(fieldprops, '&&&  &&& => fieldprops');
           
           const { name, type } = input;
           const onChange = e => {
@@ -87,15 +87,13 @@ export const FieldAddImage = props => {
   
   // Component that shows listing images from "images" field array
   const FieldListingImage = props => {
-    console.log(props, '&&&  &&& => props');
     
-    const { name, intl, onRemoveImage, aspectWidth, aspectHeight, variantPrefix } = props;
+    const { name, intl, onRemoveImage, aspectWidth, aspectHeight, variantPrefix , category} = props;
     return (
       <Field name={name}>
         {fieldProps => {
           const { input } = fieldProps;
           const image = input.value;
-          console.log(image, '&&&  &&& => image');
           
           return image ? (
             <ListingImage
@@ -117,9 +115,10 @@ export const FieldAddImage = props => {
   };
 
 const EditListingServiceFormComponent = props => {
-
+    const { category = [] } = props;
     const [state, setState] = useState({ imageUploadRequested: false });
     const [submittedImages, setSubmittedImages] = useState([]);
+    const [categoryOptions, setCategoryOptions] = useState(offers.filter(itm => category.includes(itm.key)));
 
     const onImageUploadHandler = file => {
         const { listingImageConfig, onImageUpload } = props;
@@ -164,7 +163,6 @@ const EditListingServiceFormComponent = props => {
                 } = formRenderProps;
                 
                 // const images = values.images;
-                console.log(images,values, '&&&  &&& => images');
                 const { aspectWidth = 1, aspectHeight = 1, variantPrefix } = listingImageConfig;
 
                 // const { publishListingError, showListingsError, updateListingError, uploadImageError } =
@@ -172,10 +170,10 @@ const EditListingServiceFormComponent = props => {
                 // const uploadOverLimit = isUploadImageOverLimitError(uploadImageError);
 
                 // imgs can contain added images (with temp ids) and submitted images with uniq ids.
+                
                 const arrayOfImgIds = imgs => imgs?.map(i => (typeof i.id === 'string' ? i.imageId : i.id));
                 const imageIdsFromProps = arrayOfImgIds(images);
                 const imageIdsFromPreviousSubmit = arrayOfImgIds(submittedImages);
-                console.log(submittedImages, '&&&  &&& => submittedImages');
                 
                 const imageArrayHasSameImages = isEqual(imageIdsFromProps, imageIdsFromPreviousSubmit);
                 const submittedOnce = submittedImages.length > 0;
@@ -280,9 +278,8 @@ const EditListingServiceFormComponent = props => {
                     <Form className={classes} 
                     onSubmit={handleSubmit}
                     // onSubmit={e => {
-                    //     console.log(e, '&&&  &&& => e');
                         
-                    //     setSubmittedImages(images);
+                    //     // setSubmittedImages(images);
                     //     handleSubmit(e);
                     // }}
                     >
@@ -326,8 +323,8 @@ const EditListingServiceFormComponent = props => {
                                             className={css.inputBox}
                                             label="category"
                                         >
-                                            <option value=""><FormattedMessage id="ServiceListingPageForm.categoryPlaceholder" /></option>
-                                            <option value="">category 1</option>
+                                            <option value="Select">Select</option>
+                                            {categoryOptions.map((item) => <option value={item.key}>{item.value}</option>)}
                                         </FieldSelect>
                                         <div className={css.tagsInput}>
                                             <FieldTextInput

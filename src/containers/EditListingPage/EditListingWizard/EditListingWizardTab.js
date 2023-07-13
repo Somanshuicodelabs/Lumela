@@ -186,7 +186,7 @@ const EditListingWizardTab = props => {
 
       // After successful saving of draft data, user should be redirected to next tab
       redirectAfterDraftUpdate(
-        listingId,
+        listingId.uuid,
         params,
         tab,
         marketplaceTabs,

@@ -1171,6 +1171,7 @@
   "ProfileSettingsForm.firstNameRequired": "This field is required.",
   "ProfileSettingsForm.saveChanges": "Save changes",
   "ProductListingPage.productDetails": "Product Details",
+  "ProductListingPage.administratorDetails": "Store Info",
   "ProductListingPage.addNewProduct": "Add New Product",
   "ProductListingPage.addNewServices": "Add New Service",
   "ProductListingPage.stockMangement": "Stock Mangement",

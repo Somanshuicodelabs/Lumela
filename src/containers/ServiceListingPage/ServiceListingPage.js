@@ -58,16 +58,16 @@ export const ServiceListingPageComponent = props => {
         onUpdateUserListing,
         listings,
         onRemoveListingImage,
-        page
+        page,
+        category
     } = props;
-console.log(page, '&&&  &&& => page');
 
-const imageOrder = page?.uploadedImagesOrder || [];
+    const imageOrder = page?.uploadedImagesOrder || [];
     const unattachedImages = imageOrder.map(i => page.uploadedImages
         ?.[i]);
 
-        const currentListing = listings.filter((st)=>st.attributes.publicData.listingType === BUSINESS_LISTING_TYPE)
-        const currentListingImages =
+    const currentListing = listings.filter((st) => st.attributes.publicData.listingType === BUSINESS_LISTING_TYPE)
+    const currentListingImages =
         currentListing && currentListing.images ? currentListing.images : [];
     const allImages = currentListingImages.concat(unattachedImages);
     const removedImageIds = page.removedImageIds || [];
@@ -78,12 +78,11 @@ const imageOrder = page?.uploadedImagesOrder || [];
     const [resetForm, setResetForm] = useState(false);
     const unitType = currentListing?.attributes?.publicData?.unitType;
     const { publicData = {} } = !!currentListing.id && currentListing?.attributes;
-    const {serviceTags=[]} = publicData||{};
+    const { serviceTags = [] } = publicData || {};
 
     const { id } = params || {};
     const listingId = currentListing.at(0)?.id;
-    console.log(listingId?.id, '&&&  &&& => currentListing.id');
-    
+
     // const listings = ensureOwnListing(getOwnListing(listingId));
     // const [imageState, setImageState] = useState(null);
     const ensuredCurrentUser = ensureCurrentUser(currentUser);
@@ -195,12 +194,12 @@ const imageOrder = page?.uploadedImagesOrder || [];
                                 //     subCategoryData,
                                 // };
                                 onCreateServiceListing(updatedValues, config).then((r) => {
-                                     const data = {
-                                          publicData:{
-                                            serviceTags:[...tag,...serviceTags]
+                                    const data = {
+                                        publicData: {
+                                            serviceTags: [...tag, ...serviceTags]
                                         }
                                     }
-                                    onUpdateUserListing(data ,config,listingId);
+                                    onUpdateUserListing(data, config, listingId);
                                 })
                             }}
                             onChange={onChange}
@@ -209,6 +208,7 @@ const imageOrder = page?.uploadedImagesOrder || [];
                             onImageUpload={onImageUpload}
                             onRemoveImage={onRemoveListingImage}
                             ready={ready}
+                            category={category}
                             updated={panelUpdated}
                             updateInProgress={updateInProgress}
                             fetchErrors={errors}
@@ -252,11 +252,15 @@ ServiceListingPageComponent.propTypes = {
 
 const mapStateToProps = state => {
     const { currentUser } = state.user;
-    const {currentPageResultIds} = state.ServiceListingPage;
+    const { currentPageResultIds } = state.ServiceListingPage;
     const page = state.EditListingPage;
     const listings = getOwnListingsById(state, currentPageResultIds);
+    const category = state?.ServiceListingPage
+    ?.currentBusinessLising?.attributes?.publicData?.category
+        || [];
 
     return {
+        category,
         currentUser,
         page,
         listings,
@@ -266,10 +270,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
     onImageUpload: (data, listingImageConfig, imageType) =>
-    dispatch(requestImageUpload(data, listingImageConfig, imageType)),
+        dispatch(requestImageUpload(data, listingImageConfig, imageType)),
     onCreateServiceListing: (updatedValues, config) => dispatch(createExpertListing(updatedValues, config)),
     onCreateDraftServiceListing: (updatedValues, config) => dispatch(requestCreateListingDraft(updatedValues, config)),
-    onUpdateUserListing: (data, config,listingId) => dispatch(createExpertListing( data, config,listingId)),
+    onUpdateUserListing: (data, config, listingId) => dispatch(createExpertListing(data, config, listingId)),
     onRemoveListingImage: imageId => dispatch(removeListingImage(imageId)),
 });
 

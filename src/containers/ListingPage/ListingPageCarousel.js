@@ -648,7 +648,7 @@ const EnhancedListingPage = props => {
 };
 
 const mapStateToProps = state => {
-  const { currentPageResultIds } = state.ProductListingPage;
+  const { currentPageResultIds } = state.ListingPage;
   const { isAuthenticated } = state.auth;
   const {
     showListingError,

@@ -8,31 +8,55 @@ import { parse } from '../../util/urlHelpers';
 const { UUID } = sdkTypes;
 
 // ================ Action types ================ //
-export const CREATE_LISTING_REQUEST = 'app/EditListingPage/UPDATE_LISTING_REQUEST';
-export const CREATE_LISTING_SUCCESS = 'app/EditListingPage/UPDATE_LISTING_SUCCESS';
-export const CREATE_LISTING_ERROR = 'app/EditListingPage/UPDATE_LISTING_ERROR';
+export const CREATE_LISTING_REQUEST = 'app/ProductListingPage/UPDATE_LISTING_REQUEST';
+export const CREATE_LISTING_SUCCESS = 'app/ProductListingPage/UPDATE_LISTING_SUCCESS';
+export const CREATE_LISTING_ERROR = 'app/ProductListingPage/UPDATE_LISTING_ERROR';
 
-export const UPDATE_LISTING_REQUEST = 'app/EditListingPage/UPDATE_PROFILE_REQUEST';
-export const UPDATE_LISTING_SUCCESS = 'app/EditListingPage/UPDATE_PROFILE_SUCCESS';
-export const UPDATE_LISTING_ERROR = 'app/EditListingPage/UPDATE_PROFILE_ERROR';
+export const UPDATE_LISTING_REQUEST = 'app/ProductListingPage/UPDATE_PROFILE_REQUEST';
+export const UPDATE_LISTING_SUCCESS = 'app/ProductListingPage/UPDATE_PROFILE_SUCCESS';
+export const UPDATE_LISTING_ERROR = 'app/ProductListingPage/UPDATE_PROFILE_ERROR';
 
-export const SHOW_LISTINGS_REQUEST = 'app/EditListingPage/SHOW_LISTINGS_REQUEST';
-export const SHOW_LISTINGS_SUCCESS = 'app/EditListingPage/SHOW_LISTINGS_SUCCESS';
-export const SHOW_LISTINGS_ERROR = 'app/EditListingPage/SHOW_LISTINGS_ERROR';
+export const SHOW_LISTINGS_REQUEST = 'app/ProductListingPage/SHOW_LISTINGS_REQUEST';
+export const SHOW_LISTINGS_SUCCESS = 'app/ProductListingPage/SHOW_LISTINGS_SUCCESS';
+export const SHOW_LISTINGS_ERROR = 'app/ProductListingPage/SHOW_LISTINGS_ERROR';
 
-export const SHOW_BUSINESS_LISTINGS_REQUEST = 'app/EditListingPage/SHOW_BUSINESS_LISTINGS_REQUEST';
-export const SHOW_BUSINESS_LISTINGS_SUCCESS = 'app/EditListingPage/SHOW_BUISNESS_LISTINGS_SUCCESS';
-export const SHOW_BUSINESS_LISTINGS_ERROR = 'app/EditListingPage/SHOW_BUSINESS_LISTINGS_ERROR';
+export const SHOW_BUSINESS_LISTINGS_REQUEST = 'app/ProductListingPage/SHOW_BUSINESS_LISTINGS_REQUEST';
+export const SHOW_BUSINESS_LISTINGS_SUCCESS = 'app/ProductListingPage/SHOW_BUISNESS_LISTINGS_SUCCESS';
+export const SHOW_BUSINESS_LISTINGS_ERROR = 'app/ProductListingPage/SHOW_BUSINESS_LISTINGS_ERROR';
 
-export const PUBLISH_LISTING_REQUEST = 'app/EditListingPage/PUBLISH_LISTING_REQUEST';
-export const PUBLISH_LISTING_SUCCESS = 'app/EditListingPage/PUBLISH_LISTING_SUCCESS';
-export const PUBLISH_LISTING_ERROR = 'app/EditListingPage/PUBLISH_LISTING_ERROR';
+export const PUBLISH_LISTING_REQUEST = 'app/ProductListingPage/PUBLISH_LISTING_REQUEST';
+export const PUBLISH_LISTING_SUCCESS = 'app/ProductListingPage/PUBLISH_LISTING_SUCCESS';
+export const PUBLISH_LISTING_ERROR = 'app/ProductListingPage/PUBLISH_LISTING_ERROR';
 
 
-export const CLEAR_UPDATED_FORM = 'app/EditListingPage/CLEAR_UPDATED_FORM';
+export const CLEAR_UPDATED_FORM = 'app/ProductListingPage/CLEAR_UPDATED_FORM';
 
 
 const resultIds = data => data.data.map(l => l.id);
+
+const updateUploadedImagesState = (state, payload) => {
+  const { uploadedImages, uploadedImagesOrder } = state;
+  
+
+  // Images attached to listing entity
+  const attachedImages = payload?.data?.relationships?.images?.data || [];
+  const attachedImageUUIDStrings = attachedImages.map(img => img.id.uuid);
+
+  // Uploaded images (which are propably not yet attached to listing)
+  const unattachedImages = Object.values(state?.uploadedImages);
+  const duplicateImageEntities = unattachedImages.filter(unattachedImg =>
+    attachedImageUUIDStrings.includes(unattachedImg?.imageId?.uuid)
+  );
+  return duplicateImageEntities.length > 0
+    ? {
+        uploadedImages: {},
+        uploadedImagesOrder: [],
+      }
+    : {
+        uploadedImages,
+        uploadedImagesOrder,
+      };
+};
 
 // ================ Reducer ================ //
 
@@ -247,7 +271,6 @@ export function requestCreateListing(data, config, stockUpdateMaybe) {
         include: ["images"]
       }  )
       .then(response => {
-        console.log('response :>> ', response);
         createListingResponse = response;
         const listingId = response.data.data.id;
         dispatch(updateStockOfListingMaybe(listingId, stockUpdate, dispatch))
@@ -284,7 +307,6 @@ export function requestUpdateListing(data, config, stockUpdateMaybe) {
         include: ["images"]
       }  )
       .then(response => {
-        console.log('response :>> ', response);
         createListingResponse = response;
         const listingId = response.data.data.id;
         dispatch(updateStockOfListingMaybe(listingId, stockUpdate, dispatch))

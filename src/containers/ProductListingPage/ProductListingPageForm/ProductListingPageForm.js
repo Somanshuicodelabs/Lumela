@@ -654,7 +654,7 @@ const EditListingProductFormComponent = props => {
                                                         id="maxNo"
                                                         name="maxNo"
                                                         className={css.inputBox}
-                                                        type="text"
+                                                        type="number"
                                                         label={maxNoLabel}
 
                                                     /> : null}
