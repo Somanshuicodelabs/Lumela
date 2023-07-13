@@ -80,6 +80,7 @@ export class ModalComponent extends Component {
 
   componentDidUpdate(prevProps) {
     const { id, isOpen, onManageDisableScrolling } = prevProps;
+    console.log('onManageDisableScrolling :>> ', onManageDisableScrolling);
     if (this.props.isOpen !== isOpen) {
       onManageDisableScrolling(id, this.props.isOpen);
 

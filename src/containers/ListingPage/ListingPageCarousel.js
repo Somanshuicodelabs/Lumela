@@ -313,7 +313,7 @@ export const ListingPageComponent = props => {
         <div>
           <div className={css.contentWrapperForProductLayout}>
             <div className={css.mainColumnForProductLayout}>
-              {currentListing.id ? (
+              {/* {currentListing.id ? (
                 <ActionBarMaybe
                   className={css.actionBarForProductLayout}
                   isOwnListing={isOwnListing}
@@ -325,7 +325,7 @@ export const ListingPageComponent = props => {
                     tab: listingTab,
                   }}
                 />
-              ) : null}
+              ) : null} */}
               <SectionGallery
                 listing={currentListing}
                 variantPrefix={config.layout.listingImage.variantPrefix}
