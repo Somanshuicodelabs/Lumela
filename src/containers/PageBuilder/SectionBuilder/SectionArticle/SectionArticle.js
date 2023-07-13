@@ -16,6 +16,7 @@ import {
   getQueryParamNames,
 } from '../../../../util/search';
 import { cloneDeep } from 'lodash';
+import MainPanelLanding from '../../../SearchPage/MainPanelLanding';
 
 // Section component that's able to show article content
 // The article content is mainly supposed to be inside a block
@@ -131,21 +132,21 @@ const SectionArticle = props => {
             data={description}
             className={classNames(defaultClasses.description, props?.description?.additionalClass)}
             options={fieldOptions}
-          />
+            />
           <Field data={callToAction} className={defaultClasses.ctaButton} options={fieldOptions} />
         </header>
       ) : null}
       {hasBlocks ? (
         <div
-          className={classNames(
-            defaultClasses.blockContainer,
-            css.articleMain,
-            props?.additionalClass,
-            {
-              [css.noSidePaddings]: isInsideContainer,
-            }
+        className={classNames(
+          defaultClasses.blockContainer,
+          css.articleMain,
+          props?.additionalClass,
+          {
+            [css.noSidePaddings]: isInsideContainer,
+          }
           )}
-        >
+          >
           <BlockBuilder
             blocks={blocks}
             id={sectionId}
@@ -153,13 +154,16 @@ const SectionArticle = props => {
             options={options}
           />
           {sectionId == 'hero-landing' &&
-            <TopbarSearchForm
-              isKeywordsSearch
-              className={css.searchLink}
-              desktopInputRoot={css.topbarSearchWithLeftPadding}
-              onSubmit={handleSubmit1}
-              initialValues={initialSearchFormValues}
-            />
+          
+          <MainPanelLanding/>
+            // <TopbarSearchForm
+            //   isKeywordsSearch
+            //   className={css.searchLink}
+            //   desktopInputRoot={css.topbarSearchWithLeftPadding}
+            //   onSubmit={handleSubmit1}
+            //   initialValues={initialSearchFormValues}
+            // />
+            
           }
         </div>
       ) : null}

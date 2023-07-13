@@ -177,6 +177,7 @@ const EditListingWizardTab = props => {
   // New listing flow has automatic redirects to new tab on the wizard
   // and the last panel calls publishListing API endpoint.
   const automaticRedirectsForNewListingFlow = (tab, listingId) => {
+    console.log('listingId', listingId)
 
 
     if (tab !== marketplaceTabs[marketplaceTabs.length - 1]) {
@@ -186,7 +187,7 @@ const EditListingWizardTab = props => {
 
       // After successful saving of draft data, user should be redirected to next tab
       redirectAfterDraftUpdate(
-        listingId,
+        listingId?.uuid,
         params,
         tab,
         marketplaceTabs,
@@ -217,7 +218,8 @@ const EditListingWizardTab = props => {
         // In Availability tab, the submitted data (plan) is inside a modal
         // We don't redirect provider immediately after plan is set
         if (isNewListingFlow && tab !== AVAILABILITY) {
-          const listingId = r.data.data.id;
+          const listingId = r?.data?.data?.id;
+          console.log('listingId', listingId)
 
           automaticRedirectsForNewListingFlow(tab, listingId);
         }

@@ -10,6 +10,7 @@ import lomelaVideo from '../../../../assets/video/Lumela_video.mp4';
 import ReactMuxPlayer from '../../../../components/ReactMuxPlayer/ReactMuxPlayer';
 import { Button } from '../../../../components';
 import IconLocation from '../../../../components/IconLocation/IconLocation';
+import MainPanelLanding from '../../../SearchPage/MainPanelLanding';
 // import IconSearchGlass from '../../../../components/IconSearchGlass/IconSearchGlass';
 
 const FieldMedia = props => {
@@ -96,8 +97,10 @@ const BlockDefault = props => {
           )}
           {/* {listings?.map((item) => (
           <div>{item?.attributes?.publicData?.businessName}</div>))} */}
+        
         </div>
       ) : null}
+        {/* <MainPanelLanding/> */}
     </BlockContainer>
   );
 };

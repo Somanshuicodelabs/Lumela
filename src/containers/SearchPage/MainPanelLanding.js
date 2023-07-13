@@ -35,12 +35,16 @@ const FILTER_DROPDOWN_OFFSET = -14;
 class MainPanelLandingComponent extends Component {
   constructor(props) {
     super(props);
+    // this.state = {
+    //   isSecondaryFiltersOpen: false,
+    //   currentQueryParams: props.urlQueryParams,
+    //   isplain: false,
+    // };
     this.state = {
       isSecondaryFiltersOpen: false,
-      currentQueryParams: props.urlQueryParams,
-      isplain: false,
+      currentQueryParams: { ...props.urlQueryParams },
+      keyword: ''
     };
-
     this.applyFilters = this.applyFilters.bind(this);
     this.cancelFilters = this.cancelFilters.bind(this);
     this.resetAll = this.resetAll.bind(this);
@@ -51,8 +55,11 @@ class MainPanelLandingComponent extends Component {
     // SortBy
     this.handleSortBy = this.handleSortBy.bind(this);
   }
+
+
   handleSubmit(values) {
     const { currentSearchParams } = this.props;
+    console.log('currentSearchParams', currentSearchParams)
     const { history, config, routeConfiguration } = this.props;
 
     const topbarSearchParams = () => {
@@ -66,6 +73,7 @@ class MainPanelLandingComponent extends Component {
 
       return {
         ...originMaybe,
+      
         address: search,
         bounds,
       };
@@ -148,6 +156,7 @@ class MainPanelLandingComponent extends Component {
 
     const urlQueryParams = validUrlQueryParamsFromProps(this.props);
 
+    console.log('this.state.currentQueryParams', this.state.currentQueryParams)
     return updatedURLParams => {
       const updater = prevState => {
         const { address, bounds, keywords } = urlQueryParams;
@@ -210,9 +219,11 @@ class MainPanelLandingComponent extends Component {
       scrollingDisabled,
       searchInProgress,
       searchListingsError,
+      currentSearchParams,
       activeListingId,
       onActivateListing,
     } = this.props;
+    console.log('currentSearchParams', this.state.currentQueryParams)
     const { listingFields: listingFieldsConfig } = config?.listing || {};
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
 
@@ -366,7 +377,17 @@ class MainPanelLandingComponent extends Component {
       routeConfiguration,
       config
     );
+    const handleKeywordSearch = (e) => {
+      this.setState({
+        keyword: e.target.value,
+        currentQueryParams: {
+          ...this.state.currentQueryParams,
+          keywords: e.target.value
+        }
+      })
+    }
 
+    console.log(this.state.keyword)
     // Set topbar class based on if a modal is open in
     // a child component
     const topbarClasses = this.state.isMobileModalOpen
@@ -376,22 +397,22 @@ class MainPanelLandingComponent extends Component {
     return (
       <div className={css.searchBarHero}>
         <MainPanelHeader
-              className={css.mainPanelMapVariant}
-              // sortByComponent={sortBy('desktop')}
-              isSortByActive={sortConfig.active}
-              listingsAreLoaded={listingsAreLoaded}
-              resultsCount={totalItems}
-              searchInProgress={searchInProgress}
-              searchListingsError={searchListingsError}
-              noResultsInfo={noResultsInfo}
-              pageName="LandingPage"
-              isLandingSearch={true}
-            >
-        <SearchFiltersPrimary
-          className={css.startFilter}
+          className={css.mainPanelMapVariant}
+          // sortByComponent={sortBy('desktop')}
+          isSortByActive={sortConfig.active}
+          listingsAreLoaded={listingsAreLoaded}
+          resultsCount={totalItems}
+          searchInProgress={searchInProgress}
+          searchListingsError={searchListingsError}
+          noResultsInfo={noResultsInfo}
+          pageName="LandingPage"
+          isLandingSearch={true}
+        >
+          <SearchFiltersPrimary
+            className={css.startFilter}
           // {...propsForSecondaryFiltersToggle}
           >
-          {availablePrimaryFilters.map(config => {
+            {/* {availablePrimaryFilters.map(config => {
             return (
               <FilterComponent
                 key={`SearchFiltersPrimary.${config.key}`}
@@ -400,21 +421,29 @@ class MainPanelLandingComponent extends Component {
                 marketplaceCurrency={marketplaceCurrency}
                 urlQueryParams={validQueryParams}
                 initialValues={initialValues(this.props, this.state.currentQueryParams)}
-                getHandleChangedValueFn={(e) => this.setState({ currentQueryParams: { ...this.state.currentQueryParams, ...e } })}
+                // getHandleChangedValueFn={(e) => this.setState({ currentQueryParams: { ...this.state.currentQueryParams, ...e } })}
                 intl={intl}
                 showAsPopup
                 contentPlacementOffset={FILTER_DROPDOWN_OFFSET}
               />
             );
-          })}
-          <TopbarSearchForm
-            className={css.searchLink}
-            desktopInputRoot={css.topbarSearchWithLeftPadding}
-            onSubmit={this.handleSubmit}
-            initialValues={initialSearchFormValues}
-            appConfig={config}
-          />
-        </SearchFiltersPrimary>
+          })} */}
+            <TopbarSearchForm
+              className={css.searchLink}
+              desktopInputRoot={css.topbarSearchWithLeftPadding}
+              onSubmit={this.handleSubmit}
+              isKeywordsSearch={true}
+              initialValues={initialSearchFormValues}
+              appConfig={config}
+            />
+
+            <input
+              className={css.keywordInput}
+              value={this.state.keyword}
+              placeholder="Keywords"
+              onChange={handleKeywordSearch}
+            />
+          </SearchFiltersPrimary>
         </MainPanelHeader>
         <Button
           className={css.searchButton}
