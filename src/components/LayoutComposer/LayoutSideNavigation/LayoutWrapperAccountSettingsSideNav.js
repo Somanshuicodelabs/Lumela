@@ -158,6 +158,15 @@ const LayoutWrapperAccountSettingsSideNavComponent = props => {
       },
     },
     {
+      text: <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.administratorListingTabTitle" />,
+      selected: currentTab === 'AdministratorPage',
+      icon: <IconLogout />,
+      id: 'AdministratorPageTab',
+      linkProps: {
+        name: 'AdministratorPage',
+      },
+    },
+    {
       text: <FormattedMessage id="LayoutWrapperAccountSettingsSideNav.productListingTabTitle" />,
       selected: currentTab === 'AllProductsPage',
       icon: <IconLogout />,

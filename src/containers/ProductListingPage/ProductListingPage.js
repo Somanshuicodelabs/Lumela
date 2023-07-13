@@ -217,10 +217,8 @@ export const ProductListingPageComponent = props => {
     }
 
     // save draft
-
-    console.log('ownListings :>> ', ownListings);
-        const {brand,color,size,shortDescription,seller,sort,weight,tag,maxNo,dimensions,width,height} = ownListings[0]?.attributes?.publicData ||{};
-        const {title,price} =  ownListings[0]?.attributes || {};
+    const { brand, color, size, shortDescription, seller, sort, weight, tag, maxNo, dimensions, width, height } = ownListings[0]?.attributes?.publicData || {};
+    const { title, price } = ownListings[0]?.attributes || {};
 
 
     const newInitialValues = ownListings && ownListings.length ? {

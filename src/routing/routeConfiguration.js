@@ -33,6 +33,7 @@ const PasswordResetPage = loadable(() => import(/* webpackChunkName: "PasswordRe
 const PaymentMethodsPage = loadable(() => import(/* webpackChunkName: "PaymentMethodsPage" */ '../containers/PaymentMethodsPage/PaymentMethodsPage'));
 const PrivacyPolicyPage = loadable(() => import(/* webpackChunkName: "PrivacyPolicyPage" */ '../containers/PrivacyPolicyPage/PrivacyPolicyPage'));
 const ProductListingPage= loadable(() => import('../containers/ProductListingPage/ProductListingPage'));
+const AdministratorPage= loadable(() => import('../containers/AdministratorPage/AdministratorPage'));
 const AllProductsPage= loadable(() => import('../containers/ProductListingPage/AllProductsPage'));
 const ProfilePage = loadable(() => import(/* webpackChunkName: "ProfilePage" */ '../containers/ProfilePage/ProfilePage'));
 const ProfileSettingsPage = loadable(() => import(/* webpackChunkName: "ProfileSettingsPage" */ '../containers/ProfileSettingsPage/ProfileSettingsPage'));
@@ -203,6 +204,14 @@ const routeConfiguration = (layoutConfig) => {
       authPage: 'LoginPage',
       component: ProductListingPage,
       loadData: pageDataLoadingAPI.ProductListingPage.loadData,
+    },
+    {
+      path: '/administrator',
+      name: 'AdministratorPage',
+      auth: true,
+      authPage: 'LoginPage',
+      component: AdministratorPage,
+      // loadData: pageDataLoadingAPI.AdministratorPage.loadData,
     },
     {
       path: '/all-products',

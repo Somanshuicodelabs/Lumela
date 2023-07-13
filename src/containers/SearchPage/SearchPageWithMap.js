@@ -58,12 +58,6 @@ import popularMobileImage2 from '../../../src/assets/popular-mobile-image-2.png'
 import popularMobileImage3 from '../../../src/assets/popular-mobile-image-3.png';
 import popularMobileImage4 from '../../../src/assets/popular-mobile-image-4.png';
 import popularMobileImage5 from '../../../src/assets/popular-mobile-image-5.png';
-import Slider from 'react-slick';
-import popularMobileImage1 from '../../../src/assets/popular-mobile-image-1.png';
-import popularMobileImage2 from '../../../src/assets/popular-mobile-image-2.png';
-import popularMobileImage3 from '../../../src/assets/popular-mobile-image-3.png';
-import popularMobileImage4 from '../../../src/assets/popular-mobile-image-4.png';
-import popularMobileImage5 from '../../../src/assets/popular-mobile-image-5.png';
 
 
 const MODAL_BREAKPOINT = 768; // Search is in modal on mobile layout
