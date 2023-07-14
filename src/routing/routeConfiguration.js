@@ -35,6 +35,7 @@ const PrivacyPolicyPage = loadable(() => import(/* webpackChunkName: "PrivacyPol
 const ProductListingPage= loadable(() => import('../containers/ProductListingPage/ProductListingPage'));
 const AdministratorPage= loadable(() => import('../containers/AdministratorPage/AdministratorPage'));
 const AllProductsPage= loadable(() => import('../containers/ProductListingPage/AllProductsPage'));
+const AllServicesPage= loadable(() => import('../containers/ServiceListingPage/AllServicesPage'));
 const ProfilePage = loadable(() => import(/* webpackChunkName: "ProfilePage" */ '../containers/ProfilePage/ProfilePage'));
 const ProfileSettingsPage = loadable(() => import(/* webpackChunkName: "ProfileSettingsPage" */ '../containers/ProfileSettingsPage/ProfileSettingsPage'));
 const OrderPage = loadable(() => import(/* webpackChunkName: "OrderPage" */ '../containers/OrderPage/OrderPage'));
@@ -219,6 +220,14 @@ const routeConfiguration = (layoutConfig) => {
       auth: true,
       authPage: 'LoginPage',
       component: AllProductsPage,
+      // loadData: pageDataLoadingAPI.ProductListingPage.loadData,
+    },
+    {
+      path: '/all-services',
+      name: 'AllServicesPage',
+      auth: true,
+      authPage: 'LoginPage',
+      component: AllServicesPage,
       // loadData: pageDataLoadingAPI.ProductListingPage.loadData,
     },
 

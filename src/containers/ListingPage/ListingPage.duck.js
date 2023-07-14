@@ -41,9 +41,13 @@ export const SEND_INQUIRY_REQUEST = 'app/ListingPage/SEND_INQUIRY_REQUEST';
 export const SEND_INQUIRY_SUCCESS = 'app/ListingPage/SEND_INQUIRY_SUCCESS';
 export const SEND_INQUIRY_ERROR = 'app/ListingPage/SEND_INQUIRY_ERROR';
 
-export const SHOW_LISTINGS_REQUEST = 'app/EditListingPage/SHOW_LISTINGS_REQUEST';
-export const SHOW_LISTINGS_SUCCESS = 'app/EditListingPage/SHOW_LISTINGS_SUCCESS';
-export const SHOW_LISTINGS_ERROR = 'app/EditListingPage/SHOW_LISTINGS_ERROR';
+export const SHOW_LISTINGS_REQUEST = 'app/ListingPage/SHOW_LISTINGS_REQUEST';
+export const SHOW_LISTINGS_SUCCESS = 'app/ListingPage/SHOW_LISTINGS_SUCCESS';
+export const SHOW_LISTINGS_ERROR = 'app/ListingPage/SHOW_LISTINGS_ERROR';
+
+export const SHOW_SERVICE_LISTINGS_REQUEST = 'app/ListingPage/SHOW_SERVICE_LISTINGS_REQUEST';
+export const SHOW_SERVICE_LISTINGS_SUCCESS = 'app/ListingPage/SHOW_SERVICE_LISTINGS_SUCCESS';
+export const SHOW_SERVICE_LISTINGS_ERROR = 'app/ListingPage/SHOW_SERVICE_LISTINGS_ERROR';
 
 // ================ Reducer ================ //
 
@@ -65,7 +69,8 @@ const initialState = {
   sendInquiryInProgress: false,
   sendInquiryError: null,
   inquiryModalOpenForListingId: null,
-  currentPageResultIds:[],
+  currentPageResultIds: [],
+  currentPageServiceResultIds: []
 };
 
 const listingPageReducer = (state = initialState, action = {}) => {
@@ -79,7 +84,7 @@ const listingPageReducer = (state = initialState, action = {}) => {
     case SHOW_LISTING_ERROR:
       return { ...state, showListingError: payload };
 
-      case SHOW_LISTINGS_REQUEST:
+    case SHOW_LISTINGS_REQUEST:
       return {
         ...state,
         searchInProgress: true,
@@ -94,6 +99,25 @@ const listingPageReducer = (state = initialState, action = {}) => {
         searchInProgress: false,
       };
     case SHOW_LISTINGS_ERROR:
+      // eslint-disable-next-line no-console
+      console.error(payload);
+      return { ...state, searchInProgress: false, searchListingsError: payload };
+
+    case SHOW_SERVICE_LISTINGS_REQUEST:
+      return {
+        ...state,
+        searchInProgress: true,
+        searchMapListingIds: [],
+        searchListingsError: null,
+      };
+    case SHOW_SERVICE_LISTINGS_SUCCESS:
+      return {
+        ...state,
+        currentPageServiceResultIds: resultIds(payload.data),
+        pagination: payload.data.meta,
+        searchInProgress: false,
+      };
+    case SHOW_SERVICE_LISTINGS_ERROR:
       // eslint-disable-next-line no-console
       console.error(payload);
       return { ...state, searchInProgress: false, searchListingsError: payload };
@@ -192,6 +216,21 @@ export const showListingsSuccess = response => ({
 
 export const showListingsError = e => ({
   type: SHOW_LISTINGS_ERROR,
+  error: true,
+  payload: e,
+});
+export const showServiceListingsRequest = searchParams => ({
+  type: SHOW_SERVICE_LISTINGS_REQUEST,
+  payload: { searchParams },
+});
+
+export const showServiceListingsSuccess = response => ({
+  type: SHOW_SERVICE_LISTINGS_SUCCESS,
+  payload: { data: response.data },
+});
+
+export const showServiceListingsError = e => ({
+  type: SHOW_SERVICE_LISTINGS_ERROR,
   error: true,
   payload: e,
 });
@@ -419,13 +458,29 @@ export const fetchCurrentListing = (listingId) => async (dispatch, getState, sdk
   try {
     dispatch(showListingsRequest());
     const params = {
-      pub_listingType:'product',
-      include: ["images","author"],
+      pub_listingType: 'product',
+      include: ["images", "author"],
       'fields.image': ['variants.square-small', 'variants.square-small2x']
     };
     const response = await sdk.listings.query(params, { expand: true });
     dispatch(addMarketplaceEntities(response));
     dispatch(showListingsSuccess(response));
+    return response;
+  } catch (error) {
+    console.log(error)
+  }
+}
+export const fetchCurrentServiceListing = (listingId) => async (dispatch, getState, sdk) => {
+  try {
+    dispatch(showServiceListingsRequest());
+    const params = {
+      pub_listingType: 'service',
+      include: ["images", "author"],
+      'fields.image': ['variants.square-small', 'variants.square-small2x']
+    };
+    const response = await sdk.listings.query(params, { expand: true });
+    dispatch(addMarketplaceEntities(response));
+    dispatch(showServiceListingsSuccess(response));
     return response;
   } catch (error) {
     console.log(error)

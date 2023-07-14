@@ -56,6 +56,7 @@ import {
   fetchTimeSlots,
   fetchTransactionLineItems,
   fetchCurrentListing,
+  fetchCurrentServiceListing,
 } from './ListingPage.duck';
 
 import {
@@ -123,12 +124,15 @@ export const ListingPageComponent = props => {
     config,
     routeConfiguration,
     ownListings,
+    ownServiceListings,
     user,
-    onfetchCurrentListing
+    onfetchCurrentListing,
+    onfetchCurrentServiceListing
   } = props;
 
   useEffect(() => {
     onfetchCurrentListing().then(res => res)
+    onfetchCurrentServiceListing().then(res => res)
   }, [])
 
   const ensuredCurrentUser = ensureCurrentUser(currentUser);
@@ -483,44 +487,24 @@ export const ListingPageComponent = props => {
                       </li>
                     </ul>
                   </div>
+                  {ownServiceListings.filter(item => (item.attributes.state == "published") && currentListing.author.id.uuid === item.author.id.uuid).map((item) => {
+                      return (
                   <div className={css.tabCategoryRight}>
                     <div className={css.sevicesList}>
                       <div className={css.servicesListRight}>
                         <div className={css.servicesProfile}>
-                          <img src={serviceImage} />
+                          <img src={item?.images?.[0]?.attributes?.variants?.["square-small2x"]?.url} />
                           <div>
-                            <div className={css.heading}>Haircut</div>
-                            <div className={css.time}>45 Mins</div>
+                            <div className={css.heading}>{item?.attributes?.title}</div>
+                            <div className={css.time}>{item?.attributes?.publicData?.mins}</div>
                             <div className={css.descriptionServices}>
-                              Description here if needed. blah blah blah
+                            {item?.attributes?.publicData?.shortDescription}
                             </div>
                           </div>
                         </div>
                         <div className={css.bookingBox}>
                           <div className={css.bookingAmount}>
-                            $75
-                          </div>
-                          <div>
-                            <Button>BOOK NOW</Button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className={css.sevicesList}>
-                      <div className={css.servicesListRight}>
-                        <div className={css.servicesProfile}>
-                          <img src={serviceImage} />
-                          <div>
-                            <div className={css.heading}>Haircut</div>
-                            <div className={css.time}>45 Mins</div>
-                            <div className={css.descriptionServices}>
-                              Description here if needed. blah blah blah
-                            </div>
-                          </div>
-                        </div>
-                        <div className={css.bookingBox}>
-                          <div className={css.bookingAmount}>
-                            $75
+                          {"$" + (item?.attributes?.price?.amount / 100)}
                           </div>
                           <div>
                             <Button>BOOK NOW</Button>
@@ -529,6 +513,8 @@ export const ListingPageComponent = props => {
                       </div>
                     </div>
                   </div>
+                )
+                    })}
                 </div>
               }
               {activeTab === 1 &&
@@ -648,7 +634,7 @@ const EnhancedListingPage = props => {
 };
 
 const mapStateToProps = state => {
-  const { currentPageResultIds } = state.ListingPage;
+  const { currentPageResultIds , currentPageServiceResultIds} = state.ListingPage;
   const { isAuthenticated } = state.auth;
   const {
     showListingError,
@@ -677,6 +663,7 @@ const mapStateToProps = state => {
   };
 
   const ownListings = getListingsById(state, currentPageResultIds)
+  const ownServiceListings = getListingsById(state, currentPageServiceResultIds)
 
   return {
     isAuthenticated,
@@ -694,7 +681,8 @@ const mapStateToProps = state => {
     fetchLineItemsError,
     sendInquiryInProgress,
     sendInquiryError,
-    ownListings
+    ownListings,
+    ownServiceListings
   };
 };
 
@@ -709,6 +697,7 @@ const mapDispatchToProps = dispatch => ({
   onFetchTimeSlots: (listingId, start, end, timeZone) =>
     dispatch(fetchTimeSlots(listingId, start, end, timeZone)),
   onfetchCurrentListing: (listingId) => dispatch(fetchCurrentListing(listingId)),
+  onfetchCurrentServiceListing: (listingId) => dispatch(fetchCurrentServiceListing(listingId)),
 });
 
 // Note: it is important that the withRouter HOC is **outside** the

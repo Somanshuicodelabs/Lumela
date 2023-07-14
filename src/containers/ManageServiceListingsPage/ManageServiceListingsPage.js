@@ -137,7 +137,7 @@ export class ManageServiceListingsPageComponent extends Component {
         >
           {queryInProgress ? loadingResults : null}
           {queryListingsError ? queryError : null}
-          <div className={css.listingPanel}>
+          {/* <div className={css.listingPanel}>
             {heading}
             <NamedLink name="ServiceListingPage">
               <Button><FormattedMessage id="ManageServiceListingsPage.addServices" /></Button></NamedLink>
@@ -159,7 +159,7 @@ export class ManageServiceListingsPageComponent extends Component {
               ))}
             </div>
             {paginationLinks}
-          </div>
+          </div> */}
         </LayoutSideNavigation>
       </Page>
     );

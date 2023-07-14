@@ -22,6 +22,7 @@ import ServiceListingPageForm from './ServiceListingPageForm/ServiceListingPageF
 import { createExpertListing, uploadImage } from './ServiceListingPage.duck';
 import { removeListingImage, requestCreateListingDraft, requestImageUpload, requestUpdateListing } from '../EditListingPage/EditListingPage.duck';
 import { getOwnListingsById } from '../ManageListingsPage/ManageListingsPage.duck';
+import { parse } from '../../util/urlHelpers';
 
 const { UUID } = sdkTypes;
 
@@ -59,8 +60,14 @@ export const ServiceListingPageComponent = props => {
         listings,
         onRemoveListingImage,
         page,
-        category
+        category,
+        state
     } = props;
+
+    const listingSearchId = typeof window !== 'undefined' &&
+        parse(window.location.search);
+    const listingID = new UUID(listingSearchId?.id)
+    const ownListings = getOwnListingsById(state, [listingID])
 
     const imageOrder = page?.uploadedImagesOrder || [];
     const unattachedImages = imageOrder.map(i => page.uploadedImages
@@ -74,7 +81,6 @@ export const ServiceListingPageComponent = props => {
     const images = allImages.filter(img => {
         return !removedImageIds.includes(img.id);
     });
-    console.log('images :>> ', images);
 
     const [resetForm, setResetForm] = useState(false);
     const unitType = currentListing?.attributes?.publicData?.unitType;
@@ -94,6 +100,50 @@ export const ServiceListingPageComponent = props => {
 
     const schemaTitleVars = { name: displayName, siteTitle: config.marketplaceName };
     const schemaTitle = intl?.formatMessage({ id: "ProfilePage.schemaTitle" }, schemaTitleVars);
+
+    // save draft
+    const { advanceDays
+        , advanceMonths
+        , days, hours, mins, months, tag, noOfBooking, shortDescription, technicalNotes } = ownListings[0]?.attributes?.publicData || {};
+    const { title, price } = ownListings[0]?.attributes || {};
+
+
+    const initialValues = ownListings && ownListings.length ? {
+        images: ownListings[0]?.images,
+        title: title,
+        advanceDays: advanceDays,
+        advanceMonths: advanceMonths,
+        days: days,
+        hours: hours,
+        shortDescription: shortDescription,
+        mins: mins,
+        price: price,
+        months: months,
+        noOfBooking: noOfBooking,
+        tag: tag,
+        technicalNotes: technicalNotes
+
+    } : {
+        images: [],
+        title: '',
+        advanceDays: '',
+        advanceMonths: '',
+        days: '',
+        hours: '',
+        shortDescription: '',
+        mins: '',
+        price: 0,
+        months: '',
+        noOfBooking: '',
+        tag: '',
+        technicalNotes: ''
+
+    }
+    const submitButton = listingSearchId.id ? intl.formatMessage({
+        id: "ProductListing.updateButtonText"
+    }) : intl.formatMessage({
+        id: "ProductListing.submitButtonText",
+    })
 
 
     return (
@@ -122,7 +172,7 @@ export const ServiceListingPageComponent = props => {
                     <div className={css.contentBox}>
                         <ServiceListingPageForm
                             className={css.productFormWrapper}
-                            initialValues={{}}
+                            initialValues={initialValues}
                             saveActionMsg={submitButtonText}
                             setResetForm={() => setResetForm(true)}
                             onSubmit={values => {
@@ -132,7 +182,6 @@ export const ServiceListingPageComponent = props => {
                                     isDraft = false,
                                     ...rest
                                 } = values;
-                                console.log(values, '&& >>>>>>> && => values', isDraft);
                                 
                                 const updatedValues = {
                                     title,
@@ -244,6 +293,7 @@ const mapStateToProps = state => {
         || [];
 
     return {
+        state,
         category,
         currentUser,
         page,

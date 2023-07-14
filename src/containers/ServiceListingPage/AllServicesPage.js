@@ -13,11 +13,12 @@ import { isScrollingDisabled } from '../../ducks/ui.duck';
 import { getMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { propTypes } from '../../util/types';
 import { ensureCurrentUser, ensureUser } from '../../util/data';
-import { fetchCurrentListing } from './ProductListingPage.duck';
-import css from './ProductListingPage.module.css';
+import { fetchCurrentListing } from './ServiceListingPage.duck';
+import css from './ServiceListingPage.module.css';
 import { getOwnListingsById } from '../ManageListingsPage/ManageListingsPage.duck';
+import ServicesCard from '../../components/ServiceCard/ServicesCard';
 
-export const AllProductsPageComponent = props => {
+export const AllServicesPageComponent = props => {
     const config = useConfiguration();
     const {
         intl,
@@ -52,6 +53,11 @@ export const AllProductsPageComponent = props => {
 
     const input = 'example';
 
+    // const filteredListings = ownListings.filter(listing => {
+    //     return listing.attributes.title.includes(input);
+    //   });
+    //   console.log('filteredListings :>> ', filteredListings);
+
 
 
     return (
@@ -78,8 +84,8 @@ export const AllProductsPageComponent = props => {
                     <h2 className={css.mainHeading}>
                         <FormattedMessage id="ProductListingPage.products" />
                     </h2>
-                    <NamedLink name="ProductListingPage"   >
-                        <PrimaryButton>ADD NEW PRODUCT </PrimaryButton>
+                    <NamedLink name="ServiceListingPage"   >
+                        <PrimaryButton>ADD NEW SERVICE </PrimaryButton>
                     </NamedLink>
 
 
@@ -88,14 +94,15 @@ export const AllProductsPageComponent = props => {
                         {/* Use the filteredListings as needed */}
                         <div className={css.productCardList}>
                             {filteredListings
-                                .filter((item) => item?.attributes?.publicData?.listingType === 'product')
+                                .filter((item) => item?.attributes?.publicData?.listingType === 'service')
                                 .map((item, index) => (
-                                    <ProductsCard
+                                    <ServicesCard
                                         key={index}
-                                        productImage={item?.images[0]?.attributes?.variants?.['square-small2x']?.url}
-                                        productHeading={item?.attributes?.title}
-                                        productSize={item?.attributes?.publicData.size}
-                                        productPrice={'$' + item?.attributes?.price?.amount / 100}
+                                        // productImage={item?.images[0]?.attributes?.variants?.['square-small2x']?.url}
+                                        serviceHeading={item?.attributes?.title}
+                                        serviceMins={item?.attributes?.publicData?.mins}
+                                        serviceDes={item?.attributes?.publicData?.shortDescription}
+                                        servicePrice={'$' + item?.attributes?.price?.amount / 100}
                                         status= {item?.attributes?.state}
                                         id={item?.id}
                                     />
@@ -110,13 +117,13 @@ export const AllProductsPageComponent = props => {
     )
 }
 
-AllProductsPageComponent.defaultProps = {
+AllServicesPageComponent.defaultProps = {
     currentUser: null,
     uploadImageError: null,
     image: null,
 };
 
-AllProductsPageComponent.propTypes = {
+AllServicesPageComponent.propTypes = {
     currentUser: propTypes.currentUser,
     image: shape({
         id: string,
@@ -139,7 +146,7 @@ AllProductsPageComponent.propTypes = {
 
 const mapStateToProps = state => {
     const { currentUser } = state.user,
-        { currentPageResultIds } = state.ProductListingPage;
+        { currentPageResultIds } = state.ServiceListingPage;
 
     const getOwnListing = id => {
         const listings = getMarketplaceEntities(state, [{ id, type: 'ownListing' }]);
@@ -172,13 +179,13 @@ const mapDispatchToProps = dispatch => ({
 
 });
 
-const AllProductsPage = compose(
+const AllServicesPage = compose(
     withRouter,
     connect(
         mapStateToProps,
         mapDispatchToProps
     ),
     injectIntl
-)(AllProductsPageComponent);
+)(AllServicesPageComponent);
 
-export default AllProductsPage;
+export default AllServicesPage;

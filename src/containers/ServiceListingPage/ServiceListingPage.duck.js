@@ -5,6 +5,7 @@ import { createImageVariantConfig } from '../../util/sdkLoader';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { addOwnEntities } from '../ManageListingsPage/ManageListingsPage.duck';
+import { parse } from 'url';
 // ================ Action types ================ //
 
 export const CLEAR_UPDATED_FORM = 'app/ServiceListingPage/CLEAR_UPDATED_FORM';
@@ -282,11 +283,30 @@ export function uploadImage(actionPayload) {
   };
 }
 
+// export const fetchCurrentListing = listingId => async (dispatch, getState, sdk) => {
+//   try {
+//     dispatch(expertListingsRequest());
+//     const response = await sdk.ownListings.query({ id: listingId });
+//     dispatch(addMarketplaceEntities(response));
+//     dispatch(expertListingsSuccess(response));
+//     return response;
+//   } catch (error) {
+//     console.log(error)
+//   }
+// }
+
 export const fetchCurrentListing = listingId => async (dispatch, getState, sdk) => {
   try {
     dispatch(expertListingsRequest());
-    const response = await sdk.ownListings.query({ id: listingId });
-    dispatch(addMarketplaceEntities(response));
+    const queryParams = {
+      expand: true,
+      'fields.image': ['variants.square-small', 'variants.square-small2x'],
+    };
+    const response = await sdk.ownListings.query({
+      include: ["images"],
+      'fields.image': ['variants.square-small', 'variants.square-small2x']
+    }, { expand: true });
+    dispatch(addOwnEntities(response));
     dispatch(expertListingsSuccess(response));
     return response;
   } catch (error) {
@@ -300,7 +320,6 @@ export const createExpertListing = (actionPayload, config,listingId) => async (
   sdk
 ) => {
   try {
-    console.log('actionPayload :>> ', actionPayload);
     dispatch(expertCreateListingRequest());
     const { images,...rest } = actionPayload;
     
@@ -325,8 +344,6 @@ export const createExpertListing = (actionPayload, config,listingId) => async (
     //   ? await sdk.ownListings.update(ownListingUpdateValues, queryParams)
       // : 
       await sdk.ownListings.create(ownListingValues, queryParams);
-
-      console.log('responseCreatew :>> ', response);
       
     dispatch(expertCreateListingSuccess());
     dispatch(fetchCurrentListing(response.data.data.id))
@@ -382,8 +399,10 @@ export const updateProfile = actionPayload => {
 //   }
 // }
 
-export const loadData = () => async (dispatch, getState, sdk) => {
+
+export const loadData = (params, search) => async (dispatch, getState, sdk) => {
   try {
+    const searchParams = parse(search);
     const fetchUser = await dispatch(fetchCurrentUser())
     const result = await dispatch(fetchCurrentUserHasListings());
 
