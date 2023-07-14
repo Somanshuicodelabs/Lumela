@@ -235,6 +235,7 @@ export const searchListings = (searchParams, config) => (dispatch, getState, sdk
   const datesMaybe = datesSearchParams(dates);
   const sortMaybe = sort === config.search.sortConfig.relevanceKey ? {} : { sort };
 
+  
   const params = {
     pub_listingType:'business',
     ...rest,
@@ -303,9 +304,11 @@ export const loadData = (params, search, config) => {
         'publicData',
       ],
       'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
-      'fields.image': [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`],
-      ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
-      ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
+      // 'fields.image': [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`],
+      // ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
+      // ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
+      'fields.image': ['variants.landscape-crop', 'variants.landscape-crop2x', 'variants.square-small',
+      'variants.square-small2x'],
       'limit.images': 1,
     },
     config

@@ -7,7 +7,7 @@ export const ASSET_NAME = 'landing-page';
 //   return dispatch(fetchPageAssets(pageAsset, true));
 // };
 
-
+import { createImageVariantConfig } from '../../util/sdkLoader';
 import { storableError } from '../../util/errors';
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { parse } from '../../util/urlHelpers';
@@ -146,6 +146,7 @@ export const searchListings = searchParams => (dispatch, getState, sdk) => {
   const { perPage, price, dates, ...rest } = searchParams;
   
   const params = {
+    pub_listingType:'business',
     ...rest,
     
     per_page: perPage,
@@ -154,6 +155,7 @@ export const searchListings = searchParams => (dispatch, getState, sdk) => {
   return sdk.listings
     .query(params)
     .then(response => {
+      
       dispatch(addMarketplaceEntities(response));
       dispatch(searchListingsSuccess(response));
       return response;
@@ -177,6 +179,11 @@ export const loadData = (params,search) =>(dispatch) => {
   const pageAsset = { landingPage: `content/pages/${ASSET_NAME}.json` };
   const { page = 1, address,origin, ...rest } = queryParams;
   const originMaybe = appSettings.sortSearchByDistance && origin ? { origin } : {};
+  // const {
+  //   aspectWidth = 1,
+  //   aspectHeight = 1,
+  //   variantPrefix = 'listing-card',
+  // } = config.layout.listingImage;
   return Promise.all([
     dispatch(fetchPageAssets(pageAsset, true)),
     dispatch(searchListings({
@@ -189,6 +196,9 @@ export const loadData = (params,search) =>(dispatch) => {
       'fields.user': ['profile.displayName', 'profile.abbreviatedName'],
       'fields.image': ['variants.landscape-crop', 'variants.landscape-crop2x', 'variants.square-small',
       'variants.square-small2x'],
+      // 'fields.image': [`variants.${variantPrefix}`, `variants.${variantPrefix}-2x`],
+      // ...createImageVariantConfig(`${variantPrefix}`, 400, aspectRatio),
+      // ...createImageVariantConfig(`${variantPrefix}-2x`, 800, aspectRatio),
       'limit.images': 1,
       pub_featured: true,
     }))

@@ -72,7 +72,7 @@ export const ListingCardComponent = props => {
     variantPrefix = 'listing-card',
   } = config.layout.listingImage;
   const variants = firstImage
-    ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
+    ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith("square-small"))
     : [];
 
   const { formattedPrice, priceTitle } = priceData(price, config.currency, intl);

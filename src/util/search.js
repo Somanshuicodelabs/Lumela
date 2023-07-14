@@ -76,7 +76,7 @@ export const isAnyFilterActive = (
 
 
 export const isMainSearchTypeKeywords = config =>
-  config?.search?.mainSearch?.searchType === 'keywords';
+  config?.search?.mainSearch?.searchType === 'search';
 
 /**
  * Check if the origin parameter is currently active.

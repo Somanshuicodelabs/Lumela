@@ -614,21 +614,27 @@ export class SearchPageComponent extends Component {
                 searchListingsError={searchListingsError}
                 noResultsInfo={noResultsInfo}
               >
-                {/* <TopbarSearchForm
+                 <TopbarSearchForm
                 className={css.searchLink}
                 desktopInputRoot={css.topbarSearchWithLeftPadding}
                 onSubmit={handleSubmit}
                 initialValues={initialSearchFormValues}
                 currentPage={SEARCH_PAGE}
               />
-              <TopbarSearchForm
+              {/* <TopbarSearchForm
                 isKeywordsSearch
                 className={css.searchLink}
                 desktopInputRoot={css.topbarSearchWithLeftPadding}
                 onSubmit={handleSubmit1}
                 initialValues={initialSearchFormValues}
                 currentPage={SEARCH_PAGE}
-              /> */}
+              />  */}
+               {/* <input
+              className={css.keywordInput}
+              value={this.state.keyword}
+              placeholder="Keywords"
+              onChange={handleKeywordSearch}
+            /> */}
 
                 <SearchFiltersPrimary {...propsForSecondaryFiltersToggle}>
                   {availablePrimaryFilters.map(config => {

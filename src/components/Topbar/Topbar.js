@@ -557,7 +557,7 @@ class TopbarComponent extends Component {
           isOpen={isMobileMenuOpen}
           onClose={this.handleMobileMenuClose}
           usePortal
-          onManageDisableScrolling={() => { }}
+          onManageDisableScrolling={onManageDisableScrolling}
           isMobileMenuModal={true}
         >
           {authInProgress ? null : mobileMenu}
@@ -568,7 +568,7 @@ class TopbarComponent extends Component {
           isOpen={isMobileSearchOpen}
           onClose={this.handleMobileSearchClose}
           usePortal
-          onManageDisableScrolling={() => { }}
+          onManageDisableScrolling={onManageDisableScrolling}
         >
           <div className={css.searchContainer}>
             <TopbarSearchForm

@@ -70,7 +70,7 @@ export default function SectionBusiness(props) {
       },
     ],
   };
-
+console.log('listings', listings)
   // Panel width relative to the viewport
   const panelMediumWidth = 50;
   const panelLargeWidth = 62.5;

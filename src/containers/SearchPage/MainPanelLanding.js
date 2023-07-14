@@ -56,16 +56,11 @@ class MainPanelLandingComponent extends Component {
     this.handleSortBy = this.handleSortBy.bind(this);
   }
 
-
-  handleSubmit(values) {
+   handleSubmit = (values) => {
     const { currentSearchParams } = this.props;
-    console.log('currentSearchParams', currentSearchParams)
     const { history, config, routeConfiguration } = this.props;
 
     const topbarSearchParams = () => {
-      if (isMainSearchTypeKeywords(config)) {
-        return { keywords: values?.keywords };
-      }
       // topbar search defaults to 'location' search
       const { search, selectedPlace } = values?.location;
       const { origin, bounds } = selectedPlace;
@@ -73,7 +68,6 @@ class MainPanelLandingComponent extends Component {
 
       return {
         ...originMaybe,
-      
         address: search,
         bounds,
       };
@@ -82,8 +76,34 @@ class MainPanelLandingComponent extends Component {
       ...currentSearchParams,
       ...topbarSearchParams(),
     };
+    // history.push(createResourceLocatorString('SearchPage', routeConfiguration, {}, searchParams));
     this.setState({ currentQueryParams: { ...this.state.currentQueryParams, ...searchParams } })
   }
+  // handleSubmit(values) {
+  //   const { currentSearchParams } = this.props;
+  //   const { history, config, routeConfiguration } = this.props;
+
+  //   const topbarSearchParams = () => {
+  //     if (isMainSearchTypeKeywords(config)) {
+  //       return { keywords: values?.keywords };
+  //     }
+  //     // topbar search defaults to 'location' search
+  //     const { search, selectedPlace } = values?.location;
+  //     const { origin, bounds } = selectedPlace;
+  //     const originMaybe = isOriginInUse(config) ? { origin } : {};
+
+  //     return {
+  //       ...originMaybe,
+  //       address: search,
+  //       bounds,
+  //     };
+  //   };
+  //   const searchParams = {
+  //     ...currentSearchParams,
+  //     ...topbarSearchParams(),
+  //   };
+  //   this.setState({ currentQueryParams: { ...this.state.currentQueryParams, ...searchParams } })
+  // }
 
   // Apply the filters by redirecting to SearchPage with new filters.
   applyFilters() {

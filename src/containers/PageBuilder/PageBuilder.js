@@ -145,11 +145,18 @@ const PageBuilder = props => {
                   isLandingPage={landingPageHeaderStyle}
                   onManageToggleDrawer={onManageToggleDrawer}
                 >
-                  <TopbarContainer
+                  </Topbar>
+                  {/* <TopbarContainer
                     isHeaderSticky={isHeaderSticky}
                     isLandingPage={landingPageHeaderStyle}
                   />
-                </Topbar>
+                  
+                
+                {/* <TopbarContainer
+          // className={topbarClasses}
+          currentPage="LandingPage"
+          // currentSearchParams={urlQueryParams}
+        /> */}
               </header>
               <Main as="main" className={css.main}>
                 <SectionBuilder
