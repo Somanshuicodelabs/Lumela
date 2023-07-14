@@ -615,28 +615,9 @@ console.log('listings', listings)
                 searchListingsError={searchListingsError}
                 noResultsInfo={noResultsInfo}
               >
-                 {/* <TopbarSearchForm
-                className={css.searchLink}
-                desktopInputRoot={css.topbarSearchWithLeftPadding}
-                onSubmit={handleSubmit}
-                initialValues={initialSearchFormValues}
-                currentPage={SEARCH_PAGE}
-              /> */}
+                
               <MainPanelLanding/>
-              {/* <TopbarSearchForm
-                isKeywordsSearch
-                className={css.searchLink}
-                desktopInputRoot={css.topbarSearchWithLeftPadding}
-                onSubmit={handleSubmit1}
-                initialValues={initialSearchFormValues}
-                currentPage={SEARCH_PAGE}
-              />  */}
-               {/* <input
-              className={css.keywordInput}
-              value={this.state.keyword}
-              placeholder="Keywords"
-              onChange={handleKeywordSearch}
-            /> */}
+             
 
                 <SearchFiltersPrimary {...propsForSecondaryFiltersToggle}>
                   {availablePrimaryFilters.map(config => {
@@ -679,7 +660,7 @@ console.log('listings', listings)
                           initialValues={initialValues(this.props, this.state.currentQueryParams)}
                           getHandleChangedValueFn={this.getHandleChangedValueFn}
                           intl={intl}
-                          showAsPopup={false}
+                          showAsPopup={true}
                         />
                       );
                     })}

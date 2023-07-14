@@ -12,7 +12,7 @@ import { ModalInMobile, Button } from '../../../components';
 
 import PopupOpenerButton from '../PopupOpenerButton/PopupOpenerButton';
 import css from './SearchFiltersMobile.module.css';
-
+import Drawer from 'react-modern-drawer';
 import popularMobileImage1 from '../../../assets/popular-mobile-image-1.png';
 import popularMobileImage2 from '../../../assets/popular-mobile-image-2.png';
 import popularMobileImage3 from '../../../assets/popular-mobile-image-3.png';
@@ -24,8 +24,8 @@ import { isOriginInUse } from '../../../util/search';
 class SearchFiltersMobileComponent extends Component {
   constructor(props) {
     super(props);
-    this.state = { isFiltersOpenOnMobile: false, initialQueryParams: null };
-
+    this.state = { isFiltersOpenOnMobile: false, initialQueryParams: null , isFilterDrawerOpen: false,};
+    this.toggleFilterDrawer = this.toggleFilterDrawer.bind(this);
     this.openFilters = this.openFilters.bind(this);
     this.cancelFilters = this.cancelFilters.bind(this);
     this.closeFilters = this.closeFilters.bind(this);
@@ -60,7 +60,9 @@ class SearchFiltersMobileComponent extends Component {
     this.props.onCloseModal();
     this.setState({ isFiltersOpenOnMobile: false });
   }
-
+  toggleFilterDrawer = () => {
+    this.setState({ isFilterDrawerOpen: !this.state.isFilterDrawerOpen });
+  };
   // Reset all filter query parameters
   resetAll(e) {
     this.props.resetAll(e);

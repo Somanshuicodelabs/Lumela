@@ -16,8 +16,8 @@ const KEY_CODE_ESCAPE = 27;
 class FilterPopup extends Component {
   constructor(props) {
     super(props);
-
-    this.state = { isOpen: false };
+const {label} = this.props
+    this.state = { isOpen: label == "SkinTones" || label == "SkinTypes" || label == "Hair Texture" ? true : false };
     this.filter = null;
     this.filterContent = null;
 
@@ -116,7 +116,7 @@ class FilterPopup extends Component {
       keepDirtyOnReinitialize,
       contentPlacementOffset,
     } = this.props;
-
+console.log('label', label)
     const classes = classNames(rootClassName || css.root, className);
     const popupClasses = classNames(css.popup, { [css.isOpen]: this.state.isOpen });
     const popupSizeClasses = popupClassName || css.popupSize;

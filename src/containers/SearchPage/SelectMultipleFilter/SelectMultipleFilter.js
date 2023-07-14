@@ -176,6 +176,7 @@ class SelectMultipleFilter extends Component {
           options={options}
         />
       </FilterPlain>
+     
     );
   }
 }
