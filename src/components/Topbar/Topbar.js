@@ -575,7 +575,7 @@ class TopbarComponent extends Component {
               onSubmit={this.handleSubmit}
               initialValues={initialSearchFormValues}
               appConfig={config}
-              isMobile
+             isMobile 
             />
             <p className={css.mobileHelp}>
               <FormattedMessage id="Topbar.mobileSearchHelp" />

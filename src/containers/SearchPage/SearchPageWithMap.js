@@ -58,6 +58,7 @@ import popularMobileImage2 from '../../../src/assets/popular-mobile-image-2.png'
 import popularMobileImage3 from '../../../src/assets/popular-mobile-image-3.png';
 import popularMobileImage4 from '../../../src/assets/popular-mobile-image-4.png';
 import popularMobileImage5 from '../../../src/assets/popular-mobile-image-5.png';
+import MainPanelLanding from './MainPanelLanding';
 
 
 const MODAL_BREAKPOINT = 768; // Search is in modal on mobile layout
@@ -273,7 +274,7 @@ export class SearchPageComponent extends Component {
       config,
     } = this.props;
 
-
+console.log('listings', listings)
     const { listingFields: listingFieldsConfig } = config?.listing || {};
     const { defaultFilters: defaultFiltersConfig, sortConfig } = config?.search || {};
 
@@ -609,18 +610,19 @@ export class SearchPageComponent extends Component {
                 sortByComponent={sortBy('desktop')}
                 isSortByActive={sortConfig.active}
                 listingsAreLoaded={listingsAreLoaded}
-                resultsCount={totalItems}
+                // resultsCount={totalItems}
                 searchInProgress={searchInProgress}
                 searchListingsError={searchListingsError}
                 noResultsInfo={noResultsInfo}
               >
-                 <TopbarSearchForm
+                 {/* <TopbarSearchForm
                 className={css.searchLink}
                 desktopInputRoot={css.topbarSearchWithLeftPadding}
                 onSubmit={handleSubmit}
                 initialValues={initialSearchFormValues}
                 currentPage={SEARCH_PAGE}
-              />
+              /> */}
+              <MainPanelLanding/>
               {/* <TopbarSearchForm
                 isKeywordsSearch
                 className={css.searchLink}

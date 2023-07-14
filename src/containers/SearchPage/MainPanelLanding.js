@@ -43,7 +43,8 @@ class MainPanelLandingComponent extends Component {
     this.state = {
       isSecondaryFiltersOpen: false,
       currentQueryParams: { ...props.urlQueryParams },
-      keyword: ''
+      keyword: '',
+      issearchmobile:false,
     };
     this.applyFilters = this.applyFilters.bind(this);
     this.cancelFilters = this.cancelFilters.bind(this);
@@ -407,7 +408,7 @@ class MainPanelLandingComponent extends Component {
       })
     }
 
-    console.log(this.state.keyword)
+     const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
     // Set topbar class based on if a modal is open in
     // a child component
     const topbarClasses = this.state.isMobileModalOpen
@@ -448,14 +449,17 @@ class MainPanelLandingComponent extends Component {
               />
             );
           })} */}
-            <TopbarSearchForm
+         <TopbarSearchForm
               className={css.searchLink}
               desktopInputRoot={css.topbarSearchWithLeftPadding}
               onSubmit={this.handleSubmit}
               isKeywordsSearch={true}
               initialValues={initialSearchFormValues}
               appConfig={config}
+             
             />
+         
+            
 
             <input
               className={css.keywordInput}

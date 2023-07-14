@@ -16,8 +16,8 @@ const getDatesQueryParamName = queryParamNames => {
   return Array.isArray(queryParamNames)
     ? queryParamNames[0]
     : typeof queryParamNames === 'string'
-      ? queryParamNames
-      : 'dates';
+    ? queryParamNames
+    : 'dates';
 };
 
 // Parse query parameter, which should look like "2020-05-28,2020-05-31"
@@ -90,37 +90,36 @@ export class BookingDateRangeFilterComponent extends Component {
 
     const labelForPlain = isSelected
       ? intl.formatMessage(
-        { id: 'BookingDateRangeFilter.labelSelectedPlain' },
-        {
-          dates: `${formattedStartDate} - ${formattedEndDate}`,
-        }
-      )
+          { id: 'BookingDateRangeFilter.labelSelectedPlain' },
+          {
+            dates: `${formattedStartDate} - ${formattedEndDate}`,
+          }
+        )
       : label
-        ? label
-        : intl.formatMessage({ id: 'BookingDateRangeFilter.labelPlain' });
+      ? label
+      : intl.formatMessage({ id: 'BookingDateRangeFilter.labelPlain' });
 
     const labelForPopup = isSelected
       ? intl.formatMessage(
-        { id: 'BookingDateRangeFilter.labelSelectedPopup' },
-        {
-          dates: `${formattedStartDate} - ${formattedEndDate}`,
-        }
-      )
+          { id: 'BookingDateRangeFilter.labelSelectedPopup' },
+          {
+            dates: `${formattedStartDate} - ${formattedEndDate}`,
+          }
+        )
       : label
-        ? label
-        : intl.formatMessage({ id: 'BookingDateRangeFilter.labelPopup' });
+      ? label
+      : intl.formatMessage({ id: 'BookingDateRangeFilter.labelPopup' });
 
     const labelSelection = isSelected
       ? intl.formatMessage(
-        { id: 'BookingDateRangeFilter.labelSelectedPopup' },
-        {
-          dates: `${formattedStartDate} - ${formattedEndDate}`,
-        }
-      )
+          { id: 'BookingDateRangeFilter.labelSelectedPopup' },
+          {
+            dates: `${formattedStartDate} - ${formattedEndDate}`,
+          }
+        )
       : null;
 
     const handleSubmit = values => {
-      console.log('values', values)
       onSubmit(formatValue(values, datesQueryParamName));
     };
 
@@ -158,7 +157,6 @@ export class BookingDateRangeFilterComponent extends Component {
         <FieldDateRangeController
           name="dates"
           minimumNights={minimumNights}
-          onSubmit={handleSubmit}
           controllerRef={node => {
             this.popupControllerRef = node;
           }}
@@ -193,7 +191,7 @@ export class BookingDateRangeFilterComponent extends Component {
       <FilterPlain
         className={className}
         rootClassName={rootClassName}
-        label={labelForPlain}
+        label={label}
         labelSelection={labelSelection}
         labelSelectionSeparator=":"
         isSelected={isSelected}

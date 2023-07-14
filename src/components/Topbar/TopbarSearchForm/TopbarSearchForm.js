@@ -135,6 +135,7 @@ class TopbarSearchFormComponent extends Component {
             isMobile,
             handleSubmit,
           } = formRenderProps;
+          console.log('isMobile', isMobile)
           const classes = classNames(rootClassName, className);
           const desktopInputRootClass = desktopInputRoot || css.desktopInputRoot;
 
@@ -160,12 +161,23 @@ class TopbarSearchFormComponent extends Component {
               ) : (
                 <LocationSearchField
                   desktopInputRootClass={desktopInputRootClass}
+                 
                   intl={intl}
-                  isMobile={isMobile}
+                   isMobile={isMobile}
                   inputRef={this.setSearchInputRef}
                   onLocationChange={this.onChange}
                 />
               )}
+              {/* { isMobile ?
+             <LocationSearchField
+             desktopInputRootClass={desktopInputRootClass}
+            
+             intl={intl}
+             
+             inputRef={this.setSearchInputRef}
+             onLocationChange={this.onChange}
+           />:""
+            } */}
             </Form>
           );
         }}

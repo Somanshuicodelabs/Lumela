@@ -79,7 +79,7 @@ const FilterComponent = props => {
           queryParamNames={[key]}
           initialValues={initialValues([key], liveEdit)}
           onSubmit={getHandleChangedValueFn(useHistoryPush)}
-          minimumNights={isNightlyMode ? 1 : 0}
+           minimumNights={isNightlyMode ? 1 : 0}
           {...rest}
         />
       );
