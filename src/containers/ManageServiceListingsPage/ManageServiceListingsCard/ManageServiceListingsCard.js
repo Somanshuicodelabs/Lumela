@@ -290,7 +290,7 @@ export const ManageServiceListingsCardComponent = props => {
   const currentListing = ensureOwnListing(listing);
 
   const id = currentListing.id.uuid;
-  const { title = '', price, state } = currentListing.attributes;
+  const { title = '', price,images, state } = currentListing.attributes;
   const slug = createSlug(title);
   const isPendingApproval = state === LISTING_STATE_PENDING_APPROVAL;
   const isClosed = state === LISTING_STATE_CLOSED;
@@ -306,7 +306,7 @@ export const ManageServiceListingsCardComponent = props => {
     !isBookable && isOutOfStock && !isPendingApproval && !isClosed && !isDraft;
 
   const firstImage =
-    currentListing.images && currentListing.images.length > 0 ? currentListing.images[0] : null;
+    currentListing.images && currentListing.images.length > 0 ? currentListing?.images[0] : null;
 
   const menuItemClasses = classNames(css.menuItem, {
     [css.menuItemDisabled]: !!actionsInProgressListingId,
@@ -344,6 +344,8 @@ export const ManageServiceListingsCardComponent = props => {
   const variants = firstImage
     ? Object.keys(firstImage?.attributes?.variants).filter(k => k.startsWith(variantPrefix))
     : [];
+
+  console.log('variants :>> ', variants);
 
   return (
     <div className={classes}>
@@ -483,7 +485,7 @@ export const ManageServiceListingsCardComponent = props => {
             </div>
           )}
         </div> */}
-        <div className={css.priceValue}>{price.amount / 100} (AUD)</div>
+        <div className={css.priceValue}>{price?.amount / 100} (AUD)</div>
 
         <div className={css.mainInfo}>
           <div className={css.titleWrapper}>

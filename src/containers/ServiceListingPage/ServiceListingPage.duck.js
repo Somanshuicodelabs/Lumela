@@ -366,28 +366,28 @@ export const updateProfile = actionPayload => {
   };
 };
 
-export const fetchBusinessListing = (businessUserId) => async (dispatch, getState, sdk) => {
-  try {
-    dispatch(showBusinessListingsRequest());
-    const params = {
-      id: new UUID (businessUserId),
-      include: ["images","author"],
-      'fields.image': ['variants.square-small', 'variants.square-small2x']
-    };
-    const response = await sdk.ownListings.show(params, { expand: true });
-    dispatch(showBusinessListingsSuccess(response.data.data));
-    return response;
-  } catch (error) {
-    console.log(error)
-  }
-}
+// export const fetchBusinessListing = (businessUserId) => async (dispatch, getState, sdk) => {
+//   try {
+//     dispatch(showBusinessListingsRequest());
+//     const params = {
+//       id: new UUID (businessUserId),
+//       include: ["images","author"],
+//       'fields.image': ['variants.square-small', 'variants.square-small2x']
+//     };
+//     const response = await sdk.ownListings.show(params, { expand: true });
+//     dispatch(showBusinessListingsSuccess(response.data.data));
+//     return response;
+//   } catch (error) {
+//     console.log(error)
+//   }
+// }
 
 export const loadData = () => async (dispatch, getState, sdk) => {
   try {
     const fetchUser = await dispatch(fetchCurrentUser())
     const result = await dispatch(fetchCurrentUserHasListings());
 
-    await dispatch(fetchBusinessListing(getState().user.currentUser?.attributes?.profile?.publicData?.userListingId))
+    // await dispatch(fetchBusinessListing(getState().user.currentUser?.attributes?.profile?.publicData?.userListingId))
 
     const currentUser = getState().user.currentUser;
     // const userRole = getUserRole(currentUser);

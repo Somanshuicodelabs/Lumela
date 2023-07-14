@@ -35,86 +35,85 @@ const ACCEPT_IMAGES = 'image/*';
 //       </p>
 //     ) : null;
 //   };
-  
-  // NOTE: PublishListingError and ShowListingsError are here since Photos panel is the last visible panel
-  // before creating a new listing. If that order is changed, these should be changed too.
-  // Create and show listing errors are shown above submit button
-  const PublishListingError = props => {
+
+// NOTE: PublishListingError and ShowListingsError are here since Photos panel is the last visible panel
+// before creating a new listing. If that order is changed, these should be changed too.
+// Create and show listing errors are shown above submit button
+const PublishListingError = props => {
     return props.error ? (
-      <p className={css.error}>
-        <FormattedMessage id="EditListingPhotosForm.publishListingFailed" />
-      </p>
+        <p className={css.error}>
+            <FormattedMessage id="EditListingPhotosForm.publishListingFailed" />
+        </p>
     ) : null;
-  };
-  
-  const ShowListingsError = props => {
+};
+
+const ShowListingsError = props => {
     return props.error ? (
-      <p className={css.error}>
-        <FormattedMessage id="EditListingPhotosForm.showListingFailed" />
-      </p>
+        <p className={css.error}>
+            <FormattedMessage id="EditListingPhotosForm.showListingFailed" />
+        </p>
     ) : null;
-  };
+};
 
 export const FieldAddImage = props => {
     const { formApi, onImageUploadHandler, aspectWidth = 1, aspectHeight = 1, ...rest } = props;
     return (
-      <Field form={null} {...rest}>
-        {fieldprops => {
-          const { accept, input, label, disabled: fieldDisabled } = fieldprops;
-          
-          const { name, type } = input;
-          const onChange = e => {
-            const file = e.target.files[0];
-            formApi.change(`addImage`, file);
-            formApi.blur(`addImage`);
-            onImageUploadHandler(file);
-          };
-          const inputProps = { accept, id: name, name, onChange, type };
-          return (
-            <div className={css.addImageWrapper}>
-              <AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
-                {fieldDisabled ? null : <input {...inputProps} className={css.addImageInput} />}
-                <label htmlFor={name} className={css.addImage}>
-                  {label}
-                </label>
-              </AspectRatioWrapper>
-            </div>
-          );
-        }}
-      </Field>
-    );
-  };
-  
-  // Component that shows listing images from "images" field array
-  const FieldListingImage = props => {
-    
-    const { name, intl, onRemoveImage, aspectWidth, aspectHeight, variantPrefix , category} = props;
-    return (
-      <Field name={name}>
-        {fieldProps => {
-          const { input } = fieldProps;
-          const image = input.value;
-          
-          return image ? (
-            <ListingImage
-              image={image}
-              key={image?.id?.uuid || image?.id}
-              className={css.thumbnail}
-              savedImageAltText={intl.formatMessage({
-                id: 'EditListingPhotosForm.savedImageAltText',
-              })}
-              onRemoveImage={() => onRemoveImage(image?.id)}
-              aspectWidth={aspectWidth}
-              aspectHeight={aspectHeight}
-              variantPrefix={variantPrefix}
-            />
-          ) : null;
-        }}
-      </Field>
-    );
-  };
+        <Field form={null} {...rest}>
+            {fieldprops => {
+                const { accept, input, label, disabled: fieldDisabled } = fieldprops;
 
-const EditListingServiceFormComponent = props => {
+                const { name, type } = input;
+                const onChange = e => {
+                    const file = e.target.files[0];
+                    formApi.change(`addImage`, file);
+                    formApi.blur(`addImage`);
+                    onImageUploadHandler(file);
+                };
+                const inputProps = { accept, id: name, name, onChange, type };
+                return (
+                    <div className={css.addImageWrapper}>
+                        <AspectRatioWrapper width={aspectWidth} height={aspectHeight}>
+                            {fieldDisabled ? null : <input {...inputProps} className={css.addImageInput} />}
+                            <label htmlFor={name} className={css.addImage}>
+                                {label}
+                            </label>
+                        </AspectRatioWrapper>
+                    </div>
+                );
+            }}
+        </Field>
+    );
+};
+
+// Component that shows listing images from "images" field array
+const FieldListingImage = props => {
+    const { name, intl, onRemoveImage, aspectWidth, aspectHeight, variantPrefix, category } = props;
+    return (
+        <Field name={name}>
+            {fieldProps => {
+                const { input } = fieldProps;
+                const image = input.value;
+
+                return image ? (
+                    <ListingImage
+                        image={image}
+                        key={image?.id?.uuid || image?.id}
+                        className={css.thumbnail}
+                        savedImageAltText={intl.formatMessage({
+                            id: 'EditListingPhotosForm.savedImageAltText',
+                        })}
+                        onRemoveImage={() => onRemoveImage(image?.id)}
+                        aspectWidth={aspectWidth}
+                        aspectHeight={aspectHeight}
+                        variantPrefix={variantPrefix}
+                    />
+                ) : null;
+            }}
+        </Field>
+    );
+};
+
+const ServiceListingPageFormComponent = props => {
     const { category = [] } = props;
     const [state, setState] = useState({ imageUploadRequested: false });
     const [submittedImages, setSubmittedImages] = useState([]);
@@ -138,6 +137,7 @@ const EditListingServiceFormComponent = props => {
         <FinalForm
             {...props}
             mutators={{ ...arrayMutators }}
+            keepDirtyOnReinitialize={true}
             render={formRenderProps => {
                 const {
                     className,
@@ -152,29 +152,26 @@ const EditListingServiceFormComponent = props => {
                     updated,
                     updateInProgress,
                     fetchErrors,
-                    setResetForm,
                     onRemoveImage,
                     unitType,
-                    onCreateDraftServiceListing,
-                    config,
                     listingImageConfig,
                     touched,
                     images,
                 } = formRenderProps;
-                
+
                 // const images = values.images;
-                const { aspectWidth = 1, aspectHeight = 1, variantPrefix } = listingImageConfig;
+                // const { aspectWidth = 1, aspectHeight = 1, variantPrefix } = listingImageConfig;
 
                 // const { publishListingError, showListingsError, updateListingError, uploadImageError } =
                 //     fetchErrors || {};
                 // const uploadOverLimit = isUploadImageOverLimitError(uploadImageError);
 
                 // imgs can contain added images (with temp ids) and submitted images with uniq ids.
-                
+
                 const arrayOfImgIds = imgs => imgs?.map(i => (typeof i.id === 'string' ? i.imageId : i.id));
                 const imageIdsFromProps = arrayOfImgIds(images);
                 const imageIdsFromPreviousSubmit = arrayOfImgIds(submittedImages);
-                
+
                 const imageArrayHasSameImages = isEqual(imageIdsFromProps, imageIdsFromPreviousSubmit);
                 const submittedOnce = submittedImages.length > 0;
                 const pristineSinceLastSubmit = submittedOnce && imageArrayHasSameImages;
@@ -185,7 +182,7 @@ const EditListingServiceFormComponent = props => {
                 //     invalid || disabled || submitInProgress || state.imageUploadRequested || ready;
                 // const imagesError = touched.images && errors?.images && errors.images[ARRAY_ERROR];
 
-                
+
 
                 const businessNRequiredMessage = intl.formatMessage({
                     id: 'EditListingDescriptionForm.titleRequired',
@@ -213,7 +210,7 @@ const EditListingServiceFormComponent = props => {
                 const emailRequiredMessage = intl.formatMessage({
                     id: 'SignupForm.emailRequired',
                 });
-          
+
 
                 // const { createListingDraftError,} = fetchErrors || {};
                 // const errorMessageUpdateListing = updateListingError ? (
@@ -239,7 +236,7 @@ const EditListingServiceFormComponent = props => {
                 //     </p>
                 // ) : null;
 
-               
+
                 const noOfBookingLabel = intl.formatMessage({
                     id: 'ServiceListingPage.noOfBookingLabel',
                 });
@@ -258,7 +255,7 @@ const EditListingServiceFormComponent = props => {
                 const daysLabel = intl.formatMessage({
                     id: "ServiceListingPage.daysLabel",
                 });
-               
+
 
                 const classes = classNames(css.root, className);
 
@@ -275,14 +272,7 @@ const EditListingServiceFormComponent = props => {
                 );
 
                 return (
-                    <Form className={classes} 
-                    onSubmit={handleSubmit}
-                    // onSubmit={e => {
-                        
-                    //     // setSubmittedImages(images);
-                    //     handleSubmit(e);
-                    // }}
-                    >
+                    <Form className={classes}>
                         {/* {errorMessageCreateListingDraft}
                         {errorMessageUpdateListing}
                         {errorMessageShowListing} */}
@@ -412,74 +402,74 @@ const EditListingServiceFormComponent = props => {
 
                                         </div>
                                         <div className={css.gallaryContainer}>
-                                        <label htmlFor="images" className={css.photoLabel}>Photos</label>
-                                        <div className={css.imagesGallaryGrid}>
-                                            <AddImages
-                                                className={classNames(
-                                                    css.imagesField,
-                                                    images.length == 1 && css.imagesField1,
-                                                    images.length == 2 && css.imagesField2,
-                                                    images.length == 3 && css.imagesField3,
-                                                    images.length > 3 && css.imagesFieldBig
-                                                  )}
-                                                images={images}
-                                                thumbnailClassName={css.thumbnail}
-                                                savedImageAltText={intl.formatMessage({
-                                                    id: 'EditListingPhotosForm.savedImageAltText',
-                                                })}
-                                                onRemoveImage={onRemoveImage}
-                                            >
-                                                <Field
-                                                    id="addImage"
-                                                    name="addImage"
-                                                    accept={ACCEPT_IMAGES}
-                                                    form={null}
-                                                    label={chooseImageText}
-                                                    type="file"
-                                                    disabled={state.imageUploadRequested}
+                                            <label htmlFor="images" className={css.photoLabel}>Photos</label>
+                                            <div className={css.imagesGallaryGrid}>
+                                                <AddImages
+                                                    className={classNames(
+                                                        css.imagesField,
+                                                        images.length == 1 && css.imagesField1,
+                                                        images.length == 2 && css.imagesField2,
+                                                        images.length == 3 && css.imagesField3,
+                                                        images.length > 3 && css.imagesFieldBig
+                                                    )}
+                                                    images={images}
+                                                    thumbnailClassName={css.thumbnail}
+                                                    savedImageAltText={intl.formatMessage({
+                                                        id: 'EditListingPhotosForm.savedImageAltText',
+                                                    })}
+                                                    onRemoveImage={onRemoveImage}
                                                 >
-                                                    {fieldprops => {
-                                                        const { accept, input, label, disabled: fieldDisabled } = fieldprops;
-                                                        const { name, type } = input;
-                                                        const onChange = e => {
-                                                            const file = e.target.files[0];
-                                                            form.change(`addImage`, file);
-                                                            form.blur(`addImage`);
-                                                            onImageUploadHandler(file);
-                                                        };
-                                                        const inputProps = { accept, id: name, name, onChange, type };
-                                                        return (
-                                                            <div className={css.addImageWrapper}>
-                                                                <div className={css.aspectRatioWrapper}>
-                                                                    {fieldDisabled ? null : (
-                                                                        <input {...inputProps} multiple className={css.addImageInput} />
-                                                                    )}
-                                                                    <label htmlFor={name} className={css.addImage}>
-                                                                        {label}
-                                                                    </label>
+                                                    <Field
+                                                        id="addImage"
+                                                        name="addImage"
+                                                        accept={ACCEPT_IMAGES}
+                                                        form={null}
+                                                        label={chooseImageText}
+                                                        type="file"
+                                                        disabled={state.imageUploadRequested}
+                                                    >
+                                                        {fieldprops => {
+                                                            const { accept, input, label, disabled: fieldDisabled } = fieldprops;
+                                                            const { name, type } = input;
+                                                            const onChange = e => {
+                                                                const file = e.target.files[0];
+                                                                form.change(`addImage`, file);
+                                                                form.blur(`addImage`);
+                                                                onImageUploadHandler(file);
+                                                            };
+                                                            const inputProps = { accept, id: name, name, onChange, type };
+                                                            return (
+                                                                <div className={css.addImageWrapper}>
+                                                                    <div className={css.aspectRatioWrapper}>
+                                                                        {fieldDisabled ? null : (
+                                                                            <input {...inputProps} multiple className={css.addImageInput} />
+                                                                        )}
+                                                                        <label htmlFor={name} className={css.addImage}>
+                                                                            {label}
+                                                                        </label>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        );
-                                                    }}
-                                                </Field>
-                                                <Field
-                                                    component={props => {
-                                                        const { input, meta } = props;
-                                                        return (
-                                                            <div className={css.imageRequiredWrapper}>
-                                                                <input {...input} />
-                                                                <ValidationError fieldMeta={meta} />
-                                                            </div>
-                                                        );
-                                                    }}
-                                                    name="images"
-                                                    type="hidden"
-                                                    validate={composeValidators(validators.nonEmptyArray(imageRequiredMessage))}
-                                                />
-                                            </AddImages>
+                                                            );
+                                                        }}
+                                                    </Field>
+                                                    <Field
+                                                        component={props => {
+                                                            const { input, meta } = props;
+                                                            return (
+                                                                <div className={css.imageRequiredWrapper}>
+                                                                    <input {...input} />
+                                                                    <ValidationError fieldMeta={meta} />
+                                                                </div>
+                                                            );
+                                                        }}
+                                                        name="images"
+                                                        type="hidden"
+                                                        // validate={composeValidators(validators.nonEmptyArray(imageRequiredMessage))}
+                                                    />
+                                                </AddImages>
 
+                                            </div>
                                         </div>
-                                    </div>
                                         {/* {imagesError ? <div className={css.arrayError}>{imagesError}</div> : null}
 
                                         <ImageUploadError
@@ -580,46 +570,14 @@ const EditListingServiceFormComponent = props => {
                                 </div>
                             </div>
                             <Button type="button" onClick={() => {
-                                const {
-                                    title,
-                                    price,
-                                    category,
-                                    shortDescription,
-                                    technicalNotes,
-                                    hours,
-                                    mins,
-                                    cancelationPolicy,
-                                    noOfBooking,
-                                    months,
-                                    days,
-                                    advanceMonths,
-                                    advanceDays,
-                                    tag
-                                } = values;
+                                form.change('isDraft', true);
+                                handleSubmit({ ...values, isDraft: true })}}>
+                                <FormattedMessage id="ServiceListingPage.saveDraftButton" />
+                            </Button>
 
-                                const updatedValues = {
-                                    title: title,
-                                    price,
-                                    description: '',
-                                    publicData: {
-                                        category,
-                                        shortDescription,
-                                        technicalNotes,
-                                        hours,
-                                        mins,
-                                        cancelationPolicy,
-                                        noOfBooking,
-                                        months,
-                                        days,
-                                        advanceMonths,
-                                        advanceDays,
-                                        listingType: 'service',
-                                        tag
-                                    },
-                                }
-                                onCreateDraftServiceListing(updatedValues, config);
-                            }}><FormattedMessage id="ServiceListingPage.saveDraftButton" /></Button>
-                            <Button type="submit"><FormattedMessage id="ServiceListingPage.addButton" /></Button>
+                            <Button type="button" onClick={() => handleSubmit(values)}>
+                                <FormattedMessage id="ServiceListingPage.addButton" />
+                            </Button>
                         </div>
                     </Form>
                 );
@@ -628,9 +586,9 @@ const EditListingServiceFormComponent = props => {
     )
 };
 
-EditListingServiceFormComponent.defaultProps = { className: null, fetchErrors: null };
+ServiceListingPageFormComponent.defaultProps = { className: null, fetchErrors: null };
 
-EditListingServiceFormComponent.propTypes = {
+ServiceListingPageFormComponent.propTypes = {
     className: string,
     intl: intlShape.isRequired,
     onSubmit: func.isRequired,
@@ -646,4 +604,4 @@ EditListingServiceFormComponent.propTypes = {
     }),
 };
 
-export default compose(injectIntl)(EditListingServiceFormComponent);
+export default compose(injectIntl)(ServiceListingPageFormComponent);

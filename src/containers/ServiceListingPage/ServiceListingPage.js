@@ -74,6 +74,7 @@ export const ServiceListingPageComponent = props => {
     const images = allImages.filter(img => {
         return !removedImageIds.includes(img.id);
     });
+    console.log('images :>> ', images);
 
     const [resetForm, setResetForm] = useState(false);
     const unitType = currentListing?.attributes?.publicData?.unitType;
@@ -121,52 +122,35 @@ export const ServiceListingPageComponent = props => {
                     <div className={css.contentBox}>
                         <ServiceListingPageForm
                             className={css.productFormWrapper}
-                            onCreateDraftServiceListing={onCreateDraftServiceListing}
-                            config={config}
-                            initialValues={{}
-                            }
+                            initialValues={{}}
                             saveActionMsg={submitButtonText}
                             setResetForm={() => setResetForm(true)}
                             onSubmit={values => {
                                 const {
                                     title,
                                     price,
-                                    category,
-                                    shortDescription,
-                                    technicalNotes,
-                                    hours,
-                                    mins,
-                                    cancelationPolicy,
-                                    noOfBooking,
-                                    months,
-                                    days,
-                                    advanceMonths,
-                                    advanceDays,
-                                    tag,
-                                    images
+                                    isDraft = false,
+                                    ...rest
                                 } = values;
-
+                                console.log(values, '&& >>>>>>> && => values', isDraft);
+                                
                                 const updatedValues = {
-                                    title: title,
-                                    price,
+                                    title,
                                     description: '',
+                                    images,
                                     publicData: {
-                                        category,
-                                        shortDescription,
-                                        technicalNotes,
-                                        hours,
-                                        mins,
-                                        cancelationPolicy,
-                                        noOfBooking,
-                                        months,
-                                        days,
-                                        advanceMonths,
-                                        advanceDays,
+                                        ...rest,
                                         listingType: 'service',
-                                        tag
                                     },
                                 }
-                                // const { tag } = (listing && listing.id && listing.attributes.publicData) || {};
+                                if (price) {
+                                    Object.assign(updatedValues, { price, });
+                                }
+                                
+                                if (isDraft) {
+                                    return onCreateDraftServiceListing(updatedValues, config);
+                                }
+                                const { tag } = (listing && listing.id && listing.attributes.publicData) || {};
                                 // let tag =[];
                                 const { serviceTagsData = {} } = (listing && listing.id && listing.attributes.publicData) || {};
 
@@ -194,12 +178,12 @@ export const ServiceListingPageComponent = props => {
                                 //     subCategoryData,
                                 // };
                                 onCreateServiceListing(updatedValues, config).then((r) => {
-                                    const data = {
-                                        publicData: {
-                                            serviceTags: [...tag, ...serviceTags]
-                                        }
-                                    }
-                                    onUpdateUserListing(data, config, listingId);
+                                    // const data = {
+                                    //     publicData: {
+                                    //         serviceTags: [...tag, ...serviceTags]
+                                    //     }
+                                    // }
+                                    // onUpdateUserListing(data, config, listingId);
                                 })
                             }}
                             onChange={onChange}

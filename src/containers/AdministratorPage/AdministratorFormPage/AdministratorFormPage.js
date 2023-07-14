@@ -145,6 +145,7 @@ const AdministratorFormPageComponent = props => {
                                 </div>
 
                                 <div>
+                                    
                                     <FormattedMessage id='ProductListingPage.productDetails' />
 
                                 </div>

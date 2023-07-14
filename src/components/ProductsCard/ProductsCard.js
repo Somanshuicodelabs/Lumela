@@ -4,7 +4,8 @@ import IconCard from '../IconCard/IconCard';
 import NamedLink from '../NamedLink/NamedLink';
 
 const ProductsCard = (props) => {
-    const { productImage, productHeading, productSize, productPrice ,id} = props;
+    const { productImage, productHeading, productSize, productPrice ,id, status} = props;
+    console.log('status :>> ', status);
     return (
         <NamedLink name="ProductListingPage" to={{search:`?id=${id?.uuid}`}} >
         <div className={css.productCard}>
@@ -20,6 +21,7 @@ const ProductsCard = (props) => {
                         <IconCard brand="dots" />
                     </div>
                 </div>
+                <div>{status}</div>
             </div>
         </div>
         </NamedLink>

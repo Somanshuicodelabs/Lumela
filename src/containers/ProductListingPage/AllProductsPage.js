@@ -27,6 +27,7 @@ export const AllProductsPageComponent = props => {
         onfetchCurrentListing,
         ownListings,
     } = props;
+    console.log('owlistings :>> ', ownListings);
     const [filterText, setFilterText] = useState('');
     const filteredListings = ownListings.filter((listing) => {
         const title = listing.attributes.title.toLowerCase();
@@ -101,6 +102,7 @@ export const AllProductsPageComponent = props => {
                                         productHeading={item?.attributes?.title}
                                         productSize={item?.attributes?.publicData.size}
                                         productPrice={'$' + item?.attributes?.price?.amount / 100}
+                                        status= {item?.attributes?.state}
                                         id={item?.id}
                                     />
                                 ))}
